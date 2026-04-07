@@ -1,3 +1,7 @@
+import { Button } from "@/component/ui/button";
+import { toast } from "sonner";
+
+
 export default function Dashboard() {
   return (
     <div>
@@ -24,6 +28,9 @@ export default function Dashboard() {
             <p className={`text-3xl font-bold ${card.accent}`}>{card.value}</p>
           </div>
         ))}
+      </div>
+      <div>
+        <Button variant={'destructive'}>Click me</Button>
       </div>
     </div>
   );
