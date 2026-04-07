@@ -5,62 +5,121 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  [
+    "group/button isolate relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-md border bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors duration-200 ease-in-out outline-none select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-primary)] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 aria-invalid:ring-2 aria-invalid:ring-destructive/20",
+  ].join(" "),
+
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
-        outline:
-          "border-border bg-background shadow-xs hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-        ghost:
-          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
-        destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-primary underline-offset-4 hover:underline",
+        primary: [
+          "border-transparent bg-[var(--color-primary)] text-white",
+          "hover:bg-[var(--color-primary-500)] hover:cursor-pointer",
+          "active:bg-[var(--color-primary-400)] active:cursor-pointer",
+          "disabled:bg-[var(--color-text-200)] disabled:text-[var(--color-text-600)] disabled:cursor-not-allowed",
+        ].join(" "),
+
+        secondary: [
+          "bg-white text-[var(--color-primary)] border-[var(--color-primary)]",
+          "hover:bg-white hover:text-[var(--color-primary-500)] hover:border-[var(--color-primary-500)] hover:cursor-pointer",
+          "active:bg-white active:text-[var(--color-text-500)] active:border-[var(--color-primary)] active:cursor-pointer" ,
+          "disabled:bg-white disabled:text-[var(--color-text-950)] disabled:border-[var(--color-text-950)] disabled:opacity-40 disabled:cursor-not-allowed",
+        ].join(" "),
+
+        tertiary: [
+          "border-transparent bg-transparent text-[var(--color-primary)]",
+          "hover:text-[var(--color-primary-500)] hover:cursor-pointer",
+          "active:text-[var(--color-primary-400)] active:cursor-pointer",
+          "disabled:text-[var(--color-text-950)] disabled:cursor-not-allowed disabled:opacity-40",
+        ].join(" "),
       },
+
       size: {
         default:
-          "h-9 gap-1.5 px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),8px)] px-2 text-xs in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-8 gap-1 rounded-[min(var(--radius-md),10px)] px-2.5 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5",
-        lg: "h-10 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        icon: "size-9",
-        "icon-xs":
-          "size-6 rounded-[min(var(--radius-md),8px)] in-data-[slot=button-group]:rounded-md [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm":
-          "size-8 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-md",
-        "icon-lg": "size-10",
+          "h-[2.5rem] gap-1.5 px-4 in-data-[slot=button-group]:rounded-md has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2", // 40px (Medium)
+        sm: "h-[2rem] gap-1 rounded-[min(var(--radius-md),10px)] px-3", // 32px (Small)
+        md: "h-[2.5rem] gap-1.5 px-4", // 40px (Medium)
+        lg: "h-[2.75rem] gap-1.5 px-6 text-base", // 44px (Large)
+        xl: "h-[3rem] gap-1.5 px-6 text-base", // 48px (Extra Large)
+        icon: "size-[2.5rem]", // 40px (Medium)
+        "icon-sm": "size-[2rem] rounded-[min(var(--radius-md),10px)]", // 32px (Small)
+        "icon-lg": "size-[2.75rem]", // 44px (Large)
+        "icon-xl": "size-[3rem]", // 48px (Extra Large)
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   }
 )
 
+export interface ButtonProps
+  extends React.ComponentProps<"button">,
+  VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+  isIcon?: React.ReactNode
+  // rightIcon?: React.ReactNode
+}
+
 function Button({
   className,
-  variant = "default",
+  variant,
   size = "default",
   asChild = false,
+  disabled,
+  onClick,
+  children,
+  isIcon,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
+}: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button"
+
+  const wantsCircle = !asChild && !disabled && (variant === "primary" || variant === "secondary")
+
+  // Primary gets 15% opacity when active, Secondary gets 100% opacity when active.
+  const circleClass =
+    variant === "primary"
+      ? "bg-[var(--color-ripple-primary)] opacity-0 group-active/button:opacity-15"
+      : "bg-[var(--color-ripple-secondary)] opacity-0 group-active/button:opacity-100"
 
   return (
     <Comp
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      disabled={disabled}
+      className={cn(buttonVariants({ variant, size }), className)}
+      onClick={onClick}
       {...props}
-    />
+    >
+      {/* Static active circle (replaces JS ripple) */}
+      {wantsCircle && (
+        <span
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute left-1/2 top-1/2 -z-10 aspect-square w-32 -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-150 ease-out",
+            circleClass
+          )}
+        />
+      )}
+
+      {/* Left icon */}
+      {!asChild && isIcon && (
+        <span className="inline-flex shrink-0 items-center" aria-hidden="true">
+          {isIcon}
+        </span>
+      )}
+
+      {children}
+
+      {/* Right icon */}
+      {/* {!asChild && rightIcon && (
+        <span className="inline-flex shrink-0 items-center" aria-hidden="true">
+          {rightIcon}
+        </span>
+      )} */}
+    </Comp>
   )
 }
 

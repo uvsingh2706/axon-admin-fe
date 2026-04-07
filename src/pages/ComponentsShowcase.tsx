@@ -1,4 +1,5 @@
 import { Button } from "../component/ui/button";
+import { LeftArrowIcon } from "../assets/icons";
 import { Input } from "../component/ui/input";
 import { Checkbox } from "../component/ui/checkbox";
 import { Label } from "../component/ui/label";
@@ -31,22 +32,47 @@ export default function ComponentsShowcase() {
             <div className="flex-1 h-[2px] bg-border/60"></div>
           </div>
           
-          <div className="bg-surface/10 p-8 md:p-10 rounded-2xl border border-border shadow-xs">
-            <Label className="mb-5 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Variants</Label>
-            <div className="flex flex-wrap gap-5 items-center mb-10">
-              <Button variant="default">Default</Button>
-              <Button variant="secondary">Secondary</Button>
-              <Button variant="destructive">Destructive</Button>
-              <Button variant="outline">Outline</Button>
-              <Button variant="ghost">Ghost</Button>
-              <Button variant="link">Link</Button>
+          <div className="bg-surface/10 p-8 md:p-10 rounded-2xl border border-border shadow-xs space-y-10">
+            
+            {/* Primary Button States */}
+            <div>
+              <Label className="mb-4 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Primary Variant</Label>
+              <div className="flex flex-wrap gap-5 items-center">
+                <Button variant="primary">Primary Default</Button>
+                <Button variant="primary" isIcon={<LeftArrowIcon />}>Primary Icon</Button>
+                <Button variant="primary" disabled>Primary Disabled</Button>
+              </div>
+            </div>
+
+            {/* Secondary Button States */}
+            <div>
+              <Label className="mb-4 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Secondary Variant</Label>
+              <div className="flex flex-wrap gap-5 items-center">
+                <Button variant="secondary">Secondary Default</Button>
+                <Button variant="secondary" isIcon={<LeftArrowIcon />}>Secondary Icon</Button>
+                <Button variant="secondary" disabled>Secondary Disabled</Button>
+              </div>
+            </div>
+
+            {/* Tertiary Button States */}
+            <div>
+              <Label className="mb-4 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Tertiary Variant</Label>
+              <div className="flex flex-wrap gap-5 items-center">
+                <Button variant="tertiary">Tertiary Default</Button>
+                <Button variant="tertiary" isIcon={<LeftArrowIcon />}>Tertiary Icon</Button>
+                <Button variant="tertiary" disabled>Tertiary Disabled</Button>
+              </div>
             </div>
             
-            <Label className="mb-5 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Sizes</Label>
-            <div className="flex flex-wrap gap-5 items-center">
-              <Button size="sm">Small (sm)</Button>
-              <Button size="default">Default</Button>
-              <Button size="lg">Large (lg)</Button>
+            {/* Updated Sizes list matching the rem definitions */}
+            <div>
+              <Label className="mb-4 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Sizes</Label>
+              <div className="flex flex-wrap gap-5 items-center">
+                <Button variant="primary" size="sm">Small (sm)</Button>
+                <Button variant="primary" size="md">Medium (md)</Button>
+                <Button variant="primary" size="lg">Large (lg)</Button>
+                <Button variant="primary" size="xl">Extra Large (xl)</Button>
+              </div>
             </div>
           </div>
         </section>

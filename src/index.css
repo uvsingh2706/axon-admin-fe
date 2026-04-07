@@ -9,6 +9,7 @@
 @theme {
 
   /* ── Primary / Orange scale ── */
+  --color-primary: #FE6A00;
   --color-primary-50: #FFF3EB;
   --color-primary-100: #FFDEC7;
   --color-primary-200: #FFC9A3;
@@ -23,6 +24,7 @@
   --color-primary-950: #853700;
 
   /* ── Secondary / Purple scale ── */
+  --color-secondary: #5E4A93;
   --color-secondary-00: #F6F6F8;
   --color-secondary-50: #F3F1F8;
   --color-secondary-100: #DBD5EA;
@@ -54,6 +56,10 @@
   --color-error: #FA0707;
   --color-warning: #E67F00;
   --color-success: #0E9017;
+
+  /* ── Ripple / interaction ── */
+  --color-ripple-secondary: #F7F7F7;
+  --color-ripple-primary: #FFFFFF;
 
   /* ── Legacy aliases (kept for backward compat) ── */
   --color-primary-dark: #00A87A;
