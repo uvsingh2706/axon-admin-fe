@@ -3,6 +3,8 @@ import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { Pathname } from "../../utils/pathname";
+import { Button } from "@/component/ui/button";
+import { LeftArrowIcon } from "@/assets/icons";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -74,14 +76,14 @@ export default function Login() {
           </label>
 
           {/* Submit */}
-          <button
+          <Button
             id="login-submit"
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-primary text-surface font-semibold py-2.5 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            variant="primary"
+            className="w-full text-lg"
+            isIcon={false}
           >
             {isLoading ? "Signing in…" : "Sign in"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>
