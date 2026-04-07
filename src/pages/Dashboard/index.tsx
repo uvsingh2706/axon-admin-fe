@@ -1,5 +1,5 @@
 import { Button } from "@/component/ui/button";
-import { toast } from "sonner";
+import { Input } from "@/component/ui/input";
 
 
 export default function Dashboard() {
@@ -29,9 +29,14 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
-      <div>
-        <Button variant={'destructive'}>Click me</Button>
+<div className="flex flex-col items-center gap-2 mt-">
+        <div>
+        <Button variant={'default'}>Click me</Button>
       </div>
+      <div>
+        <Input/>
+      </div>
+</div>
     </div>
   );
 }
