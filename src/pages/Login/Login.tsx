@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { Pathname } from "../../utils/pathname";
 import { Button } from "@/component/ui/button";
-import { LeftArrowIcon } from "@/assets/icons";
+import { Input } from "@/component/ui/input";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -48,32 +49,39 @@ export default function Login() {
           <h2 className="text-xl font-semibold text-white mb-6">Sign in</h2>
 
           {/* Email */}
-          <label className="block mb-4">
-            <span className="text-sm text-gray-400 mb-1.5 block">Email</span>
-            <input
+          <div className="mb-4">
+            <Input
               id="login-email"
+              label="Email"
+              labelClassName="text-gray-400 mb-1.5"
               type="email"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: any) => setEmail(e.target.value)}
               placeholder="admin@axon-ev.com"
-              className="w-full bg-surface rounded-lg border border-white/10 px-4 py-2.5 text-white text-sm placeholder-gray-500 outline-none focus:border-primary transition-colors"
+              className="bg-surface border-white/10 text-white placeholder-gray-500 focus:border-primary focus-visible:border-primary transition-colors"
             />
-          </label>
+          </div>
+
+          {/* <div>
+            <span>Phone Input</span>
+            <Input type="phone" />
+          </div> */}
 
           {/* Password */}
-          <label className="block mb-6">
-            <span className="text-sm text-gray-400 mb-1.5 block">Password</span>
-            <input
+          <div className="mb-8">
+            <Input
               id="login-password"
+              label="Password"
+              labelClassName="text-gray-400 mb-1.5"
               type="password"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: any) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-surface rounded-lg border border-white/10 px-4 py-2.5 text-white text-sm placeholder-gray-500 outline-none focus:border-primary transition-colors"
+              className="bg-surface border-white/10 text-white placeholder-gray-500 focus:border-primary focus-visible:border-primary transition-colors"
             />
-          </label>
+          </div>
 
           {/* Submit */}
           <Button

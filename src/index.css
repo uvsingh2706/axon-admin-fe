@@ -9,7 +9,6 @@
 @theme {
 
   /* ── Primary / Orange scale ── */
-  --color-primary: #FE6A00;
   --color-primary-50: #FFF3EB;
   --color-primary-100: #FFDEC7;
   --color-primary-200: #FFC9A3;
@@ -24,7 +23,6 @@
   --color-primary-950: #853700;
 
   /* ── Secondary / Purple scale ── */
-  --color-secondary: #5E4A93;
   --color-secondary-00: #F6F6F8;
   --color-secondary-50: #F3F1F8;
   --color-secondary-100: #DBD5EA;
@@ -56,10 +54,6 @@
   --color-error: #FA0707;
   --color-warning: #E67F00;
   --color-success: #0E9017;
-
-  /* ── Ripple / interaction ── */
-  --color-ripple-secondary: #F7F7F7;
-  --color-ripple-primary: #FFFFFF;
 
   /* ── Legacy aliases (kept for backward compat) ── */
   --color-primary-dark: #00A87A;
@@ -206,5 +200,53 @@ body {
 
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  /* ── Typography Definitions (Urbanist based) ── */
+  
+  /* Shared Base applying strictly requested rules */
+  .heading-1, .heading-2, .heading-3, .heading-4, .heading-5, 
+  .subtitle-1, .subtitle-2, .subtitle-3, .subtitle-3-5, .subtitle-4 {
+    font-family: var(--font-sans);
+    line-height: 1.4; /* 140% */
+    letter-spacing: -0.02em; /* -2% */
+    color: #0A2719; /* Requested specific Text Color */
+    font-weight: 600; /* Semibold Default */
+  }
+
+  /* Headings Scale */
+  .heading-1 {
+    font-size: 1.75rem; /* 28px */
+  }
+  .heading-2 {
+    font-size: 1.5rem; /* 24px */
+  }
+  .heading-3 {
+    font-size: 1.25rem; /* 20px */
+  }
+  .heading-4 {
+    font-size: 1.125rem; /* 18px */
+  }
+  .heading-5 {
+    font-size: 1rem; /* 16px */
+  }
+
+  /* Subtitles Scale */
+  .subtitle-1 {
+    font-size: 1.125rem; /* 18px */
+  }
+  .subtitle-2 {
+    font-size: 1rem; /* 16px */
+  }
+  .subtitle-3 {
+    font-size: 0.875rem; /* 14px */
+  }
+  .subtitle-3-5 {
+    font-size: 0.75rem; /* 12px */
+  }
+  .subtitle-4 {
+    font-size: 0.625rem; /* 10px */
   }
 }

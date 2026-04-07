@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../component/ui/select";
+import { Table } from "@/component/ui/table";
 
 export default function ComponentsShowcase() {
   return (
@@ -80,22 +81,78 @@ export default function ComponentsShowcase() {
         {/* Inputs */}
         <section className="space-y-8">
           <div className="flex items-center gap-6">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Inputs & Forms</h2>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Inputs</h2>
             <div className="flex-1 h-[2px] bg-border/60"></div>
           </div>
           
-          <div className="bg-surface/10 p-8 md:p-10 rounded-2xl border border-border shadow-xs">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-4">
-                <Label htmlFor="email" className="font-semibold text-base">Email address</Label>
-                <Input id="email" type="email" placeholder="e.g. admin@axon-ev.com" className="bg-white" />
-              </div>
+          <div className="bg-white p-8 md:p-10 rounded-2xl border border-primary/20 border-dashed shadow-xs overflow-x-auto">
+            <table className="w-full text-left min-w-[700px] border-separate border-spacing-y-8">
+              <thead>
+                <tr className="text-muted-foreground text-sm">
+                  <th className="w-[100px] font-medium pb-4">State</th>
+                  <th className="w-1/2 px-4 font-semibold text-primary">Input Field</th>
+                  <th className="w-1/2 px-4 font-semibold text-foreground">Verification Code</th>
+                </tr>
+              </thead>
+              <tbody className="align-top">
+                
+                {/* DEFAULT */}
+                <tr>
+                  <td className="pt-8 font-medium text-sm text-foreground">Default</td>
+                  <td className="px-4">
+                    <Input label="Email" required placeholder="Enter Email Address"  />
+                  </td>
+                  <td className="px-4">
+                    <Input type="otp" label="Verification Code" required length={6} />
+                  </td>
+                </tr>
 
-              <div className="space-y-4">
-                <Label htmlFor="disabled" className="font-semibold text-base">Disabled Input</Label>
-                <Input id="disabled" disabled placeholder="Disabled field..." className="bg-surface/50" />
-              </div>
-            </div>
+                {/* ACTIVE */}
+                <tr>
+                  <td className="pt-8 font-medium text-sm text-foreground">Active</td>
+                  <td className="px-4">
+                    <Input label="Email" required defaultValue="Enter Email" className="border-primary" />
+                  </td>
+                  <td className="px-4">
+                    <Input type="otp" label="Verification Code" required length={6} value={["3","3","3","3","3",""]} />
+                  </td>
+                </tr>
+
+                {/* FILLED */}
+                <tr>
+                  <td className="pt-8 font-medium text-sm text-foreground">Filled</td>
+                  <td className="px-4">
+                    <Input label="Email" required defaultValue="Enter Email Address" />
+                  </td>
+                  <td className="px-4">
+                    <Input type="otp" label="Verification Code" required length={6} value={["3","3","3","3","3","3"]} />
+                  </td>
+                </tr>
+
+                {/* DISABLE */}
+                <tr>
+                  <td className="pt-8 font-medium text-sm text-foreground">Disable</td>
+                  <td className="px-4">
+                    <Input label="Email" required disabled placeholder="Input Text" />
+                  </td>
+                  <td className="px-4">
+                    <Input type="otp" label="Verification Code" required disabled length={6} value={["3","3","3","3","3","3"]} />
+                  </td>
+                </tr>
+
+                {/* ERROR */}
+                <tr>
+                  <td className="pt-8 font-medium text-sm text-foreground">Error</td>
+                  <td className="px-4">
+                    <Input label="Email" required error errorMessage="Invalid Email ID. Please enter Valid Email ID." defaultValue="Navneet_123" />
+                  </td>
+                  <td className="px-4">
+                    <Input type="otp" label="Verification Code" required error errorMessage="Invalid OTP." length={6} value={["3","3","3","3","3","3"]} />
+                  </td>
+                </tr>
+                
+              </tbody>
+            </table>
           </div>
         </section>
 
@@ -149,6 +206,10 @@ export default function ComponentsShowcase() {
               </div>
             </div>
           </div>
+        </section>
+
+        <section>
+          <Table/>
         </section>
 
       </div>

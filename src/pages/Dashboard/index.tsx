@@ -30,12 +30,7 @@ export default function Dashboard() {
         ))}
       </div>
 <div className="flex flex-col items-center gap-2 mt-">
-        <div>
-        <Button variant={'default'}>Click me</Button>
-      </div>
-      <div>
-        <Input/>
-      </div>
+
 </div>
     </div>
   );
