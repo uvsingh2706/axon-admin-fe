@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
   [
-    "group/button isolate relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-md border bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors duration-200 ease-in-out outline-none select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-primary)] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 aria-invalid:ring-2 aria-invalid:ring-destructive/20",
+    "group/button isolate relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-md border bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors duration-200 ease-in-out outline-none select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-primary)] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 aria-invalid:ring-2 aria-invalid:ring-destructive/20",
   ].join(" "),
 
   {
@@ -22,7 +22,7 @@ const buttonVariants = cva(
         secondary: [
           "bg-white text-[var(--color-primary)] border-[var(--color-primary)]",
           "hover:bg-white hover:text-[var(--color-primary-500)] hover:border-[var(--color-primary-500)] hover:cursor-pointer",
-          "active:bg-white active:text-[var(--color-text-500)] active:border-[var(--color-primary)] active:cursor-pointer" ,
+          "active:bg-white active:text-[var(--color-text-500)] active:border-[color-mix(in_srgb,var(--color-text-950)_40%,transparent)] active:cursor-pointer",
           "disabled:bg-white disabled:text-[var(--color-text-950)] disabled:border-[var(--color-text-950)] disabled:opacity-40 disabled:cursor-not-allowed",
         ].join(" "),
 
@@ -73,9 +73,23 @@ function Button({
   isIcon,
   ...props
 }: ButtonProps) {
-  const Comp = asChild ? Slot.Root : "button"
 
-  const wantsCircle = !asChild && !disabled && (variant === "primary" || variant === "secondary")
+  if (asChild) {
+    return (
+      <Slot.Root
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
+        className={cn(buttonVariants({ variant, size }), className)}
+        onClick={onClick}
+        {...props}
+      >
+        {children}
+      </Slot.Root>
+    )
+  }
+
+  const wantsCircle = !disabled && (variant === "primary" || variant === "secondary")
 
   // Primary gets 15% opacity when active, Secondary gets 100% opacity when active.
   const circleClass =
@@ -84,7 +98,7 @@ function Button({
       : "bg-[var(--color-ripple-secondary)] opacity-0 group-active/button:opacity-100"
 
   return (
-    <Comp
+    <button
       data-slot="button"
       data-variant={variant}
       data-size={size}
@@ -98,7 +112,7 @@ function Button({
         <span
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute left-1/2 top-1/2 -z-10 aspect-square w-32 -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-150 ease-out",
+            "pointer-events-none absolute left-1/2 top-1/2 -z-10 aspect-square h-[250%] -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-150 ease-out",
             circleClass
           )}
         />
@@ -119,7 +133,8 @@ function Button({
           {rightIcon}
         </span>
       )} */}
-    </Comp>
+      
+    </button>
   )
 }
 
