@@ -32,8 +32,8 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-white">
-      <div className="hidden lg:flex flex-[1.5] relative bg-[#1E1E1E]">
+    <div className="flex h-screen w-full bg-white overflow-hidden">
+      <div className="hidden lg:block lg:w-[55%] xl:w-[60%] relative bg-[#1E1E1E]">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
@@ -41,16 +41,13 @@ export default function Login() {
           }}
         >
         </div>
-
-
-
       </div>
 
       {/* RIGHT SIDE - FORM */}
-      <div className="flex flex-1 flex-col items-center justify-center p-8 lg:p-12">
-        <div className="w-full max-w-[420px] flex flex-col items-center">
+      <div className="flex w-full lg:w-[45%] xl:w-[40%] flex-col overflow-y-auto p-6 sm:p-8 lg:p-12 h-full">
+        <div className="w-full max-w-[384px] mx-auto my-auto flex flex-col py-10">
           
-          <div className="w-full mb-10">
+          <div className="w-full mb-10 text-center sm:text-left">
             <h1 className="text-3xl font-semibold text-[#101828] mb-2 tracking-tight">Log in to your account</h1>
             <p className="text-[#475467] text-base">Welcome back! Please enter your details.</p>
           </div>
@@ -67,7 +64,7 @@ export default function Login() {
                 value={email}
                 onChange={(e: any) => setEmail(e.target.value)}
                 placeholder="Enter Email Address"
-                className="h-[46px]"
+                className="h-11"
               />
 
               <div className="relative">
@@ -80,7 +77,7 @@ export default function Login() {
                   value={password}
                   onChange={(e: any) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="h-[46px]"
+                  className="h-11"
                 />
                 
                 <div className="flex w-full justify-end mt-2">
