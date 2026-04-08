@@ -4,6 +4,8 @@ import { Input } from "../component/ui/input";
 import { Checkbox } from "../component/ui/checkbox";
 import { Label } from "../component/ui/label";
 import { Skeleton } from "../component/ui/skeleton";
+import { Spinner } from "../component/ui/spinner";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../component/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -37,13 +39,13 @@ const clientFormSchema = z.object({
 });
 
 
-import { Spinner } from "../component/ui/spinner";
+
 
 export default function ComponentsShowcase() {
   return (
     <div className="min-h-screen bg-white">
       <div className="w-full max-w-6xl mx-auto p-10 md:p-14 space-y-16 pb-24 text-foreground">
-        
+
         {/* Instructional Banner Section */}
         <div className="bg-primary/10 border-l-[6px] border-primary p-6 md:p-8 rounded-xl shadow-sm">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">🛠️ Central UI Component Repository</h1>
@@ -58,9 +60,9 @@ export default function ComponentsShowcase() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Buttons</h2>
             <div className="flex-1 h-[2px] bg-border/60"></div>
           </div>
-          
+
           <div className="bg-surface/10 p-8 md:p-10 rounded-2xl border border-border shadow-xs space-y-10">
-            
+
             {/* Primary Button States */}
             <div>
               <Label className="mb-4 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Primary Variant</Label>
@@ -90,7 +92,7 @@ export default function ComponentsShowcase() {
                 <Button variant="tertiary" disabled>Tertiary Disabled</Button>
               </div>
             </div>
-            
+
             {/* Updated Sizes list matching the rem definitions */}
             <div>
               <Label className="mb-4 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Sizes</Label>
@@ -110,7 +112,7 @@ export default function ComponentsShowcase() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Inputs</h2>
             <div className="flex-1 h-[2px] bg-border/60"></div>
           </div>
-          
+
           <div className="bg-white p-8 md:p-10 rounded-2xl border border-primary/20 border-dashed shadow-xs overflow-x-auto">
             <table className="w-full text-left min-w-[700px] border-separate border-spacing-y-8">
               <thead>
@@ -121,12 +123,12 @@ export default function ComponentsShowcase() {
                 </tr>
               </thead>
               <tbody className="align-top">
-                
+
                 {/* DEFAULT */}
                 <tr>
                   <td className="pt-8 font-medium text-sm text-foreground">Default</td>
                   <td className="px-4">
-                    <Input label="Email" required placeholder="Enter Email Address"  />
+                    <Input label="Email" required placeholder="Enter Email Address" />
                   </td>
                   <td className="px-4">
                     <Input type="otp" label="Verification Code" required length={6} />
@@ -140,7 +142,7 @@ export default function ComponentsShowcase() {
                     <Input label="Email" required defaultValue="Enter Email" className="border-primary" />
                   </td>
                   <td className="px-4">
-                    <Input type="otp" label="Verification Code" required length={6} value={["3","3","3","3","3",""]} />
+                    <Input type="otp" label="Verification Code" required length={6} value={["3", "3", "3", "3", "3", ""]} />
                   </td>
                 </tr>
 
@@ -151,7 +153,7 @@ export default function ComponentsShowcase() {
                     <Input label="Email" required defaultValue="Enter Email Address" />
                   </td>
                   <td className="px-4">
-                    <Input type="otp" label="Verification Code" required length={6} value={["3","3","3","3","3","3"]} />
+                    <Input type="otp" label="Verification Code" required length={6} value={["3", "3", "3", "3", "3", "3"]} />
                   </td>
                 </tr>
 
@@ -162,7 +164,7 @@ export default function ComponentsShowcase() {
                     <Input label="Email" required disabled placeholder="Input Text" />
                   </td>
                   <td className="px-4">
-                    <Input type="otp" label="Verification Code" required disabled length={6} value={["3","3","3","3","3","3"]} />
+                    <Input type="otp" label="Verification Code" required disabled length={6} value={["3", "3", "3", "3", "3", "3"]} />
                   </td>
                 </tr>
 
@@ -173,10 +175,10 @@ export default function ComponentsShowcase() {
                     <Input label="Email" required error errorMessage="Invalid Email ID. Please enter Valid Email ID." defaultValue="Navneet_123" />
                   </td>
                   <td className="px-4">
-                    <Input type="otp" label="Verification Code" required error errorMessage="Invalid OTP." length={6} value={["3","3","3","3","3","3"]} />
+                    <Input type="otp" label="Verification Code" required error errorMessage="Invalid OTP." length={6} value={["3", "3", "3", "3", "3", "3"]} />
                   </td>
                 </tr>
-                
+
               </tbody>
             </table>
           </div>
@@ -392,7 +394,53 @@ export default function ComponentsShowcase() {
           </div>
         </section>
 
+        {/* Tabs Showcase */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-6">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Tabs</h2>
+            <div className="flex-1 h-[2px] bg-border/60"></div>
+          </div>
+
+          <div className="bg-white p-8 md:p-10 rounded-2xl border border-border shadow-xs">
+
+            <Tabs defaultValue="tab1" className="w-full max-w-md">
+
+              <TabsList className="grid w-full grid-cols-3 mb-6">
+                <TabsTrigger value="tab1">Tab 1</TabsTrigger>
+                <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+                <TabsTrigger value="tab3">Tab 3</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="tab1">
+                <div className="p-4 border rounded-lg">
+                  This is Tab 1 Content
+                </div>
+              </TabsContent>
+
+              <TabsContent value="tab2">
+                <div className="p-4 border rounded-lg">
+                  This is Tab 2 Content
+                </div>
+              </TabsContent>
+
+              <TabsContent value="tab3">
+                <div className="p-4 border rounded-lg">
+                  This is Tab 3 Content
+                </div>
+              </TabsContent>
+
+            </Tabs>
+
+          </div>
+        </section>
+
       </div>
     </div>
+
+
   );
 }
+
+
+
+
