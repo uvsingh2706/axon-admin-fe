@@ -33,14 +33,14 @@ export default function Login() {
 
   return (
     <div className="flex min-h-dvh w-full bg-white lg:h-dvh lg:overflow-hidden">
-      <div className="hidden lg:block lg:w-[55%] xl:w-[60%] relative bg-[#1E1E1E]">
+      <div className="hidden lg:block lg:w-[55%] xl:w-[55%] relative bg-[#1E1E1E]">
         <div className="absolute inset-0">
           <img src={OnboardingImage} alt="onboarding-img" className="h-full w-full object-cover" />
         </div>
       </div>
 
       {/* RIGHT SIDE - FORM */}
-      <div className="flex w-full lg:w-[45%] xl:w-[40%] flex-col lg:h-full lg:overflow-y-auto relative">
+      <div className="flex w-full lg:w-[45%] xl:w-[45%] flex-col lg:h-full lg:overflow-y-auto relative">
         <div className="flex flex-col justify-center min-h-full p-6 sm:p-8 lg:p-12">
           <div className="w-full max-w-[384px] mx-auto flex flex-col py-10">
           
