@@ -4,6 +4,7 @@ import { Pathname } from "../utils/pathname";
 import AdminLayout from "../component/Layout/AdminLayout";
 import ProtectedRoute from "../component/ProtectedRoute/ProtectedRoute";
 import Login from "../pages/Login/Login";
+import ForgetPassword from "../pages/ForgetPassword";
 import ComponentsShowcase from "../pages/ComponentsShowcase";
 import { useAuthStore } from "../store/authStore";
 
@@ -13,10 +14,14 @@ export default function AppRoutes() {
   return (
     <Routes>
       {/* Public route — redirect to dashboard if already logged in */}
-        
+
       <Route
-        path="/login"
+        path={Pathname.LOGIN}
         element={isAuthenticated ? <Navigate to={Pathname.DASHBOARD} replace /> : <Login />}
+      />
+      <Route
+        path={Pathname.FORGOT_PASSWORD}
+        element={isAuthenticated ? <Navigate to={Pathname.DASHBOARD} replace /> : <ForgetPassword />}
       />
       <Route path={Pathname.COMPONENTS} element={<ComponentsShowcase />} />
 

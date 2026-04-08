@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { Pathname } from "../../utils/pathname";
 import { Button } from "@/component/ui/button";
@@ -81,16 +81,16 @@ export default function Login() {
                 />
                 
                 <div className="flex w-full justify-end mt-2">
-                  <a href="#forgot" className="text-sm font-semibold text-[#1e3a8a] py-1 underline hover:underline">
+                  <Link to={Pathname.FORGOT_PASSWORD} className="text-sm font-semibold text-[#1e3a8a] py-1 underline hover:underline">
                     Forgot password
-                  </a>
+                  </Link>
                 </div>
               </div>
 
               <Button
                 id="login-submit"
                 type="submit"
-                className="w-full py-6 mt-1 text-base border border-[#EAECF0] font-semibold bg-[#F2F4F7] hover:bg-[#FF6A00] text-[#98A2B3] hover:text-[#FFFFFF] shadow-none rounded-lg transition-all"
+                className="w-full py-6 mt-1 text-base border border-[#EAECF0] font-semibold bg-[#F2F4F7] hover:bg-primary-700 text-[#98A2B3] hover:text-[#FFFFFF] shadow-none rounded-lg transition-all"
                 isIcon={false}
               >
                 {isLoading ? "Signing in…" : "Sign in"}
