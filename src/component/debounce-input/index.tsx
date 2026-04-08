@@ -32,7 +32,7 @@ export default function DebouncedInput({
     <Input
       {...props}
       value={internalValue}
-      onChange={(e) => setInternalValue(e.target.value)}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInternalValue(e.target.value)}
       className="max-w-sm"
     />
   );
