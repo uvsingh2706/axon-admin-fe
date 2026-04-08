@@ -9,7 +9,6 @@
 @theme {
 
   /* ── Primary / Orange scale ── */
-  --color-primary: #FE6A00;
   --color-primary-50: #FFF3EB;
   --color-primary-100: #FFDEC7;
   --color-primary-200: #FFC9A3;
@@ -24,7 +23,6 @@
   --color-primary-950: #853700;
 
   /* ── Secondary / Purple scale ── */
-  --color-secondary: #5E4A93;
   --color-secondary-00: #F6F6F8;
   --color-secondary-50: #F3F1F8;
   --color-secondary-100: #DBD5EA;
@@ -56,10 +54,6 @@
   --color-error: #FA0707;
   --color-warning: #E67F00;
   --color-success: #0E9017;
-
-  /* ── Ripple / interaction ── */
-  --color-ripple-secondary: #F7F7F7;
-  --color-ripple-primary: #FFFFFF;
 
   /* ── Legacy aliases (kept for backward compat) ── */
   --color-primary-dark: #00A87A;
@@ -207,4 +201,58 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+@layer components {
+  /* ── Typography Definitions (Urbanist based) ── */
+  
+  /* Shared Base applying strictly requested rules */
+  [class^="heading-"], [class^="subtitle-"] {
+    font-family: var(--font-sans);
+    line-height: 1.4; /* 140% */
+    letter-spacing: -0.02em; /* -2% */
+    color: #0A2719; /* Requested specific Text Color */
+  }
+
+  /* Headings Scale */
+  .heading-1, .heading-1-semibold { font-size: 1.75rem; font-weight: 600; }
+  .heading-1-medium { font-size: 1.75rem; font-weight: 500; }
+  .heading-1-regular { font-size: 1.75rem; font-weight: 400; }
+
+  .heading-2, .heading-2-semibold { font-size: 1.5rem; font-weight: 600; }
+  .heading-2-medium { font-size: 1.5rem; font-weight: 500; }
+  .heading-2-regular { font-size: 1.5rem; font-weight: 400; }
+
+  .heading-3, .heading-3-semibold { font-size: 1.25rem; font-weight: 600; }
+  .heading-3-medium { font-size: 1.25rem; font-weight: 500; }
+  .heading-3-regular { font-size: 1.25rem; font-weight: 400; }
+
+  .heading-4, .heading-4-semibold { font-size: 1.125rem; font-weight: 600; }
+  .heading-4-medium { font-size: 1.125rem; font-weight: 500; }
+  .heading-4-regular { font-size: 1.125rem; font-weight: 400; }
+
+  .heading-5, .heading-5-semibold { font-size: 1rem; font-weight: 600; }
+  .heading-5-medium { font-size: 1rem; font-weight: 500; }
+  .heading-5-regular { font-size: 1rem; font-weight: 400; }
+
+  /* Subtitles Scale */
+  .subtitle-1, .subtitle-1-semibold { font-size: 1.125rem; font-weight: 600; }
+  .subtitle-1-medium { font-size: 1.125rem; font-weight: 500; }
+  .subtitle-1-regular { font-size: 1.125rem; font-weight: 400; }
+
+  .subtitle-2, .subtitle-2-semibold { font-size: 1rem; font-weight: 600; }
+  .subtitle-2-medium { font-size: 1rem; font-weight: 500; }
+  .subtitle-2-regular { font-size: 1rem; font-weight: 400; }
+
+  .subtitle-3, .subtitle-3-semibold { font-size: 0.875rem; font-weight: 600; }
+  .subtitle-3-medium { font-size: 0.875rem; font-weight: 500; }
+  .subtitle-3-regular { font-size: 0.875rem; font-weight: 400; }
+
+  .subtitle-3-5, .subtitle-3-5-semibold { font-size: 0.75rem; font-weight: 600; }
+  .subtitle-3-5-medium { font-size: 0.75rem; font-weight: 500; }
+  .subtitle-3-5-regular { font-size: 0.75rem; font-weight: 400; }
+
+  .subtitle-4, .subtitle-4-semibold { font-size: 0.625rem; font-weight: 600; }
+  .subtitle-4-medium { font-size: 0.625rem; font-weight: 500; }
+  .subtitle-4-regular { font-size: 0.625rem; font-weight: 400; }
 }
