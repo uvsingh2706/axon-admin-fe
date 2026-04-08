@@ -68,24 +68,57 @@
   --radius-card: 12px;
 }
 
-/* Reset box-sizing globally */
+/* ── Universal Box-Sizing Reset ── */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  /* margin: 0;
+  padding: 0; */
 }
 
+/* ── HTML Root ── */
 html {
-  /* Set 1rem to 16px as the standard value requested for Figma 1440x800 ref parity */
-  font-size: 16px;
+  /*
+   * Fixed 16px base: 1rem = 16px exactly (Figma 1440×800 reference parity).
+   * Swap the line below for the clamp() version if you want fluid scaling:
+   * font-size: clamp(14px, 1.11vw, 18px);
+   *   → 14px  at  ~1260px viewport
+   *   → 16px  at  1440px viewport  (matches Figma)
+   *   → 18px  at  ~1620px viewport
+   */
+  font-size: clamp(14px, 1.11vw, 18px);
+
+  /* Prevent layout collapse on very small viewports (e.g. 320px phones) */
+  min-width: 320px;
+
+  /* Smooth scrolling for anchor navigation */
+  scroll-behavior: smooth;
+
+  /* Apply base font */
+  font-family: 'Urbanist', sans-serif;
 }
 
+/* ── Body Base ── */
 body {
-  margin: 0;
+  /* Comfortable default line-height for all body copy */
+  line-height: 1.5;
+
+  /* Prevent horizontal scroll bleed on any screen width */
+  overflow-x: hidden;
+
+  /* Font rendering optimizations */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
 
+  /* Prevent text size adjustment on mobile after orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+}
 /* ── shadcn design-token mapping ── */
 @theme inline {
   --font-heading: var(--font-sans);
@@ -134,11 +167,11 @@ body {
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ── Light theme (EV Admin brand) ── */
+/* ── Light Theme (EV Admin brand) ── */
 :root {
   --background: #FFFFFF;
   --foreground: var(--color-text-950);
-  /* #0D0D10 */
+  /* #1F1F1F */
   --card: #FFFFFF;
   --card-foreground: var(--color-text-950);
   --popover: #FFFFFF;
@@ -150,21 +183,21 @@ body {
 
   /* Secondary → Purple 50 tint bg */
   --secondary: var(--color-secondary-50);
-  /* #ECEAF7 */
+  /* #F3F1F8 */
   --secondary-foreground: var(--color-text-950);
 
   --muted: var(--color-text-50);
-  /* #F8F8FA */
+  /* #FCFCFC */
   --muted-foreground: var(--color-text-400);
-  /* #8E8E9A */
+  /* #A3A3A3 */
 
   --accent: var(--color-secondary-50);
   --accent-foreground: var(--color-text-950);
 
   --destructive: var(--color-error);
-  /* #F02020 */
+  /* #FA0707 */
   --border: var(--color-text-200);
-  /* #D4D4DA */
+  /* #D0D0D0 */
   --input: var(--color-text-200);
   --ring: var(--color-primary-700);
 
@@ -205,54 +238,183 @@ body {
 
 @layer components {
   /* ── Typography Definitions (Urbanist based) ── */
-  
-  /* Shared Base applying strictly requested rules */
-  [class^="heading-"], [class^="subtitle-"] {
+
+  /*
+   * FIX: Changed [class^="heading-"] → [class*="heading-"]
+   * The ^ selector only matches when the class is FIRST in the class list.
+   * e.g. <h1 class="mt-4 heading-1"> would NOT be matched with ^.
+   * The * (contains) selector matches regardless of position.
+   * Same fix applied to subtitle- classes.
+   */
+  [class*="heading-"],
+  [class*="subtitle-"] {
     font-family: var(--font-sans);
-    line-height: 1.4; /* 140% */
-    letter-spacing: -0.02em; /* -2% */
-    color: #0A2719; /* Requested specific Text Color */
+    line-height: 1.4;
+    /* 140% */
+    letter-spacing: -0.02em;
+    /* -2% */
+    color: #0A2719;
   }
 
-  /* Headings Scale */
-  .heading-1, .heading-1-semibold { font-size: 1.75rem; font-weight: 600; }
-  .heading-1-medium { font-size: 1.75rem; font-weight: 500; }
-  .heading-1-regular { font-size: 1.75rem; font-weight: 400; }
+  /* ── Headings Scale ── */
+  .heading-1,
+  .heading-1-semibold {
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
 
-  .heading-2, .heading-2-semibold { font-size: 1.5rem; font-weight: 600; }
-  .heading-2-medium { font-size: 1.5rem; font-weight: 500; }
-  .heading-2-regular { font-size: 1.5rem; font-weight: 400; }
+  .heading-1-medium {
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
 
-  .heading-3, .heading-3-semibold { font-size: 1.25rem; font-weight: 600; }
-  .heading-3-medium { font-size: 1.25rem; font-weight: 500; }
-  .heading-3-regular { font-size: 1.25rem; font-weight: 400; }
+  .heading-1-regular {
+    font-size: 1.75rem;
+    font-weight: 400;
+  }
 
-  .heading-4, .heading-4-semibold { font-size: 1.125rem; font-weight: 600; }
-  .heading-4-medium { font-size: 1.125rem; font-weight: 500; }
-  .heading-4-regular { font-size: 1.125rem; font-weight: 400; }
+  .heading-2,
+  .heading-2-semibold {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
 
-  .heading-5, .heading-5-semibold { font-size: 1rem; font-weight: 600; }
-  .heading-5-medium { font-size: 1rem; font-weight: 500; }
-  .heading-5-regular { font-size: 1rem; font-weight: 400; }
+  .heading-2-medium {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
 
-  /* Subtitles Scale */
-  .subtitle-1, .subtitle-1-semibold { font-size: 1.125rem; font-weight: 600; }
-  .subtitle-1-medium { font-size: 1.125rem; font-weight: 500; }
-  .subtitle-1-regular { font-size: 1.125rem; font-weight: 400; }
+  .heading-2-regular {
+    font-size: 1.5rem;
+    font-weight: 400;
+  }
 
-  .subtitle-2, .subtitle-2-semibold { font-size: 1rem; font-weight: 600; }
-  .subtitle-2-medium { font-size: 1rem; font-weight: 500; }
-  .subtitle-2-regular { font-size: 1rem; font-weight: 400; }
+  .heading-3,
+  .heading-3-semibold {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
 
-  .subtitle-3, .subtitle-3-semibold { font-size: 0.875rem; font-weight: 600; }
-  .subtitle-3-medium { font-size: 0.875rem; font-weight: 500; }
-  .subtitle-3-regular { font-size: 0.875rem; font-weight: 400; }
+  .heading-3-medium {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
 
-  .subtitle-3-5, .subtitle-3-5-semibold { font-size: 0.75rem; font-weight: 600; }
-  .subtitle-3-5-medium { font-size: 0.75rem; font-weight: 500; }
-  .subtitle-3-5-regular { font-size: 0.75rem; font-weight: 400; }
+  .heading-3-regular {
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
 
-  .subtitle-4, .subtitle-4-semibold { font-size: 0.625rem; font-weight: 600; }
-  .subtitle-4-medium { font-size: 0.625rem; font-weight: 500; }
-  .subtitle-4-regular { font-size: 0.625rem; font-weight: 400; }
+  .heading-4,
+  .heading-4-semibold {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .heading-4-medium {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  .heading-4-regular {
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
+
+  .heading-5,
+  .heading-5-semibold {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .heading-5-medium {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .heading-5-regular {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  /* ── Subtitles Scale ── */
+  .subtitle-1,
+  .subtitle-1-semibold {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .subtitle-1-medium {
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  .subtitle-1-regular {
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
+
+  .subtitle-2,
+  .subtitle-2-semibold {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .subtitle-2-medium {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .subtitle-2-regular {
+    font-size: 1rem;
+    font-weight: 400;
+  }
+
+  .subtitle-3,
+  .subtitle-3-semibold {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .subtitle-3-medium {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .subtitle-3-regular {
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+
+  .subtitle-3-5,
+  .subtitle-3-5-semibold {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .subtitle-3-5-medium {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .subtitle-3-5-regular {
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+
+  .subtitle-4,
+  .subtitle-4-semibold {
+    font-size: 0.625rem;
+    font-weight: 600;
+  }
+
+  .subtitle-4-medium {
+    font-size: 0.625rem;
+    font-weight: 500;
+  }
+
+  .subtitle-4-regular {
+    font-size: 0.625rem;
+    font-weight: 400;
+  }
 }
