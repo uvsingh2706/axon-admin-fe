@@ -11,6 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../component/ui/select";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../component/ui/pagination";
 
 export default function ComponentsShowcase() {
   return (
@@ -148,6 +157,39 @@ export default function ComponentsShowcase() {
                 <Skeleton className="h-5 w-[200px]" />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Pagination */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-6">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Pagination</h2>
+            <div className="flex-1 h-[2px] bg-border/60"></div>
+          </div>
+
+          <div className="bg-surface/10 p-8 md:p-10 rounded-2xl border border-border shadow-xs flex justify-center py-12">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#" isActive>2</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">3</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         </section>
 
