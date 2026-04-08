@@ -21,7 +21,7 @@ import {
   PaginationPrevious,
 } from "../component/ui/pagination";
 // import { Table } from "@/component/ui/table";
-import { Table } from "@/component/ui/table";
+
 import { DynamicForm } from "../component/form/DynamicForm";
 import * as z from "zod";
 
@@ -36,6 +36,8 @@ const clientFormSchema = z.object({
   endDate: z.string().optional(),
 });
 
+
+import { Spinner } from "../component/ui/spinner";
 
 export default function ComponentsShowcase() {
   return (
@@ -349,6 +351,44 @@ export default function ComponentsShowcase() {
               ]}
               submitLabel="Save Details"
             />
+          </div>
+        </section>
+
+        {/* Spinner */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-6">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Spinner</h2>
+            <div className="flex-1 h-[2px] bg-border/60"></div>
+          </div>
+
+          <div className="bg-surface/10 p-8 md:p-10 rounded-2xl border border-border shadow-xs">
+            <div className="flex flex-col items-center justify-center space-y-10">
+              <div className="flex items-center space-x-8">
+                <Spinner className="size-6" />
+                <Spinner className="size-8" />
+                <Spinner className="size-10" />
+                <Spinner className="size-12" />
+              </div>
+
+              {/* Demo: Overriding color inside Buttons */}
+              <div className="w-full flex items-center justify-center space-x-6 border-t pt-10">
+                <Button variant="primary">
+                  <Spinner data-icon="inline-start" className="text-white size-5 mr-2" />
+                  Saving Changes...
+                </Button>
+
+                <Button variant="secondary" disabled>
+                  <Spinner data-icon="inline-start" className="size-5 mr-2" />
+                  Processing...
+                </Button>
+
+                <Button variant="tertiary">
+                  <Spinner data-icon="inline-start" className="text-(--color-primary) size-5 mr-2" />
+                  Authenticating
+                </Button>
+
+              </div>
+            </div>
           </div>
         </section>
 
