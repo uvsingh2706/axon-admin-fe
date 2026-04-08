@@ -238,14 +238,6 @@ html, body {
 
 @layer components {
   /* ── Typography Definitions (Urbanist based) ── */
-
-  /*
-   * FIX: Changed [class^="heading-"] → [class*="heading-"]
-   * The ^ selector only matches when the class is FIRST in the class list.
-   * e.g. <h1 class="mt-4 heading-1"> would NOT be matched with ^.
-   * The * (contains) selector matches regardless of position.
-   * Same fix applied to subtitle- classes.
-   */
   [class*="heading-"],
   [class*="subtitle-"] {
     font-family: var(--font-sans);
