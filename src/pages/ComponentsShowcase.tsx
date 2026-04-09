@@ -6,6 +6,7 @@ import { Label } from "../component/ui/label";
 import { Skeleton } from "../component/ui/skeleton";
 import { Spinner } from "../component/ui/spinner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../component/ui/tabs";
+import { Avatar, AvatarImage, AvatarFallback } from "../component/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -433,6 +434,54 @@ export default function ComponentsShowcase() {
 
           </div>
         </section>
+
+        add here in on same that thing in this code also tell me where and in which line you have done changes {/* Avatar */}
+<section className="space-y-8">
+  <div className="flex items-center gap-6">
+    <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Avatar</h2>
+    <div className="flex-1 h-[2px] bg-border/60"></div>
+  </div>
+
+  <div className="bg-surface/10 p-8 md:p-10 rounded-2xl border border-border shadow-xs">
+    <div className="flex items-center gap-10">
+
+      {/* Default Avatar */}
+      <div className="flex flex-col items-center gap-2">
+        <Avatar className="size-16">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <span className="text-sm text-muted-foreground">Default</span>
+      </div>
+
+      {/* Fallback Only */}
+      <div className="flex flex-col items-center gap-2">
+        <Avatar className="size-16">
+          <AvatarFallback>AB</AvatarFallback>
+        </Avatar>
+        <span className="text-sm text-muted-foreground">Fallback</span>
+      </div>
+
+      {/* Different Sizes */}
+      <div className="flex flex-col items-center gap-2">
+        <Avatar className="size-10">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>SM</AvatarFallback>
+        </Avatar>
+        <span className="text-sm text-muted-foreground">Small</span>
+      </div>
+
+      <div className="flex flex-col items-center gap-2">
+        <Avatar className="size-20">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>LG</AvatarFallback>
+        </Avatar>
+        <span className="text-sm text-muted-foreground">Large</span>
+      </div>
+
+    </div>
+  </div>
+</section>
 
       </div>
     </div>

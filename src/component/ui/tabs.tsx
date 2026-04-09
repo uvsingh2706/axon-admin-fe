@@ -23,11 +23,12 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-horizontal/tabs:h-9 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col data-[variant=line]:rounded-none",
+  //  container clean
+  "group/tabs-list inline-flex w-fit items-center gap-[10px]",
   {
     variants: {
       variant: {
-        default: "bg-muted",
+        default: "",
         line: "gap-1 bg-transparent",
       },
     },
@@ -61,25 +62,26 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        // Base layout & shared states
-        "relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-all select-none cursor-pointer",
-        "text-foreground/60 hover:text-[var(--color-primary-700)]",
-        "group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start",
-        "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring",
-        "disabled:pointer-events-none disabled:opacity-50",
-        "has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5",
-        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        // Shadow control per variant
-        "group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none",
-        // ── Default (pill) variant — active: orange bg + white text ──
-        "group-data-[variant=default]/tabs-list:data-active:bg-[var(--color-primary-700)] group-data-[variant=default]/tabs-list:data-active:text-white group-data-[variant=default]/tabs-list:data-active:border-transparent",
-        // ── Line variant — no bg, keep transparent ──
-        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-[var(--color-primary-700)]",
-        // ── Line variant — orange underline bar ──
-        "after:absolute after:bg-[var(--color-primary-700)] after:opacity-0 after:transition-opacity",
-        "group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5",
-        "group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5",
-        "group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
+        //  EXACT SIZE + LAYOUT
+        "inline-flex items-center justify-center",
+        "w-[151px] h-[32px]",
+
+        //  EXACT PADDING + GAP
+        "px-[20px] py-[10px] gap-[10px]",
+
+        //  BORDER RADIUS
+        "rounded-[6px]",
+
+        //  DEFAULT STATE
+        "text-foreground bg-transparent",
+
+        //  ACTIVE STATE (exact color)
+        "group-data-[variant=default]/tabs-list:data-active:bg-[#5E4A93]",
+        "group-data-[variant=default]/tabs-list:data-active:text-white",
+
+        // smooth transition
+        "transition-all",
+
         className
       )}
       {...props}
