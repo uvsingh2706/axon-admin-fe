@@ -42,7 +42,7 @@ export default function Login() {
 
       <div className="flex w-full lg:w-[45%] min-w-0 flex-col h-full overflow-y-auto">
         <div className="flex flex-col justify-center min-h-full px-6 py-10 sm:px-8 lg:px-10 xl:px-14">
-          <div className="w-full max-w-[384px] min-w-65 mx-auto flex flex-col">
+          <div className="w-full max-w-[384px] min-w-65 mx-auto flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
 
             <div className="w-full mb-8 text-center sm:text-left">
               <h1 className="text-[1.75rem] leading-[1.35] font-semibold text-[#101828] mb-2 tracking-tight">

@@ -65,6 +65,10 @@
   --color-primary-active: var(--color-primary-800);
   /* #CC5500 */
 
+ /* ── Ripple / interaction ── */
+  --color-ripple-secondary: #f7f7f7;
+  --color-ripple-primary: #ffffff;
+
   --radius-card: 12px;
 }
 

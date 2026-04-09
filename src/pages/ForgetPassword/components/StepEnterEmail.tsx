@@ -19,11 +19,11 @@ export default function StepEnterEmail({
 }: StepEnterEmailProps) {
   return (
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="mb-8 flex flex-col items-center justify-center text-center pt-6">
+      <div className="mb-6 flex flex-col items-center justify-center text-center pt-6">
         <div className="w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-6">
           <InfoCircleIcon className="text-[#292D32]" />
         </div>
-        <h1 className="text-3xl font-semibold text-[#101828] mb-2 tracking-tight">
+        <h1 className="text-2xl font-semibold text-[#101828] mb-2 tracking-tight">
           Forgot Password
         </h1>
         <p className="text-[#475467] text-base text-center">
