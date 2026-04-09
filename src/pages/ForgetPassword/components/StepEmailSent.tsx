@@ -7,7 +7,7 @@ interface StepEmailSentProps {
 export default function StepEmailSent({ email }: StepEmailSentProps) {
   return (
     <div className="w-full text-center animate-in fade-in zoom-in-95 duration-500">
-      <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-6">
+      <div className="w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-6">
         <img src={tickIcon} alt="tick" />
       </div>
       <h1 className="text-3xl font-semibold text-[#101828] mb-3 tracking-tight">
