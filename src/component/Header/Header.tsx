@@ -38,8 +38,9 @@ export default function Header() {
         {/* Profile */}
         <button
           id="header-profile"
-          className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+          className="flex items-center gap-3 hover:opacity-90 transition-opacity cursor-pointer"
           aria-label="User profile"
+          onClick={}
         >
           {/* Avatar circle */}
         <UsersIcon className="h-8 w-8"/>

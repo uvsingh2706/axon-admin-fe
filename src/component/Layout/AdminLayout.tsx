@@ -17,10 +17,8 @@ export default function AdminLayout() {
           isCollapsed ? "ml-20" : "ml-[300px]"
         }`}
       >
-        {/* Header */}
         <Header />
 
-        {/* Page content */}
         <main className="flex-1 p-4 bg-secondary-00">
           <Suspense
             fallback={

@@ -43,7 +43,6 @@ export default function AppRoutes() {
           />
         ))}
 
-        {/* Developer Sandbox (Not visible on sidebar) */}
         
       </Route>
 
