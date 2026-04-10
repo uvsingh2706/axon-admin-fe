@@ -92,9 +92,7 @@ export default function TariffList() {
       </TabsContent>
 
       <TabsContent value="tax">
-        <div className="p-8 text-center text-text-500 subtitle-2-medium">
-          Tax content goes here
-        </div>
+          <DataTable columns={columns} data={dummyTariffs} />
       </TabsContent>
     </PageWrapper>
   );

@@ -39,6 +39,7 @@ export interface PageWrapperProps {
   // ── Primary action button ─────────────────
   /** Label for the primary CTA button */
   actionLabel?: string;
+  isTable?: boolean;
   /** Icon node rendered inside the CTA button */
   actionIcon?: ReactNode;
   /** Callback when CTA button is clicked */
@@ -73,6 +74,7 @@ export default function PageWrapper({
   onActionClick,
   children,
   titleClassName,
+  isTable,
   className,
 }: PageWrapperProps) {
   const defaultTab = tabs?.[0]?.value;
@@ -158,7 +160,7 @@ export default function PageWrapper({
         </h1>
       )}
       
-      <div className="w-full border-b h-2 border-text-200"/>
+      {!isTable && <div className="w-full border-b h-2 border-text-200"/>}
 
       <div className="flex items-center justify-between gap-4 mb-5">
         {searchNode || <div />}
