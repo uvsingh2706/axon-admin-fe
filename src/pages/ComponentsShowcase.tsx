@@ -48,7 +48,6 @@ const clientFormSchema = z.object({
 
 
 export default function ComponentsShowcase() {
-<<<<<<< Updated upstream
   const { items, push, navigateTo } = useBreadcrumbs([
     { name: "Tariff Management", href: "#" },
     { name: "Tariff", href: "#" },
@@ -57,12 +56,10 @@ export default function ComponentsShowcase() {
 
   const [date, setDate] = useState<Date | undefined>(new Date());
 
-=======
   const handleDeleteTariff = () => {
     alert("Logic Triggered: Tariff is being deleted from the database!");
     // In a real app, you would add your API call here
   };
->>>>>>> Stashed changes
   return (
     <div className="min-h-screen bg-white">
       <div className="w-full max-w-6xl mx-auto p-10 md:p-14 space-y-16 pb-24 text-foreground">
