@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "../component/ui/button";
 import { LeftArrowIcon } from "../assets/icons";
 import { Input } from "../component/ui/input";
@@ -23,6 +24,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../component/ui/pagination";
+import { Breadcrumbs, useBreadcrumbs } from "../component/ui/breadcrumb"
+import { Calendar } from "../component/ui/calendar";
 // import { Table } from "@/component/ui/table";
 
 import { DynamicForm } from "../component/form/DynamicForm";
@@ -43,6 +46,14 @@ const clientFormSchema = z.object({
 
 
 export default function ComponentsShowcase() {
+  const { items, push, navigateTo } = useBreadcrumbs([
+    { name: "Tariff Management", href: "#" },
+    { name: "Tariff", href: "#" },
+    { name: "Systematic services", href: "#" },
+  ]);
+
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
   return (
     <div className="min-h-screen bg-white">
       <div className="w-full max-w-6xl mx-auto p-10 md:p-14 space-y-16 pb-24 text-foreground">
@@ -206,10 +217,10 @@ export default function ComponentsShowcase() {
             <div className="flex-1">
               <Label className="mb-5 block text-muted-foreground font-semibold uppercase tracking-widest text-xs">Dropdown</Label>
               <Select>
-                <SelectTrigger className="bg-white py-6">
+                <SelectTrigger className="bg-white py-6 text-md">
                   <SelectValue placeholder="Theme Selection" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="text-md ">
                   <SelectItem value="light">Light Mode</SelectItem>
                   <SelectItem value="dark">Dark Mode</SelectItem>
                   <SelectItem value="system">System Settings</SelectItem>
@@ -269,9 +280,62 @@ export default function ComponentsShowcase() {
             </Pagination>
           </div>
         </section>
+
+        {/* Breadcrumb Section */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-6">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Breadcrumb</h2>
+            <div className="flex-1 h-[2px] bg-border/60"></div>
+          </div>
+
+          <div className="bg-white p-10 rounded-2xl border border-border shadow-xs space-y-8">
+            <Breadcrumbs
+              items={items}
+              onItemClick={navigateTo}
+            />
+
+            {/* Interactive controls to demonstrate fully dynamic behavior */}
+            <div className="flex flex-wrap gap-4 border-t pt-6">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => push({ name: "New Page " + (items.length + 1), href: "#" })}
+              >
+                + Push Page
+              </Button>
+              {/* <Button
+                variant="tertiary"
+                size="sm"
+                onClick={reset}
+              >
+                Reset Breadcrumbs
+              </Button> */}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Try clicking <b>+ Push Page</b> to append a new page to the breadcrumbs, or click any previous link in the breadcrumb trail above to dynamically navigate back to it!
+            </p>
+          </div>
+        </section>
+
         {/* <section>
           <Table/>
         </section> */}
+
+        {/* Calender section */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-6">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Calendar</h2>
+            <div className="flex-1 h-[2px] bg-border/60"></div>
+          </div>
+
+          <div className="bg-gray-100 p-8 md:p-10 rounded-2xl border border-border shadow-xs flex justify-center">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+            />
+          </div>
+        </section>
 
         {/* Dynamic Form Showcase */}
         <section className="space-y-8">
