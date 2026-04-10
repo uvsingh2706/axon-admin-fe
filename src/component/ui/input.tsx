@@ -37,10 +37,11 @@ interface InternalTextInputProps extends React.ComponentProps<"input"> {
   error?: boolean
   errorMessage?: string
   labelClassName?: string
+  prefixIcon?: React.ReactNode
 }
 
 const InternalTextInput = React.forwardRef<HTMLInputElement, InternalTextInputProps>(
-  ({ label, required, error: externalError, errorMessage: externalErrorMessage, labelClassName, className, id, onBlur, onChange, type, ...props }, ref) => {
+  ({ label, required, error: externalError, errorMessage: externalErrorMessage, labelClassName, prefixIcon, className, id, onBlur, onChange, type, ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, "-")
     const [internalError, setInternalError] = React.useState<string | null>(null)
     const [showPassword, setShowPassword] = React.useState(false)
@@ -111,15 +112,21 @@ const InternalTextInput = React.forwardRef<HTMLInputElement, InternalTextInputPr
               activeError && "border-danger text-text-950 focus:border-danger focus-visible:border-danger placeholder:text-text-500",
               
               type === "password" && "pr-10",
+              prefixIcon && "pl-10",
               inputType === "password" && "font-['system-ui',sans-serif] tracking-[0.2em] text-lg font-bold",
               className
             )}
             {...props}
           />
+          {prefixIcon && (
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-400 pointer-events-none flex items-center justify-center">
+              {prefixIcon}
+            </div>
+          )}
           {type === "password" && (
             <button
               type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-400 hover:text-text-600 cursor-pointer focus:outline-none"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-400 hover:text-text-600 cursor-pointer focus:outline-none flex items-center justify-center"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
@@ -388,6 +395,7 @@ export interface InputProps extends Omit<React.ComponentProps<"input">, "type" |
   error?: boolean
   errorMessage?: string
   labelClassName?: string
+  prefixIcon?: React.ReactNode
   
   // Types
   value?: string | string[] | number | readonly string[]

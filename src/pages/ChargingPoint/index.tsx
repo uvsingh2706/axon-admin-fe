@@ -1,4 +1,6 @@
 import { DataTable, type ExtendedColumnDef } from "@/component/data-table";
+import DebouncedInput from "@/component/debounce-input";
+import { Button } from "@/component/ui/button";
 
 type ChargingPointData = {
   id: string;
@@ -15,6 +17,11 @@ const columns: ExtendedColumnDef<ChargingPointData, unknown>[] = [
     accessorKey: "id",
     header: "Point ID",
     enableSorting: true,
+    cell: ({ row }) => (
+      <span className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline cursor-pointer hover:text-opacity-80">
+        {row.original.id}
+      </span>
+    ),
   },
   {
     accessorKey: "station",
@@ -40,7 +47,7 @@ const columns: ExtendedColumnDef<ChargingPointData, unknown>[] = [
         Maintenance: "bg-yellow-100 text-yellow-700",
       };
       return (
-        <span className={`text-xs px-2 py-1 rounded-full font-medium ${styles[status]}`}>
+        <span className={`text-xs px-2 py-1 rounded-[4px] font-medium ${styles[status]}`}>
           {status}
         </span>
       );
@@ -81,10 +88,12 @@ const dummyData: ChargingPointData[] = [
 export default function ChargingPoint() {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-2">Charging Points</h1>
-      <p className="text-sm text-muted-foreground mb-6">
+      <h1 className="text-2xl">Charging Points</h1>
+      <p className="">
         Monitor and manage individual charging points.
       </p>
+      <DebouncedInput onChange={(value) => console.log(value)} />
+      <Button>Add Charging Point</Button>
       <DataTable columns={columns} data={dummyData} />
     </div>
   );

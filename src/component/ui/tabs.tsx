@@ -23,12 +23,12 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  //  container clean
-  "group/tabs-list inline-flex w-fit items-center gap-[10px]",
+  // Segmented control container
+  "group/tabs-list inline-flex w-fit items-center rounded-[8px] p-1",
   {
     variants: {
       variant: {
-        default: "",
+        default: "bg-secondary-00",
         line: "gap-1 bg-transparent",
       },
     },
@@ -62,25 +62,23 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        //  EXACT SIZE + LAYOUT
+        // Layout
         "inline-flex items-center justify-center",
-        "w-[151px] h-[32px]",
+        "px-8 py-2.5",
+        "rounded-[8px]",
 
-        //  EXACT PADDING + GAP
-        "px-[20px] py-[10px] gap-[10px]",
+        // Typography
+        "subtitle-3-medium whitespace-nowrap select-none cursor-pointer",
 
-        //  BORDER RADIUS
-        "rounded-[6px]",
+        // Default (inactive) state
+        "text-text-700 bg-transparent",
 
-        //  DEFAULT STATE
-        "text-foreground bg-transparent",
+        // Active state — purple pill
+        "data-active:bg-secondary-600 data-active:text-white data-active:font-semibold",
+        "data-active:shadow-sm",
 
-        //  ACTIVE STATE (exact color)
-        "group-data-[variant=default]/tabs-list:data-active:bg-[#5E4A93]",
-        "group-data-[variant=default]/tabs-list:data-active:text-white",
-
-        // smooth transition
-        "transition-all",
+        // Smooth transition
+        "transition-all duration-200",
 
         className
       )}

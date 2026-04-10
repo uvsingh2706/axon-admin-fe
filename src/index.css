@@ -50,10 +50,29 @@
   --color-text-900: #323232;
   --color-text-950: #1F1F1F;
 
+  
+
   /* ── Semantic colors ── */
   --color-error: #FA0707;
   --color-warning: #E67F00;
   --color-success: #0E9017;
+
+  /* colors */
+
+  --color-gray-c1: #F2F2F2;
+  --color-gray-c2: #E5E7EB;
+
+  /* blacck color  */
+  --color-black-c1: #101828;
+
+  /* white color */
+
+  --color-white-c1: #FFFFFF;
+  
+
+
+  /* ── Status colors ── */
+  --color-green: #DDF9E4
 
   /* ── Legacy aliases (kept for backward compat) ── */
   --color-primary-dark: #00A87A;
@@ -91,7 +110,8 @@ html {
    *   → 16px  at  1440px viewport  (matches Figma)
    *   → 18px  at  ~1620px viewport
    */
-  font-size: clamp(14px, 1.11vw, 18px);
+  /* font-size: clamp(14px, 1.11vw, 18px); */
+  font-size: 16px;
 
   /* Prevent layout collapse on very small viewports (e.g. 320px phones) */
   min-width: 320px;
