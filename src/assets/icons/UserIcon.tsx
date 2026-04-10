@@ -2,19 +2,12 @@
 
 function UsersIcon({ className }: { className?: string }) {
   return (
-    <svg
-      className={className}
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M7.63333 9.05817C7.55 9.04984 7.45 9.04984 7.35833 9.05817C5.375 8.9915 3.8 7.3665 3.8 5.3665C3.8 3.32484 5.45 1.6665 7.5 1.6665C9.54167 1.6665 11.2 3.32484 11.2 5.3665C11.1917 7.3665 9.61667 8.9915 7.63333 9.05817Z" stroke="#767676" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M13.675 3.3335C15.2917 3.3335 16.5917 4.64183 16.5917 6.25016C16.5917 7.82516 15.3417 9.1085 13.7833 9.16683C13.7167 9.1585 13.6417 9.1585 13.5667 9.16683" stroke="#767676" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M3.46667 12.1335C1.45 13.4835 1.45 15.6835 3.46667 17.0252C5.75833 18.5585 9.51667 18.5585 11.8083 17.0252C13.825 15.6752 13.825 13.4752 11.8083 12.1335C9.525 10.6085 5.76667 10.6085 3.46667 12.1335Z" stroke="#767676" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M15.2833 16.6665C15.8833 16.5415 16.45 16.2998 16.9167 15.9415C18.2167 14.9665 18.2167 13.3582 16.9167 12.3832C16.4583 12.0332 15.9 11.7998 15.3083 11.6665" stroke="#767676" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+<svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16Z" fill="#FE6A00"/>
+<path d="M15.9999 15.9998C17.6107 15.9998 18.9166 14.694 18.9166 13.0832C18.9166 11.4723 17.6107 10.1665 15.9999 10.1665C14.3891 10.1665 13.0833 11.4723 13.0833 13.0832C13.0833 14.694 14.3891 15.9998 15.9999 15.9998Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M21.0109 21.8333C21.0109 19.5758 18.7651 17.75 16.0001 17.75C13.2351 17.75 10.9893 19.5758 10.9893 21.8333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
   );
 }
 

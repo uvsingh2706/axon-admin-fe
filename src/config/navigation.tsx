@@ -3,7 +3,7 @@ import type { NavItem } from "../types/navigation";
 import { CardIcon, GridIcon, LightningIcon, TruckIcon, WalletIcon } from "../assets/icons";
 import { Pathname } from "../utils/pathname";
 import GasStation from "@/assets/icons/GasStation";
-import UsersIcon from "@/assets/icons/UserIcon";
+import ProfileUserIcon from "@/assets/icons/ProfileUserIcon";
 
 
 
@@ -51,7 +51,7 @@ export const navItems: NavItem[] = [
     key: "user-management",
     label: "User Management",
     path: Pathname.USER_MANAGEMENT,
-    icon: UsersIcon,
+    icon: ProfileUserIcon,
     component: UserManagement,
   },
   {
@@ -68,11 +68,4 @@ export const navItems: NavItem[] = [
     icon: LightningIcon,
     component: ActiveChargingSession,
   },
-  // {
-  //   key: "charging-points",
-  //   label: "Charging points",
-  //   path: "/charging-points",
-  //   icon: StationIcon,
-  //   component: ChargingPoint,
-  // },
 ];

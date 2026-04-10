@@ -1,706 +1,506 @@
-
-
 import {
-	type ColumnDef,
-	flexRender,
-	getCoreRowModel,
-	getSortedRowModel,
-	type SortingState,
-	useReactTable,
-	getPaginationRowModel,
-	type PaginationState,
-	type Updater,
-	type ColumnFiltersState,
-	getFilteredRowModel,
-	type Header,
-	type Table as TanStackTable,
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  type SortingState,
+  useReactTable,
+  getPaginationRowModel,
+  type PaginationState,
+  type Updater,
+  type ColumnFiltersState,
+  getFilteredRowModel,
+  type FilterFn,
+  type RowData,
 } from "@tanstack/react-table";
-
 import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/component/ui/table";
-import { cn } from "@/lib/utils";
 import { Skeleton } from "@/component/ui/skeleton";
-import { Button } from "@/component/ui/button";
-import { ArrowUpDown } from "lucide-react";
-import {
-	ChevronLeft,
-	ChevronRight,
-	ChevronsLeft,
-	ChevronsRight,
-	ChevronsUpDownIcon,
-} from "lucide-react";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-} from "@/component/ui/select";
-import DebouncedInput from "../debounce-input";
-import { Filter } from "lucide-react";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/component/ui/popover";
-
-import { Checkbox } from "@/component/ui/checkbox";
-import { Label } from "@/component/ui/label";
-import { DatePicker } from "../form-date";
+import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import type { DateRange } from "react-day-picker";
-import { useCallback, useEffect, useState } from "react";
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect,
+  type ReactNode,
+} from "react";
+import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
+import ArrowRightIcon from "@/assets/icons/ArrowRightIcon";
+import UpDownIcon from "@/assets/icons/UpDownIcon";
 
-export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
-	filterOptions?: {
-		label: string;
-		value: string;
-		group?: string;
-		icon?: React.ReactNode;
-	}[];
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-	multiSelect?: boolean;
+export type ExtendedColumnDef<TData, TValue = unknown> = ColumnDef<
+  TData,
+  TValue
+>;
+
+export interface DataTableProps<TData extends RowData, TValue = unknown> {
+  columns: ExtendedColumnDef<TData, TValue>[];
+  data: TData[];
+
+  // Styling overrides
+  cellClassName?: string;
+  headClassName?: string;
+  tbodyClassName?: string;
+  theadClassName?: string;
+  wrapperClassName?: string;
+
+  // Loading state
+  isLoading?: boolean;
+  /** Number of skeleton rows to show while loading. Defaults to 10. */
+  skeletonRows?: number;
+
+  // Pagination
+  disablePagination?: boolean;
+  /** Default page size for client-side pagination. Defaults to 10. */
+  defaultPageSize?: number;
+
+  // Server-side mode — pass these when your API owns pagination/sorting/filtering
+  isServerSide?: boolean;
+  pagination?: PaginationState;
+  onPaginationChange?: (updater: Updater<PaginationState>) => void;
+  pageCount?: number;
+  totalItems?: number;
+
+  /**
+   * Global search string (client-side only).
+   * Filters every cell that contains this value (case-insensitive).
+   * For server-side mode, manage filtering yourself — do NOT pass this prop.
+   */
+  search?: string;
+
+  /**
+   * Column-level filters (client-side only).
+   * Format: [{ id: "status", value: ["Active", "Inactive"] }]
+   * Must be a STABLE reference (from useState / useMemo) to avoid re-render loops.
+   */
+  columnFilters?: ColumnFiltersState;
+
+  // Row click navigation
+  isLink?: boolean;
+  link?: (row: TData) => string;
+
+  // Toolbar slot — your Search, Filter, Tabs, Buttons live here.
+  toolbar?: ReactNode;
+
+  // Filter pills slot — your active filter chips live here.
+  filterPills?: ReactNode;
+
+  // Empty state customisation
+  emptyIcon?: string;
+  emptyMessage?: string;
+}
+
+// ─── Stable empty fallbacks ───────────────────────────────────────────────────
+// These are module-level constants so they are the SAME reference on every render.
+// Passing [] inline as a prop creates a new array every render → infinite loop.
+
+const EMPTY_COLUMN_FILTERS: ColumnFiltersState = [];
+
+// ─── Global fuzzy-style filter across all string columns ─────────────────────
+
+const globalSearchFilter: FilterFn<unknown> = (
+  row,
+  _columnId,
+  filterValue: string
+) => {
+  const search = filterValue.toLowerCase().trim();
+  if (!search) return true;
+  return row.getAllCells().some((cell) => {
+    const val = cell.getValue();
+    return val != null && String(val).toLowerCase().includes(search);
+  });
 };
-export type ExtraFilter = {
-	label: string;
-	key: string;
-	options: { label: string; value: string }[];
-	value: string[];
-	onChange?: (value: string[]) => void;
-	multiSelect?: boolean;
-};
-export interface DataTableProps<TData, TValue> {
-	columns: ExtendedColumnDef<TData, TValue>[];
-	data: TData[];
-	cellClassName?: string;
-	headClassName?: string;
-	tbodyClassName?: string;
-	theadClassName?: string;
-	tableWrapperClassName?: string;
-	isLoading?: boolean;
 
-	isServerPagination?: boolean;
-	isServerColumnFilter?: boolean;
-	isServerSort?: boolean;
+// Mark so TanStack picks it up
+globalSearchFilter.autoRemove = (val: string) => !val?.trim();
 
-	pagination?: PaginationState;
-	onPaginationChange?: (updater: Updater<PaginationState>) => void;
-	pageCount?: number;
-	onSearchChange?: (value: string) => void;
-	search?: string;
-	searchPlaceholder?: string;
-	isShowSearch?: boolean;
-	disablePagination?: boolean;
-	disabledDateFilter?: boolean;
-	defaultColumnFilters?: ColumnFiltersState;
-	onColumnFilterChange?: (value: ColumnFiltersState) => void;
-	isLink?: boolean;
-	link?: (row: TData) => string;
-	onDateRangeChange?: (value: DateRange | undefined) => void;
-	range?: DateRange;
-	extraFilters?: ExtraFilter[];
-	clearFiltersButton?: React.ReactNode;
-}
+// ─── Component ────────────────────────────────────────────────────────────────
 
-function getUniqueValues<TData>(data: TData[], accessorKey: string): string[] {
-	const values = new Set<string>();
-	for (const row of data) {
-		const value = getNestedValue(row, accessorKey);
-		if (value != null) values.add(String(value));
-	}
-	return Array.from(values);
-}
-
-function getNestedValue<T>(obj: T, path: string): unknown {
-	return path.split(".").reduce((acc: unknown, key: string) => {
-		if (acc && typeof acc === "object" && key in acc) {
-			return (acc as Record<string, unknown>)[key];
-		}
-		return undefined;
-	}, obj);
-}
-
-function ColumnActions<TData>({
-	header,
-	data,
-	appliedColumnFilters,
-	table,
-	isServerColumnFilter = false,
-	filterOptions,
-	columnFilters,
-	onColumnFilterChange,
-	multiSelect = true,
-}: {
-	header: Header<TData, unknown>;
-	data: TData[];
-	appliedColumnFilters: (header: Header<TData, unknown>) => number;
-	table: TanStackTable<TData>;
-	isServerColumnFilter?: boolean;
-	filterOptions?: ExtendedColumnDef<TData, unknown>["filterOptions"];
-	columnFilters: ColumnFiltersState;
-	onColumnFilterChange?: (value: ColumnFiltersState) => void;
-	multiSelect?: boolean;
-}) {
-	const column = table.getColumn(header.column.id);
-	const currentValue =
-		(columnFilters.find((f) => f.id === header.column.id)?.value as string[]) ||
-		[];
-
-	const handleCheckboxChange = (value: string, checked: boolean) => {
-		const newValue = checked
-			? [...currentValue, value]
-			: currentValue.filter((v) => v !== value);
-
-		column?.setFilterValue(newValue.length ? newValue : undefined);
-
-		onColumnFilterChange?.([
-			...columnFilters.filter((f) => f.id !== header.column.id),
-			...(newValue.length ? [{ id: header.column.id, value: newValue }] : []),
-		]);
-	};
-
-	const handleSingleSelectChange = (value: string, checked: boolean) => {
-		const newValue = checked ? [value] : [];
-		column?.setFilterValue(newValue.length ? newValue : undefined);
-		onColumnFilterChange?.([
-			...columnFilters.filter((f) => f.id !== header.column.id),
-			...(newValue.length ? [{ id: header.column.id, value: newValue }] : []),
-		]);
-	};
-
-	const handleGroupCheckboxChange = (values: string[], checked: boolean) => {
-		const newValue = checked
-			? [...new Set([...currentValue, ...values])]
-			: currentValue.filter((v) => !values.includes(v));
-
-		column?.setFilterValue(newValue.length ? newValue : undefined);
-
-		onColumnFilterChange?.([
-			...columnFilters.filter((f) => f.id !== header.column.id),
-			...(newValue.length ? [{ id: header.column.id, value: newValue }] : []),
-		]);
-	};
-
-	return (
-		<>
-			{header.column.columnDef.enableSorting && (
-				<ArrowUpDown sortType={header.column.getIsSorted()} />
-			)}
-
-			{header.column.columnDef.enableColumnFilter && (
-				<Popover>
-					<PopoverTrigger asChild>
-						<Button className="text-neutral-200" variant="ghost">
-							<Filter className="size-4" />
-							{appliedColumnFilters(header)
-								? ` (${appliedColumnFilters(header)})`
-								: ""}
-						</Button>
-					</PopoverTrigger>
-
-					<PopoverContent
-						className={cn("cursor-pointer max-h-[250px] overflow-y-auto w-72", {
-							"p-0": isServerColumnFilter,
-						})}
-					>
-						{isServerColumnFilter ? (
-							<div className="flex flex-col">
-								{filterOptions?.length ? (
-									Object.entries(
-										Object.groupBy(filterOptions, (item) => item.group || ""),
-									).map(([group, options], i, list) => {
-										const groupValues = options?.map((item) => item.value);
-										const isGroupChecked = groupValues?.every((v) =>
-											currentValue.includes(v),
-										);
-
-										return (
-											<div
-												key={group || "no-group"}
-												className={cn("flex flex-col gap-3 p-4", {
-													"border-b border-neutral-40":
-														group && i !== list.length - 1,
-												})}
-											>
-												{group && (
-													<div className="flex items-center justify-between">
-														<Label
-															className="capitalize cursor-pointer text-neutral-200 leading-normal"
-															htmlFor={group}
-														>
-															{group}
-														</Label>
-														<Checkbox
-															id={group}
-															checked={isGroupChecked}
-															onCheckedChange={(checked) =>
-																handleGroupCheckboxChange(
-																	groupValues || [],
-																	!!checked,
-																)
-															}
-														/>
-													</div>
-												)}
-
-												<div className="flex flex-col gap-3 flex-1">
-													{options?.map((item) => (
-														<div
-															key={item.value}
-															className="flex items-center justify-between gap-6"
-														>
-															<div className="flex items-center gap-2">
-																{item.icon && item.icon}
-																<Label
-																	className="capitalize cursor-pointer line-clamp-1 overflow-hidden leading-normal"
-																	htmlFor={item.value}
-																>
-																	{item.label}
-																</Label>
-															</div>
-															<Checkbox
-																id={item.value}
-																checked={currentValue.includes(item.value)}
-																onCheckedChange={(checked) =>
-																	multiSelect
-																		? handleCheckboxChange(
-																				item.value,
-																				!!checked,
-																			)
-																		: handleSingleSelectChange(
-																				item.value,
-																				!!checked,
-																			)
-																}
-															/>
-														</div>
-													))}
-												</div>
-											</div>
-										);
-									})
-								) : (
-									<div className="flex p-4">
-										<Label className="text-center">No Options</Label>
-									</div>
-								)}
-							</div>
-						) : (
-							<div className="py-1 px-2 flex flex-col gap-2">
-								{getUniqueValues(data, header.column.id).map((val) => (
-									<div key={val} className="flex items-center justify-between">
-										<Label className="capitalize cursor-pointer" htmlFor={val}>
-											{val}
-										</Label>
-										<Checkbox
-											id={val}
-											checked={currentValue.includes(val)}
-											onCheckedChange={(checked) =>
-												handleCheckboxChange(val, !!checked)
-											}
-										/>
-									</div>
-								))}
-							</div>
-						)}
-					</PopoverContent>
-				</Popover>
-			)}
-		</>
-	);
-}
-
-export function DataTable<TData, TValue>({
-	columns,
-	data,
-	cellClassName,
-	headClassName,
-	tbodyClassName,
-	theadClassName,
-	tableWrapperClassName,
-	isLoading,
-	isServerPagination = false,
-	pagination: externalPagination,
-	onPaginationChange,
-	pageCount,
-	search,
-	onSearchChange,
-	searchPlaceholder,
-	isShowSearch = true,
-	disabledDateFilter = true,
-	disablePagination = false,
-	isServerColumnFilter = false,
-	defaultColumnFilters,
-	onColumnFilterChange,
-	onDateRangeChange,
-	range,
-	isLink,
-	link,
-	extraFilters,
-	clearFiltersButton,
+export function DataTable<TData extends RowData, TValue = unknown>({
+  columns,
+  data,
+  cellClassName,
+  headClassName,
+  tbodyClassName,
+  theadClassName,
+  wrapperClassName,
+  isLoading = false,
+  skeletonRows = 10,
+  disablePagination = false,
+  defaultPageSize = 10,
+  isServerSide = false,
+  pagination: externalPagination,
+  onPaginationChange,
+  pageCount,
+  totalItems,
+  search,
+  columnFilters,
+  isLink = false,
+  link,
+  toolbar,
+  filterPills,
+  emptyIcon = "📭",
+  emptyMessage = "No results found.",
 }: DataTableProps<TData, TValue>) {
-	const [sorting, setSorting] = useState<SortingState>([]);
-	const [open, setOpen] = useState<boolean>(false);
-	const [internalPagination, setInternalPagination] = useState<PaginationState>(
-		{
-			pageIndex: 0,
-			pageSize: 10,
-		},
-	);
+  const navigate = useNavigate();
 
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-	const navigate = useNavigate();
+  // ── Internal pagination (client-side) ──────────────────────────────────────
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [internalPagination, setInternalPagination] = useState<PaginationState>(
+    () => ({ pageIndex: 0, pageSize: defaultPageSize })
+  );
 
-	useEffect(() => {
-		if (!onColumnFilterChange) return;
-		onColumnFilterChange(columnFilters);
-	}, [columnFilters, onColumnFilterChange]);
+  // ── Stable resolved values ─────────────────────────────────────────────────
+  // Use the caller's columnFilters only if provided; otherwise fall back to the
+  // module-level empty constant so the reference never changes.
+  const resolvedColumnFilters = columnFilters ?? EMPTY_COLUMN_FILTERS;
 
-	useEffect(() => {
-		setColumnFilters(defaultColumnFilters || []);
-	}, [defaultColumnFilters]);
-	const appliedColumnFilters = useCallback(
-		(header: Header<TData, unknown>) => {
-			const filter = columnFilters.filter(
-				(item) => item.id === header.column.id,
-			)[0]?.value as string[];
-			return filter?.length || 0;
-		},
-		[columnFilters],
-	);
-	const table = useReactTable({
-		data,
-		columns,
-		state: {
-			sorting,
-			pagination: isServerPagination ? externalPagination : internalPagination,
-			columnFilters: isServerColumnFilter ? [] : columnFilters,
-		},
-		onSortingChange: setSorting,
-		onPaginationChange: isServerPagination
-			? onPaginationChange
-			: setInternalPagination,
-		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getPaginationRowModel: !isServerPagination
-			? getPaginationRowModel()
-			: undefined,
-		manualPagination: isServerPagination,
-		pageCount: isServerPagination ? pageCount : undefined,
-		onColumnFiltersChange: isServerColumnFilter ? undefined : setColumnFilters,
-		getFilteredRowModel: getFilteredRowModel(),
-	});
+  // Resolved pagination state
+  const resolvedPagination = isServerSide
+    ? (externalPagination ?? internalPagination)
+    : internalPagination;
 
-	return (
-		<div className={cn("w-full", tableWrapperClassName)}>
-			<div className="my-2 flex justify-between items-center md:flex-row flex-col gap-4">
-				{isShowSearch && (
-					<DebouncedInput
-						onChange={(val) => {
-							onSearchChange?.(val);
-						}}
-						value={search}
-						placeholder={searchPlaceholder || "Search..."}
-					/>
-				)}
+  // ── Stable onPaginationChange ──────────────────────────────────────────────
+  // Wrap the external handler in useCallback so the table's internal reference
+  // stays stable across renders.  For client-side we always use setInternalPagination.
+  const stableOnPaginationChange = useCallback(
+    (updater: Updater<PaginationState>) => {
+      if (isServerSide && onPaginationChange) {
+        onPaginationChange(updater);
+      } else {
+        setInternalPagination((prev) =>
+          typeof updater === "function" ? updater(prev) : updater
+        );
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isServerSide, onPaginationChange]
+  );
 
-				<div className="flex gap-4 items-center">
-					{extraFilters?.map((filter: ExtraFilter) =>
-						filter.multiSelect ? (
-							<Popover key={filter.key}>
-								<PopoverTrigger asChild>
-									<Button
-										variant="ghost"
-										className="min-w-[200px] border-2 text-black justify-between"
-									>
-										{filter.label}
-										<ChevronsUpDownIcon size={14} />
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent className="w-[200px] p-2">
-									<div className="flex flex-col gap-2">
-										{filter.options.map(
-											(option: { label: string; value: string }) => {
-												const checked =
-													filter.value?.includes(String(option.value)) ?? false;
-												return (
-													<div
-														key={option.value}
-														className="flex items-center gap-2"
-													>
-														<Checkbox
-															id={`${filter.key}-${option.value}`}
-															checked={checked}
-															onCheckedChange={(isChecked: boolean) => {
-																const currentValue = Array.isArray(filter.value)
-																	? filter.value
-																	: [];
+  // ── Reset to page 0 when search or columnFilters change (client-side) ──────
+  const prevSearch = useRef(search);
+  const prevFilters = useRef(resolvedColumnFilters);
+  useEffect(() => {
+    if (isServerSide) return;
+    if (
+      prevSearch.current !== search ||
+      prevFilters.current !== resolvedColumnFilters
+    ) {
+      setInternalPagination((p) => ({ ...p, pageIndex: 0 }));
+      prevSearch.current = search;
+      prevFilters.current = resolvedColumnFilters;
+    }
+  }, [search, resolvedColumnFilters, isServerSide]);
 
-																const newValue: string[] = isChecked
-																	? [...currentValue, option.value]
-																	: currentValue.filter(
-																			(v) => v !== option.value,
-																		);
+  // ── Table instance ─────────────────────────────────────────────────────────
+  // useMemo on the options object is NOT needed — useReactTable is already
+  // optimised.  What matters is that the VALUES we pass in are stable.
+  const table = useReactTable<TData>({
+    data,
+    columns,
+    filterFns: {
+      globalSearch: globalSearchFilter,
+    },
+    state: {
+      sorting,
+      pagination: resolvedPagination,
+      // Server-side: let the server handle filtering; pass undefined so TanStack
+      // doesn't try to filter locally and trigger spurious recalculations.
+      globalFilter: isServerSide ? undefined : (search ?? ""),
+      columnFilters: isServerSide ? EMPTY_COLUMN_FILTERS : resolvedColumnFilters,
+    },
+    onSortingChange: setSorting,
+    onPaginationChange: stableOnPaginationChange,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: isServerSide,
+    manualFiltering: isServerSide,
+    // Only auto-reset page when the data itself changes (not on every render).
+    autoResetPageIndex: !isServerSide,
+    pageCount: isServerSide ? (pageCount ?? -1) : undefined,
+    globalFilterFn: globalSearchFilter,
+  });
 
-																(filter.onChange as (val: string[]) => void)?.(
-																	newValue,
-																);
-															}}
-														/>
-														<Label
-															htmlFor={`${filter.key}-${option.value}`}
-															className="text-sm cursor-pointer"
-														>
-															{option.label}
-														</Label>
-													</div>
-												);
-											},
-										)}
-									</div>
-								</PopoverContent>
-							</Popover>
-						) : (
-							<Select
-								key={filter.key}
-								value={filter.value?.[0] ?? ""}
-								onValueChange={(val) => filter.onChange?.([val])}
-							>
-								<SelectTrigger className="min-w-[150px]">
-									{filter.label}
-								</SelectTrigger>
-								<SelectContent>
-									{filter.options.map(
-										(option: { value: string; label: string }) => (
-											<SelectItem
-												key={option.value}
-												value={String(option.value ?? "")}
-											>
-												{option.label}
-											</SelectItem>
-										),
-									)}
-								</SelectContent>
-							</Select>
-						),
-					)}
-					{clearFiltersButton}
-				</div>
-				{!disabledDateFilter && (
-					<DatePicker
-						value={range}
-						onChange={(val) => {
-							onDateRangeChange?.(val);
-						}}
-						type="range"
-						open={open}
-						setOpen={setOpen}
-						placeholder="Filter by Date Range"
-					/>
-				)}
-			</div>
+  // ── Pagination display math ────────────────────────────────────────────────
+  const { pageIndex, pageSize } = table.getState().pagination;
+  const totalRecords = isServerSide
+    ? (totalItems ?? 0)
+    : table.getFilteredRowModel().rows.length;
+  const startRow = totalRecords === 0 ? 0 : pageIndex * pageSize + 1;
+  const endRow = Math.min((pageIndex + 1) * pageSize, totalRecords);
 
-			<div className="border-neutral-20 rounded-3xl border-2 overflow-hidden">
-				<Table className="xl:w-full w-[1400px]">
-					<TableHeader className={theadClassName}>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow className="" key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead
-											key={header.id}
-											className={cn(
-												"text-sm font-medium first:pl-6 border-0 last:pr-6 py-3 bg-neutral-10 select-none text-zinc-500",
-												headClassName,
-											)}
-											onClick={
-												header.column.columnDef.enabeSorting
-													? header.column.getToggleSortingHandler()
-													: undefined
-											}
-											style={{
-												width: header.column.getSize(),
-											}}
-										>
-											<div className="flex gap-1 items-center">
-												<div>
-													{header.isPlaceholder
-														? null
-														: flexRender(
-																header.column.columnDef.header,
-																header.getContext(),
-															)}
-												</div>
-												<ColumnActions
-													table={table}
-													data={data}
-													appliedColumnFilters={appliedColumnFilters}
-													header={header}
-													isServerColumnFilter={isServerColumnFilter}
-													filterOptions={
-														(
-															header.column.columnDef as ExtendedColumnDef<
-																TData,
-																TValue
-															>
-														).filterOptions
-													}
-													columnFilters={columnFilters}
-													onColumnFilterChange={setColumnFilters}
-													multiSelect={
-														(
-															header.column.columnDef as ExtendedColumnDef<
-																TData,
-																TValue
-															>
-														).multiSelect
-													}
-												/>
-											</div>
-										</TableHead>
-									);
-								})}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody className={tbodyClassName}>
-						{isLoading ? (
-							Array.from({
-								length: table.getState()?.pagination?.pageSize || 10,
-							}).map((_, i) => (
-								<TableRow key={i} data-state={"selected"}>
-									{Array.from({ length: columns.length }).map((_, index) => (
-										<TableCell
-											className={cn(
-												"first:pl-6 last:pr-6 p-[10px]",
-												cellClassName,
-											)}
-											key={index}
-										>
-											<Skeleton className="w-full rounded h-8 bg-neutral-100 " />
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : table?.getRowModel()?.rows?.length ? (
-							table?.getRowModel()?.rows.map((row) => (
-								<TableRow
-									key={row.id}
-									data-state={row.getIsSelected() && "selected"}
-									onClick={() => {
-										if (isLink) {
-											navigate(link?.(row.original) || "");
-										}
-									}}
-									className={cn("hover:bg-neutral-20", {
-										"cursor-pointer": isLink,
-									})}
-								>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell
-											className={cn(
-												"first:pl-6 last:pr-6 py-3 px-2 text-sm font-medium",
-												cellClassName,
-											)}
-											key={cell.id}
-										>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext(),
-											)}
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : (
-							<TableRow>
-								<TableCell
-									colSpan={columns.length}
-									className="h-24 text-center"
-								>
-									<div className="flex flex-col items-center gap-2">
-										<span className="text-4xl">📭</span>
-										<span className="text-muted-foreground">No results.</span>
-									</div>
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
+  // ── Page numbers (stable — recomputed only when pageIndex / pageCount change)
+  const pageNumbers = useMemo(
+    () => buildPageNumbers(pageIndex, table.getPageCount()),
+    [pageIndex, table.getPageCount()]
+  );
 
-			{!disablePagination && (
-				<div className="flex items-center justify-end gap-6 py-4 w-full sm:flex-row flex-col">
-					<div className="flex items-center gap-2">
-						<span className="text-sm text-[#09090B] font-medium">
-							Row per page
-						</span>
-						<Select
-							value={`${table.getState()?.pagination?.pageSize}`}
-							onValueChange={(value) => {
-								table.setPageSize(Number(value));
-							}}
-						>
-							<SelectTrigger className="h-8 text-[#09090B]">
-								{table.getState()?.pagination?.pageSize}
-							</SelectTrigger>
-							<SelectContent>
-								{[5, 10, 15, 20, 50, 100].map((pageSize) => (
-									<SelectItem key={pageSize} value={`${pageSize}`}>
-										Show {pageSize}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
-					<span className="text-sm text-[#09090B] font-medium">
-						Page{" "}
-						<strong>
-							{table.getState()?.pagination?.pageIndex + 1} of{" "}
-							{table.getPageCount()}
-						</strong>
-					</span>
-					<div className="flex gap-2 items-center">
-						<Button
-							variant="outline"
-							size="icon-sm"
-							onClick={() => table.firstPage()}
-							disabled={!table?.getCanPreviousPage()}
-						>
-							<ChevronsLeft />
-						</Button>
-						<Button
-							variant="outline"
-							size="icon-sm"
-							onClick={() => table.previousPage()}
-							disabled={!table?.getCanPreviousPage()}
-						>
-							<ChevronLeft />
-						</Button>
-						<Button
-							variant="outline"
-							size="icon-sm"
-							onClick={() => table.nextPage()}
-							disabled={!table.getCanNextPage()}
-						>
-							<ChevronRight />
-						</Button>
-						<Button
-							variant="outline"
-							size="icon-sm"
-							onClick={() => table.lastPage()}
-							disabled={!table.getCanNextPage()}
-						>
-							<ChevronsRight />
-						</Button>
-					</div>
-				</div>
-			)}
-		</div>
-	);
+  // ── Row click handler ──────────────────────────────────────────────────────
+  const handleRowClick = useCallback(
+    (row: TData) => {
+      if (isLink && link) navigate(link(row));
+    },
+    [isLink, link, navigate]
+  );
+
+  // ── Skeleton rows (stable array) ───────────────────────────────────────────
+  const skeletonRowArray = useMemo(
+    () => Array.from({ length: skeletonRows }),
+    [skeletonRows]
+  );
+  const skeletonCellArray = useMemo(
+    () => Array.from({ length: columns.length }),
+    [columns.length]
+  );
+
+  // ─────────────────────────────────────────────────────────────────────────
+  return (
+    <div className={cn("w-full flex flex-col gap-4", wrapperClassName)}>
+      {/* Toolbar */}
+      {toolbar && <div className="w-full">{toolbar}</div>}
+
+      {/* Active filter pills */}
+      {filterPills && (
+        <div className="flex items-center gap-2 flex-wrap">{filterPills}</div>
+      )}
+
+      {/* Grid */}
+      <div className="border border-secondary-00 rounded-xl overflow-x-auto bg-white shadow-sm w-full">
+        <Table className="w-full min-w-max">
+          <TableHeader className={theadClassName}>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    style={{ width: header.column.getSize() }}
+                    onClick={
+                      header.column.columnDef.enableSorting
+                        ? header.column.getToggleSortingHandler()
+                        : undefined
+                    }
+                    className={cn(
+                      "font-semibold text-sm first:pl-6 last:pr-6 py-4 px-4",
+                      "border-y border-secondary-00 bg-secondary-00",
+                      "text-text-950 whitespace-nowrap select-none",
+                      header.column.columnDef.enableSorting && "cursor-pointer",
+                      headClassName
+                    )}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      {header.column.columnDef.enableSorting && (
+                        <UpDownIcon className="h-3.5 w-3.5 shrink-0 text-[#98A2B3]" />
+                      )}
+                    </div>
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+
+          <TableBody className={tbodyClassName}>
+            {isLoading ? (
+              // ── Skeleton rows ─────────────────────────────────────────────
+              skeletonRowArray.map((_, i) => (
+                <TableRow key={`skel-row-${i}`}>
+                  {skeletonCellArray.map((_, j) => (
+                    <TableCell
+                      key={`skel-cell-${j}`}
+                      className={cn(
+                        "first:pl-6 last:pr-6 py-4 px-4 border-b border-secondary-00",
+                        cellClassName
+                      )}
+                    >
+                      <Skeleton className="w-full h-8 rounded bg-neutral-100" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows.length ? (
+              // ── Data rows ──────────────────────────────────────────────────
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() ? "selected" : undefined}
+                  onClick={() => handleRowClick(row.original)}
+                  className={cn(
+                    "transition-colors hover:bg-[#FAFAFA]",
+                    isLink && "cursor-pointer"
+                  )}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className={cn(
+                        "font-medium text-sm first:pl-6 last:pr-6 py-4 px-4",
+                        "border-b border-secondary-00 text-text-950 whitespace-nowrap",
+                        cellClassName
+                      )}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              // ── Empty state ────────────────────────────────────────────────
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-32 text-center"
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="text-4xl">{emptyIcon}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {emptyMessage}
+                    </span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      {!disablePagination && (
+        <div className="flex items-center justify-between py-2 w-full flex-col sm:flex-row gap-4">
+          <p className="text-sm text-[#475467]">
+            Showing{" "}
+            <strong className="font-semibold text-[#101828]">
+              {startRow} – {endRow}
+            </strong>{" "}
+            of{" "}
+            <strong className="font-semibold text-[#101828]">
+              {totalRecords}
+            </strong>{" "}
+            results
+          </p>
+
+          <div className="flex items-center gap-1">
+            <PageButton
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              aria-label="Previous page"
+            >
+              <ArrowLeftIcon className="h-3 w-1.5" />
+            </PageButton>
+
+            {pageNumbers.map((page, i) =>
+              page === "..." ? (
+                <span
+                  key={`dots-${i}`}
+                  className="px-1.5 text-sm text-[#475467]"
+                >
+                  …
+                </span>
+              ) : (
+                <PageButton
+                  key={`page-${page}`}
+                  active={pageIndex === Number(page) - 1}
+                  onClick={() => table.setPageIndex(Number(page) - 1)}
+                  aria-label={`Page ${page}`}
+                >
+                  {page}
+                </PageButton>
+              )
+            )}
+
+            <PageButton
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              aria-label="Next page"
+            >
+              <ArrowRightIcon className="h-3 w-1.5" />
+            </PageButton>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── PageButton ───────────────────────────────────────────────────────────────
+
+interface PageButtonProps {
+  children: ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+  active?: boolean;
+  "aria-label"?: string;
+}
+
+function PageButton({
+  children,
+  onClick,
+  disabled,
+  active,
+  "aria-label": ariaLabel,
+}: PageButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "h-8 w-8 flex items-center justify-center rounded-md text-sm font-medium",
+        "transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
+        active
+          ? " text-[#101828] border border-[#D3D3D4]"
+          : "text-[#475467] hover:bg-[#F9FAFB] cursor-pointer"
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ─── buildPageNumbers ─────────────────────────────────────────────────────────
+// Produces a smart page list with ellipsis.
+// `currentIndex` is 0-based; `total` is the page count.
+// e.g. currentIndex=4, total=10 → [1, "...", 4, 5, 6, "...", 10]
+
+function buildPageNumbers(
+  currentIndex: number,
+  total: number
+): (number | "...")[] {
+  if (total <= 0) return [];
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+  const current = currentIndex + 1; // convert to 1-based
+  const pages: (number | "...")[] = [1];
+
+  if (current > 3) pages.push("...");
+
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  for (let i = start; i <= end; i++) pages.push(i);
+
+  if (current < total - 2) pages.push("...");
+  if (total > 1) pages.push(total);
+
+  return pages;
 }

@@ -127,7 +127,7 @@ export default function Login() {
               <img
                 alt="axon energies"
                 src={Logo}
-                className="h-10 w-auto max-w-[112px] object-contain"
+                className="h-10 w-auto max-w-28 object-contain"
               />
             </div>
 
