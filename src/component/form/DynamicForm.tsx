@@ -15,6 +15,7 @@ import {
 import { Button } from "@/component/ui/button"
 import { cn } from "@/lib/utils"
 import { DatePicker } from "@/component/form-date"
+import { Switch } from "@/component/ui/switch"
 
 export type FieldType =
   | "text"
@@ -25,6 +26,7 @@ export type FieldType =
   | "select"
   | "phone"
   | "image"
+  | "switch"
   | "custom"
 
 export interface FieldConfig<T extends FieldValues> {
@@ -34,8 +36,10 @@ export interface FieldConfig<T extends FieldValues> {
   placeholder?: string
   options?: { label: string; value: string }[]
   required?: boolean
+  disabled?: boolean
   colSpan?: number // Number of columns to span (e.g., 2 in a 2-column grid)
   className?: string
+  isPublic?: boolean
   customComponent?: (props: {
     field: any
     fieldState: any
@@ -146,6 +150,9 @@ export function DynamicForm<T extends FieldValues>({
     : [{ fields, gridCols: 2 }]
 
   const renderField = (fieldConfig: FieldConfig<T>) => {
+
+    console.log(fieldConfig, 'helllo');
+    
     return (
       <Controller
         key={fieldConfig.name}
@@ -248,7 +255,23 @@ export function DynamicForm<T extends FieldValues>({
             )
           }
 
-          // 5. Default: Input Component (handles text, email, password, phone, etc)
+          // 5. Switch Component
+          if (fieldConfig.type === "switch") {
+            return (
+              <div className={cn("flex items-center justify-between w-full h-[42px] px-4 border border-text-200 rounded-lg bg-white mt-[24px]", fieldConfig.className)}>
+                <span className="subtitle-3-regular text-text-700">{fieldConfig.label}</span>
+                <Switch 
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  disabled={fieldConfig.disabled || formState.isSubmitting}
+                  defaultChecked={fieldConfig?.isPublic}
+                />
+                <ErrorMessage message={errorMsg} />
+              </div>
+            )
+          }
+
+          // 6. Default: Input Component (handles text, email, password, phone, etc)
           const inputType =
             fieldConfig.type === "phone" ? "phone" : fieldConfig.type
 

@@ -30,7 +30,7 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       fixedWeeks = {false}
       className={cn(
-        "group/calendar w-fit bg-background p-4 rounded-xl shadow-xs [--cell-radius:12px] [--cell-size:--spacing(12)]",
+        "group/calendar w-fit bg-background p-3 rounded-xl shadow-xs [--cell-radius:8px] [--cell-size:--spacing(10)]",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className
@@ -61,26 +61,26 @@ function Calendar({
 
         button_previous: cn(
           buttonVariants({ variant: buttonVariant || "tertiary" }),
-          "w-(--cell-size) h-10 p-0 select-none aria-disabled:opacity-50",
+          "w-(--cell-size) h-8 p-0 select-none aria-disabled:opacity-50",
           "text-secondary-700 hover:text-secondary-900 active:text-secondary-500",
           defaultClassNames.button_previous
         ),
 
         button_next: cn(
           buttonVariants({ variant: buttonVariant || "tertiary" }),
-          "w-(--cell-size) h-10 p-0 select-none aria-disabled:opacity-50",
+          "w-(--cell-size) h-8 p-0 select-none aria-disabled:opacity-50",
           "text-secondary-700 hover:text-secondary-900 active:text-secondary-500",
           defaultClassNames.button_next
         ),
 
         // Month title: LEFT-aligned, no horizontal padding pushing it to center
         month_caption: cn(
-          "flex h-10 w-full items-center justify-start px-1",
+          "flex h-8 w-full items-center justify-start px-1",
           defaultClassNames.month_caption
         ),
 
         dropdowns: cn(
-          "flex h-10 w-full items-center gap-2 px-1",
+          "flex h-8 w-full items-center gap-2 px-1",
           defaultClassNames.dropdowns
         ),
 
@@ -95,7 +95,7 @@ function Calendar({
         ),
 
         caption_label: cn(
-          "text-xl font-semibold select-none text-text-950",
+          "text-base font-semibold select-none text-text-950",
           defaultClassNames.caption_label
         ),
 
@@ -103,7 +103,7 @@ function Calendar({
         weekdays: cn("flex", defaultClassNames.weekdays),
 
         weekday: cn(
-          "w-(--cell-size) text-lg font-bold select-none text-center text-secondary-600",
+          "w-(--cell-size) text-sm font-medium select-none text-center text-secondary-600",
           defaultClassNames.weekday
         ),
 
@@ -120,11 +120,7 @@ function Calendar({
         ),
 
         day: cn(
-          "group/day relative w-(--cell-size) h-10 flex items-center justify-center rounded-xl p-0 text-center select-none",
-          "[&:last-child[data-selected=true]_button]:rounded-r-xl",
-          props.showWeekNumber
-            ? "[&:nth-child(2)[data-selected=true]_button]:rounded-l-xl"
-            : "[&:first-child[data-selected=true]_button]:rounded-l-xl",
+          "group/day relative w-(--cell-size) h-8 flex items-center justify-center p-0 text-center select-none",
           defaultClassNames.day
         ),
 
@@ -177,7 +173,7 @@ function Calendar({
         Weekday: ({ children, ...props }) => (
           <th
             {...props}
-            className="w-(--cell-size) text-lg font-bold select-none text-center text-secondary-600"
+            className="w-(--cell-size) text-sm font-medium select-none text-center text-secondary-600"
           >
             {children}
           </th>
@@ -221,7 +217,7 @@ function CalendarDayButton({
       ref={ref}
       type="button"
       className={cn(
-        "flex size-10 mx-auto items-center justify-center rounded-xl text-[14px]",
+        "flex size-8 mx-auto items-center justify-center rounded-lg text-sm",
         "p-0 transition-colors aspect-square focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-700 focus-visible:ring-offset-2",
         !modifiers.selected && "font-semibold",
         !modifiers.selected && !modifiers.range_middle && "hover:bg-secondary-50 text-foreground",
