@@ -48,6 +48,9 @@ export interface PageWrapperProps {
   /** Page body — usually a DataTable or tab-driven content */
   children: ReactNode;
 
+  /** Additional className on the title */
+  titleClassName?: string;
+
   /** Additional className on the outer wrapper */
   className?: string;
 }
@@ -69,6 +72,7 @@ export default function PageWrapper({
   actionIcon,
   onActionClick,
   children,
+  titleClassName,
   className,
 }: PageWrapperProps) {
   const defaultTab = tabs?.[0]?.value;
@@ -148,7 +152,13 @@ export default function PageWrapper({
   // ── Wrapper without tabs — search LEFT, filter + action RIGHT ─────────────
   return (
     <div className={cn("flex flex-col gap-0 bg-white p-6 rounded-lg", className)}>
-      {title && <h1 className="heading-2-semibold text-text-950 mb-4">{title}</h1>}
+      {title && (
+        <h1 className={cn("heading-2-semibold mb-1 text-text-950", titleClassName)}>
+          {title}
+        </h1>
+      )}
+      
+      <div className="w-full border-b h-2 border-text-200"/>
 
       <div className="flex items-center justify-between gap-4 mb-5">
         {searchNode || <div />}
