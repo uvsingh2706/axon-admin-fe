@@ -57,6 +57,8 @@ export interface DynamicFormProps<T extends FieldValues> {
   sections?: SectionConfig<T>[]
   fields?: FieldConfig<T>[]
   submitLabel?: string
+  cancelLabel?: string
+  onCancel?: () => void
   className?: string
   isSubmitting?: boolean
 }
@@ -123,16 +125,19 @@ export function DynamicForm<T extends FieldValues>({
   sections = [],
   fields = [],
   submitLabel = "Submit",
+  cancelLabel = "Cancel",
+  onCancel,
   className,
   isSubmitting,
 }: DynamicFormProps<T>) {
   const {
     control,
     handleSubmit,
+    formState,
   } = useForm({
     resolver: zodResolver(schema as any),
     defaultValues: defaultValues as any,
-    mode: "onBlur",
+    mode: "onChange",
   })
 
   // Normalize structure: flat fields are wrapped in a default section
@@ -305,11 +310,22 @@ export function DynamicForm<T extends FieldValues>({
         )
       })}
 
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-end gap-3 mt-4">
+        {onCancel && (
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onCancel}
+            disabled={isSubmitting}
+            className="min-w-[120px]"
+          >
+            {cancelLabel}
+          </Button>
+        )}
         <Button
           type="submit"
           className="min-w-[150px]"
-          disabled={isSubmitting} // Need to check if Button supports `isLoading` or `disabled`
+          disabled={isSubmitting || !formState.isValid}
         >
           {isSubmitting ? "Submitting..." : submitLabel}
         </Button>

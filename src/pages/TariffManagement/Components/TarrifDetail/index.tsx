@@ -3,6 +3,7 @@ import Breadcrumb from "@/component/Breadcrumb";
 import EditIcon from "@/assets/icons/EditIcon";
 import DeleteIcon from "@/assets/icons/DeleteIcon";
 import { Pathname } from "@/utils/pathname";
+import PageWrapper from "@/component/PageWrapper";
 
 // ─── Dummy data lookup (replace with API call) ───────────────────────────────
 
@@ -53,26 +54,29 @@ export default function TariffDetail() {
       />
 
       {/* Detail Card */}
-      <div className="bg-white rounded-lg p-6">
-        {/* Card Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="heading-4-semibold text-text-950">Tariff Details</h2>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleEdit}
-              className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
-              aria-label="Edit tariff"
-            >
-              <EditIcon className="w-5 h-5" />
-            </button>
-            <button
-              onClick={handleDelete}
-              className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-              aria-label="Delete tariff"
-            >
-              <DeleteIcon className="w-5 h-5" />
-            </button>
-          </div>
+      <PageWrapper
+        title="Tariff Details"
+        showSearch={false}
+        showFilter={false}
+        titleClassName="heading-3-semibold"
+        className="w-full"
+      >
+        {/* Actions Row */}
+        <div className="flex items-center justify-end gap-3 mb-6">
+          <button
+            onClick={handleEdit}
+            className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+            aria-label="Edit tariff"
+          >
+            <EditIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleDelete}
+            className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+            aria-label="Delete tariff"
+          >
+            <DeleteIcon className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Detail Fields */}
@@ -97,7 +101,7 @@ export default function TariffDetail() {
             <span className="subtitle-2-semibold text-text-950">{tariff.tax}</span>
           </div>
         </div>
-      </div>
+      </PageWrapper>
     </div>
   );
 }
