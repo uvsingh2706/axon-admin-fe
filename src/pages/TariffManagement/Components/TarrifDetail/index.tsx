@@ -4,6 +4,9 @@ import EditIcon from "@/assets/icons/EditIcon";
 import DeleteIcon from "@/assets/icons/DeleteIcon";
 import { Pathname } from "@/utils/pathname";
 import PageWrapper from "@/component/PageWrapper";
+import { Modal } from "@/component/Modal";
+import { useState } from "react";
+
 
 // ─── Dummy data lookup (replace with API call) ───────────────────────────────
 
@@ -22,6 +25,7 @@ const TARIFF_MAP: Record<string, { name: string; value: string; serviceFee: stri
 export default function TariffDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const tariff = id ? TARIFF_MAP[id] : null;
 
@@ -71,12 +75,20 @@ export default function TariffDetail() {
             <EditIcon className="w-5 h-5" />
           </button>
           <button
-            onClick={handleDelete}
+            onClick={() => setIsModalOpen(true)}
             className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
             aria-label="Delete tariff"
           >
             <DeleteIcon className="w-5 h-5" />
           </button>
+
+          <Modal
+            open={isModalOpen}
+            onOpenChange={setIsModalOpen}
+            description="Are you sure you want to delete this Tariff?"
+            onConfirm={handleDelete}
+          />  
+
         </div>
 
         {/* Detail Fields */}

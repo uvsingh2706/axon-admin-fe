@@ -50,7 +50,7 @@
   --color-text-900: #323232;
   --color-text-950: #1F1F1F;
 
-  
+
 
   /* ── Semantic colors ── */
   --color-error: #FA0707;
@@ -70,18 +70,22 @@
   /* white color */
 
   --color-white-c1: #FFFFFF;
-  
+
   /* red color */
   --color-red-c1: #E25B53;
 
-  
+
+  /* pink color */
+  --color-pink-c1: #FBEAE9;
+
+
+
 
 
   /* ── Status colors ── */
   --color-green: #DDF9E4
-
-  /* ── Legacy aliases (kept for backward compat) ── */
-  --color-primary-dark: #00A87A;
+    /* ── Legacy aliases (kept for backward compat) ── */
+    --color-primary-dark: #00A87A;
   --color-danger: #FF4D4F;
   --color-surface: #0F1923;
   --color-surface-2: #1A2535;
@@ -90,7 +94,7 @@
   --color-primary-active: var(--color-primary-800);
   /* #CC5500 */
 
- /* ── Ripple / interaction ── */
+  /* ── Ripple / interaction ── */
   --color-ripple-secondary: #f7f7f7;
   --color-ripple-primary: #ffffff;
 
@@ -145,10 +149,13 @@ body {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
-html, body {
+
+html,
+body {
   margin: 0;
   padding: 0;
 }
+
 /* ── shadcn design-token mapping ── */
 @theme inline {
   --font-heading: var(--font-sans);
@@ -267,6 +274,7 @@ html, body {
 }
 
 @layer components {
+
   /* ── Typography Definitions (Urbanist based) ── */
   [class*="heading-"],
   [class*="subtitle-"] {

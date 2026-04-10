@@ -57,12 +57,12 @@ function AlertDialogContent({
         data-size={size}
         className={cn(
           "group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid",
-          "w-[23.5625rem] h-[15.75rem] -translate-x-1/2 -translate-y-1/2", 
-          "gap-0 rounded-[1.5rem] bg-popover", 
-          "pt-[3.75rem] px-4 pb-6", 
-          "text-popover-foreground border border-foreground/10", 
+          "w-[23.5625rem] h-[15.75rem] -translate-x-1/2 -translate-y-1/2",
+          "gap-0 rounded-[1.5rem] bg-popover",
+          "pt-[3.75rem] px-4 pb-6",
+          "text-popover-foreground border border-foreground/10",
           "duration-100 outline-none",
-          
+
           "data-[size=default]:max-w-none data-[size=sm]:max-w-none sm:data-[size=default]:max-w-none",
           "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           className
@@ -76,7 +76,7 @@ function AlertDialogContent({
         {props.children}
       </AlertDialogPrimitive.Content>
     </AlertDialogPortal>
-    
+
 
   )
 }
@@ -89,8 +89,8 @@ function AlertDialogHeader({
     <div
       data-slot="alert-dialog-header"
       className={cn(
-          "flex flex-col items-center text-center",
-        "w-[14.8125rem] h-[6.5rem] mx-auto gap-2", 
+        "flex flex-col items-center text-center",
+        "w-[14.8125rem] h-[6.5rem] mx-auto gap-2",
         className
       )}
       {...props}
@@ -106,8 +106,8 @@ function AlertDialogFooter({
     <div
       data-slot="alert-dialog-footer"
       className={cn(
-          "flex flex-row items-center justify-center auto-cols-fr",
-        "w-[21.5625rem] h-[2.5rem] mx-auto gap-2", 
+        "flex flex-row items-center justify-center auto-cols-fr",
+        "w-[21.5625rem] h-[2.5rem] mx-auto gap-2",
         className
       )}
       {...props}
@@ -123,8 +123,10 @@ function AlertDialogMedia({
     <div
       data-slot="alert-dialog-media"
       className={cn(
-         "inline-flex size-12 items-center justify-center", 
-        "opacity-100", 
+        "inline-flex size-12 items-center justify-center",
+        "w-[3rem] h-[3rem]",
+        "bg-pink-c1 rounded-full",
+        "opacity-100",
         className
       )}
       {...props}
@@ -156,7 +158,7 @@ function AlertDialogDescription({
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
       className={cn(
-       "w-[14.8125rem] h-[3rem] mx-auto", 
+        "w-[14.8125rem] h-[3rem] mx-auto",
         // Typography
         "text-base font-normal leading-[1.5] text-center",
         "color-gray-c3:",
@@ -172,17 +174,17 @@ function AlertDialogAction({
   variant = "primary",
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Action> &
- {
-  variant?: "primary" | "secondary" | "tertiary"
-}) {
+  {
+    variant?: "primary" | "secondary" | "tertiary"
+  }) {
   return (
-    <Button 
-      variant={variant} 
+    <Button
+      variant={variant}
       className={cn(
-        "w-[6.125rem] h-[2.5rem] border-[0.5px] rounded-[8px]", 
-         variant === "primary" && ["bg-red-c1 text-white border-red-c1 hover:bg-red-c1/90","active:bg-red-c1/80","focus-visible:ring-red-c1/50"],
+        "w-[6.125rem] h-[2.5rem] border-[0.5px] rounded-[8px]",
+        variant === "primary" && ["bg-red-c1 text-white border-red-c1 hover:bg-red-c1/90", "active:bg-red-c1/80", "focus-visible:ring-red-c1/50"],
         className
-      )} 
+      )}
       asChild
     >
       <AlertDialogPrimitive.Action
@@ -200,22 +202,22 @@ function AlertDialogCancel({
 
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel> &
-  { variant?: "primary" | "secondary" | "tertiary"}){
-     return (
-    <Button 
-      variant={variant} 
+  { variant?: "primary" | "secondary" | "tertiary" }) {
+  return (
+    <Button
+      variant={variant}
 
       className={cn(
         "w-[6.125rem] h-[2.5rem] border-[0.5px] rounded-[8px]", // Matches action button size
         className
-      )} 
+      )}
       asChild
     >
       <AlertDialogPrimitive.Cancel
         data-slot="alert-dialog-cancel"
         {...props}
       />
-  
+
     </Button>
   )
 }
