@@ -38,7 +38,7 @@ export default function AppRoutes() {
         {navItems.map((item) => (
           <Route
             key={item.key}
-            path={item.path}
+            path={`${item.path}/*`}
             element={<item.component />}
           />
         ))}
