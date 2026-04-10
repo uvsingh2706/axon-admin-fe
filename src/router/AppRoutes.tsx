@@ -21,7 +21,7 @@ export default function AppRoutes() {
       />
       <Route
         path={Pathname.FORGOT_PASSWORD}
-        element={isAuthenticated ? <Navigate to={Pathname.DASHBOARD} replace /> : <ForgetPassword />}
+        element={<ForgetPassword />}
       />
       <Route path={Pathname.COMPONENTS} element={<ComponentsShowcase />} />
 

@@ -1,12 +1,14 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { navItems } from "@/config/navigation";
 import NotificationIcon from "@/assets/icons/NotificationIcon";
 import UsersIcon from "@/assets/icons/UserIcon";
+import KeyIcon from "@/assets/icons/KeyIcon";
+import LogoutIcon from "@/assets/icons/LogoutIcon";
+import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover";
+import { useAuthStore } from "@/store/authStore";
+import { Pathname } from "@/utils/pathname";
+import { useState } from "react";
 
-/**
- * Derives the current page title from navItems config
- * by matching the current pathname.
- */
 function usePageTitle(): string {
   const { pathname } = useLocation();
   const matched = navItems.find((item) => pathname.startsWith(item.path));
@@ -15,15 +17,31 @@ function usePageTitle(): string {
 
 export default function Header() {
   const pageTitle = usePageTitle();
+  const navigate = useNavigate();
+  const logout = useAuthStore((s) => s.logout);
+  const [open, setOpen] = useState(false);
+
+  const handleChangePassword = () => {
+    setOpen(false);
+    // Defer logout until after we navigate so ProtectedRoute doesn't intercept
+    // the jump and force a redirect to /login
+    navigate(Pathname.FORGOT_PASSWORD);
+    // setTimeout(() => {
+    //   logout();
+    // }, 2000);
+  };
+
+  const handleSignOut = () => {
+    setOpen(false);
+    logout();
+    navigate(Pathname.LOGIN, { replace: true });
+  };
 
   return (
-    <header className="h-26 border-b border-gray-c1 bg-white flex items-center justify-between px-8  shrink-0">
-      {/* ── Page Title ───────────────────────────────── */}
-      <h1 className="text-2xl font-semibold heading-3-semibold  text-text-950">{pageTitle}</h1>
+    <header className="h-26 border-b border-gray-c1 bg-white flex items-center justify-between px-8 shrink-0">
+      <h1 className="text-2xl font-semibold heading-3-semibold text-text-950">{pageTitle}</h1>
 
-      {/* ── Right Section: Notification + Profile ───── */}
       <div className="flex items-center gap-5">
-        {/* Notification bell */}
         <button
           id="header-notification"
           className="relative flex items-center justify-center w-10 h-10 rounded-full hover:bg-text-50 transition-colors text-text-700"
@@ -32,25 +50,45 @@ export default function Header() {
           <NotificationIcon className="w-6 h-6" />
         </button>
 
-        {/* Divider */}
         <div className="w-px h-6 bg-gray-c2" />
 
         {/* Profile */}
-        <button
-          id="header-profile"
-          className="flex items-center gap-3 hover:opacity-90 transition-opacity cursor-pointer"
-          aria-label="User profile"
-          onClick={()=>{}}
-        >
-          {/* Avatar circle */}
-        <UsersIcon className="h-8 w-8"/>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <button
+              id="header-profile"
+              className="flex items-center gap-3 hover:opacity-90 transition-opacity cursor-pointer"
+              aria-label="User profile"
+            >
+              <UsersIcon className="h-8 w-8" />
+              <div className="text-left">
+                <p className="subtitle-3-semibold text-black-c1 leading-tight">Admin User</p>
+                <p className="subtitle-3-5-regular text-text-500 leading-tight">admin@evcharge.com</p>
+              </div>
+            </button>
+          </PopoverTrigger>
 
-          {/* User info */}
-          <div className="text-left">
-            <p className="subtitle-3-semibold text-black-c1 leading-tight">Admin User</p>
-            <p className="subtitle-3-5-regular text-text-500 leading-tight">admin@evcharge.com</p>
-          </div>
-        </button>
+          <PopoverContent
+            align="end"
+            sideOffset={12}
+            className="w-56 p-2 rounded-xl"
+          >
+            <button
+              onClick={handleChangePassword}
+              className="flex items-center font-semibold gap-3 w-full px-4 py-3 rounded-lg subtitle-3-medium text-text-700 hover:bg-secondary-00 transition-colors cursor-pointer"
+            >
+              <KeyIcon className="w-4 h-4 shrink-0" />
+              Change Password
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center font-semibold gap-3 w-full px-4 py-3 rounded-lg subtitle-3-medium text-red-c1 hover:bg-secondary-00 transition-colors cursor-pointer"
+            >
+              <LogoutIcon className="w-4 h-4 shrink-0" />
+              Sign out
+            </button>
+          </PopoverContent>
+        </Popover>
       </div>
     </header>
   );
