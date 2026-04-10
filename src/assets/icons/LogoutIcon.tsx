@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 function LogoutIcon({className} : {className?: string}) {
   return (
