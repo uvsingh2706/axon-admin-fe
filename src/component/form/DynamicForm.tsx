@@ -14,6 +14,7 @@ import {
 } from "@/component/ui/select"
 import { Button } from "@/component/ui/button"
 import { cn } from "@/lib/utils"
+import { DatePicker } from "@/component/form-date"
 
 export type FieldType =
   | "text"
@@ -214,7 +215,35 @@ export function DynamicForm<T extends FieldValues>({
             )
           }
 
-          // 4. Default: Input Component (handles text, email, password, phone, date, etc)
+          // 4 Date Component
+          if (fieldConfig.type === "date") {
+            // Note: form typically handles dates as strings "yyyy-MM-dd" or full ISO, adapt as needed
+            const dateValue = field.value ? new Date(field.value) : undefined;
+            return (
+              <div className={cn("flex flex-col", fieldConfig.className)}>
+                {fieldConfig.label && (
+                  <FieldLabel
+                    label={fieldConfig.label}
+                    required={fieldConfig.required}
+                  />
+                )}
+                <DatePicker
+                  mode="single"
+                  value={dateValue}
+                  onChange={(date) => {
+                    const d = date as Date;
+                    field.onChange(d ? d.toISOString() : "");
+                  }}
+                  placeholder={fieldConfig.placeholder}
+                  disabled={field.disabled}
+                  error={!!errorMsg}
+                />
+                <ErrorMessage message={errorMsg} />
+              </div>
+            )
+          }
+
+          // 5. Default: Input Component (handles text, email, password, phone, etc)
           const inputType =
             fieldConfig.type === "phone" ? "phone" : fieldConfig.type
 
