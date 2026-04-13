@@ -1,9 +1,11 @@
 import type { RouteObject } from "react-router-dom";
-import TariffList from "../TarrifList";
-import TariffCreate from "../TarriffCreate";
-import TariffDetail from "../TarrifDetail";
-import TariffEdit from "../TarrifEdit";
-
+import TariffDetail from "../Tariff/TariffDetail";
+import TariffList from "../TariffManagementList";
+import TariffCreate from "../Tariff/TariffCreate";
+import TariffEdit from "../Tariff/TariffEdit";
+import TaxCreate from "../Tax/TaxCreate";
+import TaxDetails from "../Tax/TaxDetails";
+import TaxEdit from "../Tax/TaxEdit";
 // ─── Tariff Management Route Config ───────────────────────────────────────────
 //
 // All sub-routes for the Tariff Management module.
@@ -26,11 +28,23 @@ export const tariffRoutes: RouteObject[] = [
     element: <TariffCreate />,
   },
   {
-    path: ":id",
+    path: "create-tax",
+    element: <TaxCreate />,
+  },
+  {
+    path: "tarrif/:id",
     element: <TariffDetail />,
   },
   {
-    path: ":id/edit",
+    path: "tarrif/:id/edit",
     element: <TariffEdit />,
+  },
+  {
+    path: "tax/:id",
+    element: <TaxDetails />,
+  },
+  {
+    path: "tax/:id/edit",
+    element: <TaxEdit />,
   },
 ];

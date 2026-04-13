@@ -1,5 +1,5 @@
 import { useRoutes } from "react-router-dom";
-import { assetRoutes } from "./components/Routes";
+import { assetRoutes } from "./Components/Routes";
 
 const AssetManagement = () => {
   const element = useRoutes(assetRoutes);

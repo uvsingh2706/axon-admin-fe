@@ -60,11 +60,11 @@ export default function TariffEdit() {
   const handleSubmit = (data: EditTariffFormValues) => {
     // TODO: API call to update tariff
     console.log("Update tariff:", id, data);
-    navigate(`${Pathname.TARIFF_MANAGEMENT}/${id}`);
+    navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}`);
   };
 
   const handleCancel = () => {
-    navigate(`${Pathname.TARIFF_MANAGEMENT}/${id}`);
+    navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}`);
   };
 
   return (
@@ -74,7 +74,7 @@ export default function TariffEdit() {
         items={[
           { label: "Tariff Management", path: Pathname.TARIFF_MANAGEMENT },
           { label: "Tariff", path: Pathname.TARIFF_MANAGEMENT },
-          { label: tariff.name, path: `${Pathname.TARIFF_MANAGEMENT}/${id}` },
+          { label: tariff.name, path: `${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}` },
           { label: "Edit" },
         ]}
       />

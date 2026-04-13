@@ -54,6 +54,9 @@ export interface PageWrapperProps {
 
   /** Additional className on the outer wrapper */
   className?: string;
+
+  /** Custom actions rendered next to the title */
+  headerActions?: ReactNode;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -76,6 +79,7 @@ export default function PageWrapper({
   titleClassName,
   isTable,
   className,
+  headerActions,
 }: PageWrapperProps) {
   const defaultTab = tabs?.[0]?.value;
 
@@ -154,10 +158,15 @@ export default function PageWrapper({
   // ── Wrapper without tabs — search LEFT, filter + action RIGHT ─────────────
   return (
     <div className={cn("flex flex-col gap-0 bg-white p-6 rounded-lg", className)}>
-      {title && (
-        <h1 className={cn("heading-2-semibold mb-1 text-text-950", titleClassName)}>
-          {title}
-        </h1>
+      {(title || headerActions) && (
+        <div className="flex items-center justify-between w-full mb-1">
+          {title && (
+            <h1 className={cn("heading-2-semibold text-text-950", titleClassName)}>
+              {title}
+            </h1>
+          )}
+          {headerActions && <div>{headerActions}</div>}
+        </div>
       )}
       
       {!isTable && <div className="w-full border-b h-2 border-text-200"/>}

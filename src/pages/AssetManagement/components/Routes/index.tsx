@@ -1,7 +1,7 @@
 import type { RouteObject } from "react-router-dom";
 import AssetList from "../AssetManagmentList";
-import PointCreate from "../AssetCreate/PointCreate";
-import StationCreate from "../AssetCreate/StationCreate";
+import PointCreate from "../Point/PointCreate";
+import StationCreate from "../Station/StationCreate";
 
 export const assetRoutes: RouteObject[] = [
   {
