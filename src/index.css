@@ -17,10 +17,12 @@
   --color-primary-500: #FF8B38;
   --color-primary-600: #FF7614;
   --color-primary-700: #FF6A00;
+
   /* base primary */
   --color-primary-800: #CC5500;
   --color-primary-900: #A84600;
   --color-primary-950: #853700;
+
 
   /* ── Secondary / Purple scale ── */
   --color-secondary-00: #F6F6F8;
@@ -77,6 +79,8 @@
 
   /* pink color */
   --color-pink-c1: #FBEAE9;
+  /* orange */
+  --color-orange-c1: #FE6A00;
 
 
 

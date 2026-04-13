@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 function ProfileUserIcon({className}: {className?: string}) {
   return (
