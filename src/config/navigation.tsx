@@ -15,7 +15,8 @@ const AssetManagement = lazy(() => import("../pages/AssetManagement"));
 const FleetManagement = lazy(() => import("../pages/FleetManagement"));
 const UserManagement = lazy(() => import("../pages/UserManagement"));
 const Transactions = lazy(() => import("../pages/Transactions"));
-// const ChargingPoint = lazy(() => import("../pages/ChargingPoint"));
+
+
 
 
 export const navItems: NavItem[] = [

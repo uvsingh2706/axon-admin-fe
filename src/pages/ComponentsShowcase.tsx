@@ -505,7 +505,7 @@ export default function ComponentsShowcase() {
           </div>
         </section>
 
-        add here in on same that thing in this code also tell me where and in which line you have done changes {/* Avatar */}
+
         <section className="space-y-8">
           <div className="flex items-center gap-6">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Avatar</h2>
