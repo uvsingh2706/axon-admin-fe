@@ -15,6 +15,7 @@ import AlertCircleIcon from "@/assets/icons/AlertCircleIcon";
 interface ModalProps {
     trigger?: ReactNode;
     description: ReactNode;
+     mediaClassName?: string; 
     onConfirm: () => void;
     confirmLabel?: string;
     cancelLabel?: string;
@@ -29,6 +30,7 @@ export const Modal = ({
     onConfirm,
     open,
     onOpenChange,
+    mediaClassName,
     confirmLabel = "Delete",
     cancelLabel = "Cancel",
     icon = <AlertCircleIcon />,
@@ -42,7 +44,7 @@ export const Modal = ({
             )}
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogMedia>
+                    <AlertDialogMedia className={mediaClassName}>
                         {icon}
                     </AlertDialogMedia>
                     <AlertDialogDescription>
