@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/component/ui/popover"
 import { useAuthStore } from "@/store/authStore";
 import { Pathname } from "@/utils/pathname";
 import { useState } from "react";
+import { Modal } from "@/component/Modal";
 
 function usePageTitle(): string {
   const { pathname } = useLocation();
@@ -20,6 +21,7 @@ export default function Header() {
   const navigate = useNavigate();
   const logout = useAuthStore((s) => s.logout);
   const [open, setOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleChangePassword = () => {
     setOpen(false);
@@ -33,6 +35,11 @@ export default function Header() {
 
   const handleSignOut = () => {
     setOpen(false);
+    setIsModalOpen(true);
+  };
+
+  const confirmSignOut = () => {
+    setIsModalOpen(false);
     logout();
     navigate(Pathname.LOGIN, { replace: true });
   };
@@ -89,6 +96,15 @@ export default function Header() {
             </button>
           </PopoverContent>
         </Popover>
+        <Modal
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          description="Are you sure you want to Logout?"
+          confirmLabel="Logout"
+          onConfirm={confirmSignOut}
+          icon={<LogoutIcon className="w-9 h-9" />}
+          mediaClassName="w-[4.4375rem] h-[4.4375rem] rounded-full shrink-0"
+        />
       </div>
     </header>
   );
