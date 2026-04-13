@@ -284,6 +284,7 @@ export function DynamicForm<T extends FieldValues>({
               error={!!errorMsg}
               errorMessage={errorMsg}
               className={fieldConfig.className}
+              disabled={fieldConfig.disabled || formState.isSubmitting}
               {...field}
             />
           )

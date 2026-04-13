@@ -1,7 +1,7 @@
 import * as z from "zod";
 import type { SectionConfig } from "@/component/form/DynamicForm";
 
-export const createAssetSchema = z.object({
+export const createPointSchema = z.object({
   name: z.string().min(1, "Name is required"),
   id: z.string().min(1, "ID is required"),
   configurationUrl: z.string().optional(),
@@ -14,9 +14,9 @@ export const createAssetSchema = z.object({
   isPublic: z.boolean().default(true),
 });
 
-export type CreateAssetFormValues = z.infer<typeof createAssetSchema>;
+export type CreatePointFormValues = z.infer<typeof createPointSchema>;
 
-export const assetFormSections: SectionConfig<CreateAssetFormValues>[] = [
+export const pointFormSections: SectionConfig<CreatePointFormValues>[] = [
   {
     gridCols: 2,
     fields: [

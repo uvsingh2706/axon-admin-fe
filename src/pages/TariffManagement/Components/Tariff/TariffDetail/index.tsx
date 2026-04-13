@@ -38,7 +38,7 @@ export default function TariffDetail() {
   }
 
   const handleEdit = () => {
-    navigate(`${Pathname.TARIFF_MANAGEMENT}/${id}/edit`);
+    navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}/edit`);
   };
 
   const handleDelete = () => {
@@ -59,40 +59,39 @@ export default function TariffDetail() {
 
       {/* Detail Card */}
       <PageWrapper
-        title="Tariff Details"
         showSearch={false}
         showFilter={false}
         titleClassName="heading-3-semibold"
         className="w-full"
+        title="Tariff Details"
+        
+        headerActions={
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleEdit}
+              className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+              aria-label="Edit tariff"
+            >
+              <EditIcon className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+              aria-label="Delete tariff"
+            >
+              <DeleteIcon className="w-5 h-5" />
+            </button>
+            <Modal
+              open={isModalOpen}
+              onOpenChange={setIsModalOpen}
+              description="Are you sure you want to delete this Tariff?"
+              onConfirm={handleDelete}
+            />
+          </div>
+        }
       >
-        {/* Actions Row */}
-        <div className="flex items-center justify-end gap-3 mb-6">
-          <button
-            onClick={handleEdit}
-            className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
-            aria-label="Edit tariff"
-          >
-            <EditIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-            aria-label="Delete tariff"
-          >
-            <DeleteIcon className="w-5 h-5" />
-          </button>
-
-          <Modal
-            open={isModalOpen}
-            onOpenChange={setIsModalOpen}
-            description="Are you sure you want to delete this Tariff?"
-            onConfirm={handleDelete}
-          />  
-
-        </div>
-
         {/* Detail Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Tariff Name</span>
             <span className="subtitle-2-semibold text-text-950">{tariff.name}</span>
