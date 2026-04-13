@@ -1,5 +1,4 @@
-import { Button } from "@/component/ui/button";
-import { Input } from "@/component/ui/input";
+
 
 
 export default function Dashboard() {
