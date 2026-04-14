@@ -149,7 +149,7 @@ function index() {
   return (
     <PageWrapper
       searchPlaceholder="Search Charge Point"
-      searchValue={search}data
+      searchValue={search}
       onSearchChange={setSearch}
       onFilterClick={() => console.log("filter clicked")}
       actionLabel="Add Fleet"

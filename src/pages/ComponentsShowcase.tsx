@@ -9,7 +9,7 @@ import { Spinner } from "../component/ui/spinner";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../component/ui/tabs";
 import { Avatar, AvatarImage, AvatarFallback } from "../component/ui/avatar";
 import AlertCircleIcon from "../assets/icons/AlertCircleIcon";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle, AlertDialogTrigger, } from "../component/ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTrigger, } from "../component/ui/alert-dialog";
 import {
   Select,
   SelectContent,
