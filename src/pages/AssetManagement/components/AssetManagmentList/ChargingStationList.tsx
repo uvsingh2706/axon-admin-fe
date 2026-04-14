@@ -1,5 +1,7 @@
 import { DataTable, type ExtendedColumnDef } from "@/component/data-table"
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Pathname } from "@/utils/pathname";
 
 type ChargingStationData = {
   id: string;
@@ -24,41 +26,45 @@ const dummyData: ChargingStationData[] = [
   { id: "CS-011", stationName: "Station 2", address: "Sector 15, New Delhi, Delhi - 110015, Petrol...", supportPerson: "Maneshwar", updatedAt: "May 18, 2023 1:27:08 PM", updatedBy: "admin" },
 ];
 
-const columns: ExtendedColumnDef<ChargingStationData, unknown>[] = [
-  {
-    accessorKey: "stationName",
-    header: "Station Name",
-    enableSorting: true,
-    cell: ({ row }) => (
-      <span className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline cursor-pointer hover:text-opacity-80">
-        {row.original.stationName}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "address",
-    header: "Address",
-    enableSorting: true,
-  },
-  {
-    accessorKey: "supportPerson",
-    header: "Support Person",
-    enableSorting: true,
-  },
-  {
-    accessorKey: "updatedAt",
-    header: "Updated At",
-    enableSorting: true,
-  },
-  {
-    accessorKey: "updatedBy",
-    header: "Updated By",
-    enableSorting: true,
-  },
-];
-
 function ChargingStationList() {
   const [search] = useState("");
+  const navigate = useNavigate();
+
+  const columns: ExtendedColumnDef<ChargingStationData, unknown>[] = [
+    {
+      accessorKey: "stationName",
+      header: "Station Name",
+      enableSorting: true,
+      cell: ({ row }) => (
+        <span 
+          onClick={() => navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${row.original.id}`)}
+          className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline cursor-pointer hover:text-opacity-80"
+        >
+          {row.original.stationName}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "address",
+      header: "Address",
+      enableSorting: true,
+    },
+    {
+      accessorKey: "supportPerson",
+      header: "Support Person",
+      enableSorting: true,
+    },
+    {
+      accessorKey: "updatedAt",
+      header: "Updated At",
+      enableSorting: true,
+    },
+    {
+      accessorKey: "updatedBy",
+      header: "Updated By",
+      enableSorting: true,
+    },
+  ];
   
   return (
    <DataTable columns={columns} data={dummyData} search={search} />
