@@ -1,18 +1,8 @@
 import { DataTable, type ExtendedColumnDef } from "@/component/data-table"
 import { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Pathname } from "@/utils/pathname";
-
-type ChargingPointData = {
-  id: string;
-  station: string;
-  connectorType: string;
-  status: "Online" | "Charging" | "Offline" | "Maintenance";
-  power: string;
-  lastSession: string;
-  energyDelivered: string;
-};
-
+import { type ChargingPointData } from "../types/ChargingPoints.types";
 
 const dummyData: ChargingPointData[] = [
   { id: "CP-001", station: "Hub Alpha", connectorType: "CCS2", status: "Online", power: "150 kW", lastSession: "2026-04-03 09:15", energyDelivered: "42.5 kWh" },
@@ -102,4 +92,4 @@ function ChargingPointList() {
   return <DataTable columns={columns} data={dummyData} search={search} />;
 }
 
-export default ChargingPointList
+export default ChargingPointList;

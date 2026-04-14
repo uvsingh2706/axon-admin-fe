@@ -169,7 +169,7 @@ export default function PointDetails() {
             <div key={field?.key} className="flex flex-col gap-1">
               <span className="text-sm text-muted-foreground">{field?.label}</span>
               <span
-                className={`text-base font-medium ${
+                className={`text-sm font-medium ${
                   field?.key === "published" && point?.fields?.[field?.key] === "True" ? "text-green-600" : "text-foreground"
                 }`}
               >

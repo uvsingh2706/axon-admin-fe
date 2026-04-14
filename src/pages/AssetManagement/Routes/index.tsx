@@ -1,17 +1,8 @@
 import type { RouteObject } from "react-router-dom";
-import AssetList from "../AssetManagmentList";
-import PointCreate from "../ChargingPoints/PointCreate";
-import PointDetails from "../ChargingPoints/PointDetails";
-import PointEdit from "../ChargingPoints/PointEdit";
-import StationCreate from "../ChargingStations/StationCreate";
-import StationDetails from "../ChargingStations/StationDetails";
-import StationEdit from "../ChargingStations/StationEdit";
+import { PointCreate, PointDetails, PointEdit } from "../ChargingPoints";
+import { StationCreate, StationDetails, StationEdit } from "../ChargingStations";
 
 export const assetRoutes: RouteObject[] = [
-  {
-    path: "/",
-    element: <AssetList />,
-  },
   {
     path: "create-station",
     element: <StationCreate />,

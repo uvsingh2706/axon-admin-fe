@@ -4,8 +4,8 @@ import Breadcrumb from "@/component/Breadcrumb";
 import PageWrapper from "@/component/PageWrapper";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import { Pathname } from "@/utils/pathname";
-import { editStationSchema, stationEditFormSections } from "./StationEditConfig";
-import type { EditStationFormValues } from "./StationEditConfig";
+import { editStationSchema, stationEditFormSections } from "./ChargingStationsEditConfig";
+import { type EditStationFormValues } from "../types/ChargingStations.types";
 
 // ─── Dummy data lookup (matching StationDetails structure) ──────────────────
 const STATION_MAP: Record<string, any> = {
@@ -54,7 +54,7 @@ export default function StationEdit() {
   useEffect(() => {
     if (station) {
       const [lat, lng] = (station.latLng || "").split(",").map((s: string) => s.trim());
-      
+
       setFormValues({
         stationName: station.name,
         stationImage: null, // Image typically handled separately/requires manual re-upload or showing current

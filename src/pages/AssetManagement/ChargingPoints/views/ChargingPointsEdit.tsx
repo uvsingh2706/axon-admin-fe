@@ -4,8 +4,8 @@ import Breadcrumb from "@/component/Breadcrumb";
 import PageWrapper from "@/component/PageWrapper";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import { Pathname } from "@/utils/pathname";
-import { editPointSchema, pointEditFormSections } from "./PointEditConfig";
-import type { EditPointFormValues } from "./PointEditConfig";
+import { editPointSchema, pointEditFormSections } from "./ChargingPointsEditConfig";
+import { type EditPointFormValues } from "../types/ChargingPoints.types";
 
 type PointEditData = {
   pointName: string;
