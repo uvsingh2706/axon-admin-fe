@@ -5,8 +5,8 @@ import { useAuthStore } from "../../store/authStore";
 import { Pathname } from "../../utils/pathname";
 import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
-import Logo from "@/assets/images/logo.webp";
 import OnboardingImage from "@/assets/images/Onboardingimage.webp";
+import { brandTheme } from "@/config/branding";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -125,8 +125,8 @@ export default function Login() {
               </div>
 
               <img
-                alt="axon energies"
-                src={Logo}
+                alt={brandTheme.logo.alt}
+                src={brandTheme.logo.src}
                 className="h-10 w-auto max-w-28 object-contain"
               />
             </div>

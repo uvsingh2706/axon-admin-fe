@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { navItems } from "../../config/navigation";
 import { useSidebarStore } from "../../store/sidebarStore";
-import logo from "../../assets/images/logo.webp";
+import { brandTheme } from "@/config/branding";
 
 export default function Sidebar() {
   const { isCollapsed, toggleSidebar } = useSidebarStore();
@@ -17,7 +17,7 @@ export default function Sidebar() {
       <div className="relative w-full border-b border-gray-c1 flex flex-col items-center justify-center px-5 py-5 gap-1.5 shrink-0">
         {!isCollapsed && (
           <>
-            <img src={logo} alt="Axon Energies" className="h-10 w-auto" />
+            <img src={brandTheme.logo.src} alt={brandTheme.logo.alt} className="h-10 w-auto" />
             <span className="text-xs font-medium text-text-700">
               Administrator Panel
             </span>

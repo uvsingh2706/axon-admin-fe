@@ -130,7 +130,7 @@ html {
   scroll-behavior: smooth;
 
   /* Apply base font */
-  font-family: 'Urbanist', sans-serif;
+  font-family: var(--brand-font-sans, 'Urbanist', sans-serif);
 }
 
 /* ── Body Base ── */
@@ -159,7 +159,7 @@ body {
 /* ── shadcn design-token mapping ── */
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: 'Urbanist', sans-serif;
+  --font-sans: var(--brand-font-sans, 'Urbanist', sans-serif);
 
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
