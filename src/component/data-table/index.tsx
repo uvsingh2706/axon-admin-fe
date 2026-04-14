@@ -230,7 +230,7 @@ export function DataTable<TData extends RowData, TValue = unknown>({
     // Only auto-reset page when the data itself changes (not on every render).
     autoResetPageIndex: !isServerSide,
     pageCount: isServerSide ? (pageCount ?? -1) : undefined,
-    globalFilterFn: globalSearchFilter,
+    // globalFilterFn: globalSearchFilter,
   });
 
   // ── Pagination display math ────────────────────────────────────────────────
