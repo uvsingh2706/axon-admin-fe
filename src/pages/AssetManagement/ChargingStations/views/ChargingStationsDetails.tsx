@@ -11,6 +11,8 @@ import Pump from "@/assets/icons/Pump";
 import Wallet from "@/assets/icons/Wallet";
 import ChargePointTable from "./ChargingGunsList";
 import type { ReactNode } from "react";
+import { mockStationDetailsById } from "../mocks/station.mock";
+import type { StationDetailsData } from "../types/ChargingStations.types";
 
 
 type InfrastructureSection = {
@@ -19,7 +21,7 @@ type InfrastructureSection = {
   component?: ReactNode;
 };
 
-const getSummaryCards = (station: any) => [
+const getSummaryCards = (station: StationDetailsData) => [
   {
     title: "Total Charging Sessions",
     value: station?.sessions,
@@ -57,50 +59,14 @@ const INFRASTRUCTURE_CONFIG: InfrastructureSection[] = [
   },
 ];
 
-// Dummy data setup
-const STATION_MAP: Record<string, any> = {
-  "CS-001": {
-    name: "My Home Tarkshya",
-    sessions: "4",
-    revenue: "₹1,200",
-    energy: "1.75",
-    address: "Sector 15, New Delhi, Delhi - 110015, Petrol Pump Station",
-    addressLine2: "-",
-    pincode: "500075",
-    cityState: "Delhi, New Delhi",
-    latLng: "28.6139, 77.2090",
-    commissionOn: "26/06/21",
-    // amenities: ["Mall", "Restaurant"],
-    areaManager: {
-      name: "Rahul Sharma",
-      email: "rahul123@gmail.com",
-      phone: "+91 98765 43210"
-    },
-    onSiteExecutive: {
-      name: "Arjun Mehta",
-      email: "arjun123@gmail.com",
-      phone: "+91 87 0008 6088"
-    },
-    energyCapacity: {
-      solar: "50 KWp",
-      bess: "100 KWh",
-      nonSolar: "100 KW",
-      totalCapacity: "100 KW",
-      totalLoad: "100 KW"
-    }
-  }
-};
-
-
-
 export default function StationDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Default to ID "CS-001" to show design placeholder even if routed without correct ID
-  const stationId = id && STATION_MAP[id] ? id : "CS-001";
-  const station = STATION_MAP[stationId];
+  const stationId = id && mockStationDetailsById[id] ? id : "CS-001";
+  const station = mockStationDetailsById[stationId];
 
   const handleEdit = () => {
     navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${stationId}/edit`);

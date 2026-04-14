@@ -5,3 +5,17 @@ export type TariffData = {
   updatedAt: string;
   updatedBy: string;
 };
+
+export type TariffDetailData = {
+  name: string;
+  value: string;
+  serviceFee: string;
+  tax: string;
+};
+
+export type TariffEditData = {
+  name: string;
+  value: string;
+  serviceFee: string;
+  tax: string;
+};

@@ -15,32 +15,16 @@ export const createPointSchema = z.object({
 });
 
 export type CreatePointFormValues = z.infer<typeof createPointSchema>;
+export const editPointSchema = createPointSchema;
+export type EditPointFormValues = z.infer<typeof editPointSchema>;
 
-export const pointFormSections: SectionConfig<CreatePointFormValues>[] = [
+const sharedPointSections: SectionConfig<CreatePointFormValues>[] = [
   {
     gridCols: 2,
     fields: [
-      {
-        name: "name",
-        label: "Charging Point Display Name",
-        type: "text",
-        placeholder: "Enter Name",
-        required: true,
-      },
-      {
-        name: "id",
-        label: "Charging Point ID",
-        type: "text",
-        placeholder: "Enter ID",
-        required: true,
-      },
-      {
-        name: "configurationUrl",
-        label: "Configuration URL",
-        type: "text",
-        placeholder: "Enter URL",
-        required: true,
-      },
+      { name: "name", label: "Charging Point Display Name", type: "text", placeholder: "Enter Name", required: true },
+      { name: "id", label: "Charging Point ID", type: "text", placeholder: "Enter ID", required: true },
+      { name: "configurationUrl", label: "Configuration URL", type: "text", placeholder: "Enter URL", required: true },
       {
         name: "station",
         label: "Charging Stations",
@@ -74,13 +58,7 @@ export const pointFormSections: SectionConfig<CreatePointFormValues>[] = [
           { label: "Model y1", value: "model-y1" },
         ],
       },
-      {
-        name: "commissionOn",
-        label: "Commission On",
-        type: "date",
-        placeholder: "Select Date",
-        required: true,
-      },
+      { name: "commissionOn", label: "Commission On", type: "date", placeholder: "Select Date", required: true },
       {
         name: "tariff",
         label: "Assign Tariff",
@@ -104,12 +82,10 @@ export const pointFormSections: SectionConfig<CreatePointFormValues>[] = [
           { label: "SIM", value: "sim" },
         ],
       },
-      {
-        name: "isPublic",
-        label: "Public",
-        type: "switch",
-        isPublic: true,
-      },
+      { name: "isPublic", label: "Public", type: "switch", isPublic: true },
     ],
   },
 ];
+
+export const pointCreateFormSections = sharedPointSections;
+export const pointEditFormSections = sharedPointSections;
