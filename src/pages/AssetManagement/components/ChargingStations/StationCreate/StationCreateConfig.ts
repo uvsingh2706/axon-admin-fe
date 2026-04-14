@@ -15,6 +15,11 @@ export const createStationSchema = z.object({
   supportPersonName: z.string().min(1, "Support Person Name is required"),
   contactNumber: z.string().min(1, "Contact Number is required"),
   emailId: z.string().min(1, "Email Id is required").email("Invalid email"),
+  solar: z.string().min(1, "Solar is required"),
+  bess: z.string().min(1, "BESS is required"),
+  nonSolarGeneration: z.string().min(1, "Non solar generation is required"),
+  totalChargingCapacity: z.string().min(1, "Total charging capacity is required"),
+  totalOnSiteLoad: z.string().min(1, "Total on-site load is required"),
 });
 
 export type CreateStationFormValues = z.infer<typeof createStationSchema>;
@@ -153,6 +158,47 @@ export const stationFormSections: SectionConfig<CreateStationFormValues>[] = [
         label: "Email Id",
         type: "email",
         placeholder: "Enter Email Id",
+        required: true,
+      },
+    ],
+  },
+    {
+    title: "Energy infrastructure & capacity",
+    gridCols: 2,
+    fields: [
+      {
+        name: "solar",
+        label: "Solar",
+        type: "text",
+        placeholder: "E.g. 50 KWp",
+        required: true,
+      },
+      {
+        name: "bess",
+        label: "BESS - battery energy storage system",
+        type: "text",
+        placeholder: "E.g. 100 KWh",
+        required: true,
+      },
+      {
+        name: "nonSolarGeneration",
+        label: "Non solar generation",
+        type: "text",
+        placeholder: "E.g. 100 KW",
+        required: true,
+      },
+      {
+        name: "totalChargingCapacity",
+        label: "Total installed EV charging capacity",
+        type: "text",
+        placeholder: "E.g. 100 KWh",
+        required: true,
+      },
+      {
+        name: "totalOnSiteLoad",
+        label: "Total on-site load",
+        type: "text",
+        placeholder: "E.g. 100 KW",
         required: true,
       },
     ],
