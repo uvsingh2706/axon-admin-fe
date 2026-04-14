@@ -15,3 +15,10 @@ export { default as NotificationIcon } from './NotificationIcon';
 export { default as StationIcon } from './StationICon';
 export { default as TruckIcon } from './TruckIcon';
 export { default as WalletIcon } from './WalletIcon';
+export { default as CarIcon } from './CarIcon';
+export { default as Bolt } from './Bolt';
+export { default as ProfileUserIcon } from './ProfileUserIcon';
+export { default as ImagePlaceholderIcon } from './ImagePlaceholderIcon';
+export { default as CopyIcon } from './CopyIcon';
+export { default as UsersIcon } from './User';
+
