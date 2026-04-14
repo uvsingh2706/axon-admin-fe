@@ -6,24 +6,14 @@ import { Pathname } from "@/utils/pathname";
 import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
-
-const TAX_MAP: Record<string, { taxName: string; type: string; percentageValue: string }> = {
-  "1": { taxName: "star-1 3968", type: "Percentage", percentageValue: "18%" },
-  "2": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18%" },
-  "3": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18%" },
-  "4": { taxName: "Systematic services", type: "Percentage", percentageValue: "18%" },
-  "5": { taxName: "Systematic services", type: "Percentage", percentageValue: "18%" },
-  "6": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18%" },
-  "7": { taxName: "Systematic services", type: "Percentage", percentageValue: "18%" },
-  "8": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18%" },
-};
+import { mockTaxDetailsById } from "../mocks/tax.mock";
 
 export default function TaxDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const tax = id ? TAX_MAP[id] : null;
+  const tax = id ? mockTaxDetailsById[id] : null;
 
   if (!tax) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tax not found.</div>;

@@ -6,23 +6,14 @@ import { Pathname } from "@/utils/pathname";
 import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
-
-const TARIFF_MAP: Record<string, { name: string; value: string; serviceFee: string; tax: string }> = {
-  "1": { name: "Zaptec Tariff", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
-  "2": { name: "Systematic Services", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
-  "3": { name: "Systematic Services", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
-  "4": { name: "Systematic Services", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
-  "5": { name: "Systematic Services", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
-  "6": { name: "Systematic Services", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
-  "7": { name: "Systematic Services", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
-};
+import { mockTariffDetailsById } from "../mocks/tariff.mock";
 
 export default function TariffDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const tariff = id ? TARIFF_MAP[id] : null;
+  const tariff = id ? mockTariffDetailsById[id] : null;
 
   if (!tariff) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tariff not found.</div>;

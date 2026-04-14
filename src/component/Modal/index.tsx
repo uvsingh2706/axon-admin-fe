@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,18 +10,8 @@ import {
     AlertDialogTrigger,
 } from "@/component/ui/alert-dialog";
 import AlertCircleIcon from "@/assets/icons/AlertCircleIcon";
-
-interface ModalProps {
-    trigger?: ReactNode;
-    description: ReactNode;
-     mediaClassName?: string; 
-    onConfirm: () => void;
-    confirmLabel?: string;
-    cancelLabel?: string;
-    icon?: ReactNode;
-    open?: boolean;
-    onOpenChange?: (open: boolean) => void;
-}
+import type { ModalProps } from "./Modal.types";
+export type { ModalProps } from "./Modal.types";
 
 export const Modal = ({
     trigger,

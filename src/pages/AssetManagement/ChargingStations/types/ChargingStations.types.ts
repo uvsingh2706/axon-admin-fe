@@ -31,3 +31,33 @@ export type CreateStationFormValues = {
 export type EditStationFormValues = Omit<CreateStationFormValues, "stationImage"> & {
   stationImage?: any;
 };
+
+export type StationEnergyCapacity = {
+  solar: string;
+  bess: string;
+  nonSolar: string;
+  totalCapacity: string;
+  totalLoad: string;
+};
+
+export type StationDetailsData = {
+  name: string;
+  sessions: string;
+  revenue: string;
+  energy: string;
+  address: string;
+  addressLine2: string;
+  pincode: string;
+  city: string;
+  state: string;
+  latLng: string;
+  commissionOn: string;
+  areaManager: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  energyCapacity: StationEnergyCapacity;
+};
+
+export type StationEditSeedData = CreateStationFormValues;

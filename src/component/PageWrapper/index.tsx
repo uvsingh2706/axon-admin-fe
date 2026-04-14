@@ -1,63 +1,10 @@
-import type { ReactNode } from "react";
 import { Button } from "@/component/ui/button";
 import FilterIcon from "@/assets/icons/FilterIcon";
 import DebouncedInput from "@/component/debounce-input";
 import { Tabs, TabsList, TabsTrigger } from "@/component/ui/tabs";
 import { cn } from "@/lib/utils";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export interface TabConfig {
-  value: string;
-  label: string;
-}
-
-export interface PageWrapperProps {
-  title?: string;
-
-  // ── Tabs ──────────────────────────────────
-  tabs?: TabConfig[];
-  activeTab?: string;
-  onTabChange?: (value: string) => void;
-
-  // ── Search ────────────────────────────────
-  /** Placeholder text for the search input */
-  searchPlaceholder?: string;
-  /** Controlled search value */
-  searchValue?: string;
-  /** Callback when search value changes */
-  onSearchChange?: (value: string) => void;
-  /** Set false to hide the search input. Defaults true. */
-  showSearch?: boolean;
-
-  // ── Filter ────────────────────────────────
-  /** Callback when Filter button is clicked */
-  onFilterClick?: () => void;
-  /** Set false to hide the filter button. Defaults true. */
-  showFilter?: boolean;
-
-  // ── Primary action button ─────────────────
-  /** Label for the primary CTA button */
-  actionLabel?: string;
-  isTable?: boolean;
-  /** Icon node rendered inside the CTA button */
-  actionIcon?: ReactNode;
-  /** Callback when CTA button is clicked */
-  onActionClick?: () => void;
-
-  // ── Content ───────────────────────────────
-  /** Page body — usually a DataTable or tab-driven content */
-  children: ReactNode;
-
-  /** Additional className on the title */
-  titleClassName?: string;
-
-  /** Additional className on the outer wrapper */
-  className?: string;
-
-  /** Custom actions rendered next to the title */
-  headerActions?: ReactNode;
-}
+import type { PageWrapperProps } from "./PageWrapper.types";
+export type { PageWrapperProps, TabConfig } from "./PageWrapper.types";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

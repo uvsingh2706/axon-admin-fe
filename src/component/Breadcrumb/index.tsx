@@ -1,19 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Breadcrumbs, type BreadcrumbItemProps } from "@/component/ui/breadcrumb";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export interface BreadcrumbItem {
-  /** Display label */
-  label: string;
-  /** Route path — omit for the last (current) item */
-  path?: string;
-}
-
-export interface BreadcrumbProps {
-  items: BreadcrumbItem[];
-  className?: string;
-}
+import type { BreadcrumbProps } from "./Breadcrumb.types";
+export type { BreadcrumbItem, BreadcrumbProps } from "./Breadcrumb.types";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 

@@ -10,71 +10,14 @@ import Wallet from "@/assets/icons/Wallet";
 import { FileTypeIcon } from "@/assets/icons/FileTypeIcon";
 import { DownloadIcon } from "@/assets/icons/DownloadIcon";
 import { Pathname } from "@/utils/pathname";
+import { mockPointDetailsById, pointDetailFields } from "../mocks/point.mock";
+import type { PointDetailsData } from "../types/ChargingPoints.types";
 
 type PointSummaryCard = {
   title: string;
   value: string;
   icon: ReactNode;
   color: string;
-};
-
-type PointField = {
-  label: string;
-  key: string;
-};
-
-type PointDocument = {
-  id: string;
-  title: string;
-  size: string;
-  uploadedAt: string;
-};
-
-type PointDetailsData = {
-  stationName: string;
-  chargingTransactions: string;
-  totalRevenue: string;
-  fields: Record<string, string>;
-  documents: PointDocument[];
-};
-
-const POINT_DETAIL_FIELDS: PointField[] = [
-  { label: "Configuration URL", key: "configurationUrl" },
-  { label: "Charging Point ID", key: "chargingPointId" },
-  { label: "Serial Number", key: "serialNumber" },
-  { label: "Charging Station", key: "chargingStation" },
-  { label: "Communication Protocol (Version)", key: "protocolVersion" },
-  { label: "OEM", key: "oem" },
-  { label: "Commissioned on", key: "commissionedOn" },
-  { label: "Model", key: "model" },
-  { label: "Type", key: "type" },
-  { label: "Published", key: "published" },
-  { label: "Firmware Version", key: "firmwareVersion" },
-];
-
-const POINT_MAP: Record<string, PointDetailsData> = {
-  "CP-001": {
-    stationName: "My Home Tarkshya",
-    chargingTransactions: "2",
-    totalRevenue: "₹200",
-    fields: {
-      configurationUrl: "ws://c-be-uel.ioncharge.tech/ocpp/smart3.t3test",
-      chargingPointId: "smart3.t3test",
-      serialNumber: "ME250461",
-      chargingStation: "My Home Tarkshya",
-      protocolVersion: "ocpp1.6",
-      oem: "EVRE",
-      commissionedOn: "March 10, 2026 12:00:00 AM",
-      model: "Model 1",
-      type: "March 10, 2026 12:00:00 AM",
-      published: "True",
-      firmwareVersion: "4.0.1",
-    },
-    documents: [
-      { id: "doc-1", title: "User Manual PDF", size: "1.2MB", uploadedAt: "24/01/25" },
-      { id: "doc-2", title: "Specification PDF", size: "1.2MB", uploadedAt: "U24/01/25" },
-    ],
-  },
 };
 
 const getSummaryCards = (point: PointDetailsData): PointSummaryCard[] => [
@@ -97,8 +40,8 @@ export default function PointDetails() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const pointId = id && POINT_MAP[id] ? id : "CP-001";
-  const point = POINT_MAP[pointId];
+  const pointId = id && mockPointDetailsById[id] ? id : "CP-001";
+  const point = mockPointDetailsById[pointId];
 
   const handleEdit = () => {
     navigate(`${Pathname.ASSET_MANAGEMENT}/charging-points/${pointId}/edit`);
@@ -165,7 +108,7 @@ export default function PointDetails() {
         }
       >
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
-          {POINT_DETAIL_FIELDS?.map((field) => (
+          {pointDetailFields?.map((field) => (
             <div key={field?.key} className="flex flex-col gap-1">
               <span className="text-sm text-muted-foreground">{field?.label}</span>
               <span

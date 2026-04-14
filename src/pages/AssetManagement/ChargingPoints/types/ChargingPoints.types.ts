@@ -22,3 +22,36 @@ export type CreatePointFormValues = {
 };
 
 export type EditPointFormValues = CreatePointFormValues;
+
+export type PointField = {
+  label: string;
+  key: string;
+};
+
+export type PointDocument = {
+  id: string;
+  title: string;
+  size: string;
+  uploadedAt: string;
+};
+
+export type PointDetailsData = {
+  stationName: string;
+  chargingTransactions: string;
+  totalRevenue: string;
+  fields: Record<string, string>;
+  documents: PointDocument[];
+};
+
+export type PointEditData = {
+  pointName: string;
+  pointId: string;
+  configurationUrl: string;
+  station: EditPointFormValues["station"];
+  oem: EditPointFormValues["oem"];
+  model: EditPointFormValues["model"];
+  commissionOn: string;
+  tariff: EditPointFormValues["tariff"];
+  connectionType: EditPointFormValues["connectionType"];
+  isPublic: boolean;
+};
