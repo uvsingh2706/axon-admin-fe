@@ -4,43 +4,19 @@ import Breadcrumb from "@/component/Breadcrumb";
 import PageWrapper from "@/component/PageWrapper";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import { Pathname } from "@/utils/pathname";
-import { editPointSchema, pointEditFormSections } from "./ChargingPointsEditConfig";
-import { type EditPointFormValues } from "../types/ChargingPoints.types";
-
-type PointEditData = {
-  pointName: string;
-  pointId: string;
-  configurationUrl: string;
-  station: EditPointFormValues["station"];
-  oem: EditPointFormValues["oem"];
-  model: EditPointFormValues["model"];
-  commissionOn: string;
-  tariff: EditPointFormValues["tariff"];
-  connectionType: EditPointFormValues["connectionType"];
-  isPublic: boolean;
-};
-
-const POINT_EDIT_MAP: Record<string, PointEditData> = {
-  "CP-001": {
-    pointName: "smart3.t3test",
-    pointId: "smart3.t3test",
-    configurationUrl: "ws://c-be-uel.ioncharge.tech/ocpp/smart3.t3test",
-    station: "station-1",
-    oem: "evre",
-    model: "model-x1",
-    commissionOn: "2026-03-10",
-    tariff: "tariff-a",
-    connectionType: "wifi",
-    isPublic: true,
-  },
-};
+import {
+  editPointSchema,
+  pointEditFormSections,
+  type EditPointFormValues,
+} from "../config/point.form";
+import { mockPointEditById } from "../mocks/point.mock";
 
 export default function PointEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const pointId = id && POINT_EDIT_MAP[id] ? id : "CP-001";
-  const point = POINT_EDIT_MAP[pointId];
+  const pointId = id && mockPointEditById[id] ? id : "CP-001";
+  const point = mockPointEditById[pointId];
 
   const [formValues, setFormValues] = useState<EditPointFormValues | null>(null);
 

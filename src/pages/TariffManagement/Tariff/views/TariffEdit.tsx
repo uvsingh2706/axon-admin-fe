@@ -3,24 +3,18 @@ import { useEffect, useState } from "react";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { DynamicForm } from "@/component/form/DynamicForm";
-import { editTariffSchema, tariffEditFormSections } from "./TarrifEditConfig";
-import type { EditTariffFormValues } from "./TarrifEditConfig";
+import {
+  editTariffSchema,
+  tariffEditFormSections,
+  type EditTariffFormValues,
+} from "../config/tariff.form";
 import PageWrapper from "@/component/PageWrapper";
-
-const TARIFF_MAP: Record<string, { name: string; value: string; serviceFee: string; tax: string }> = {
-  "1": { name: "Zaptec Tariff", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
-  "2": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
-  "3": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
-  "4": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
-  "5": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
-  "6": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
-  "7": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
-};
+import { mockTariffEditById } from "../mocks/tariff.mock";
 
 export default function TariffEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const tariff = id ? TARIFF_MAP[id] : null;
+  const tariff = id ? mockTariffEditById[id] : null;
 
   const [form, setForm] = useState({
     name: "",

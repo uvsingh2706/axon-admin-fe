@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
-import { createPointSchema, pointFormSections } from "./ChargingPointsCreateConfig";
-import { type CreatePointFormValues } from "../types/ChargingPoints.types";
+import {
+  createPointSchema,
+  pointCreateFormSections,
+  type CreatePointFormValues,
+} from "../config/point.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 
@@ -39,7 +42,7 @@ export default function PointCreate() {
           <DynamicForm
             schema={createPointSchema}
             onSubmit={handleSubmit}
-            sections={pointFormSections}
+            sections={pointCreateFormSections}
             submitLabel="Save"
             cancelLabel="Cancel"
             onCancel={handleBack}

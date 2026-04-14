@@ -11,17 +11,14 @@ export const createTaxSchema = z.object({
 });
 
 export type CreateTaxFormValues = z.infer<typeof createTaxSchema>;
+export const editTaxSchema = createTaxSchema;
+export type EditTaxFormValues = z.infer<typeof editTaxSchema>;
 
-export const taxFormSections: SectionConfig<CreateTaxFormValues>[] = [
+const taxFormSections: SectionConfig<CreateTaxFormValues>[] = [
   {
     gridCols: 2,
     fields: [
-      {
-        name: "name",
-        label: "Tax Name",
-        type: "text",
-        placeholder: "Enter tax name",
-      },
+      { name: "name", label: "Tax Name", type: "text", placeholder: "Enter tax name" },
       {
         name: "type",
         label: "Type",
@@ -38,3 +35,6 @@ export const taxFormSections: SectionConfig<CreateTaxFormValues>[] = [
     ],
   },
 ];
+
+export const taxCreateFormSections = taxFormSections;
+export const taxEditFormSections = taxFormSections;

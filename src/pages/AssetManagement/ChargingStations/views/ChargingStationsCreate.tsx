@@ -3,8 +3,11 @@ import PageWrapper from "@/component/PageWrapper";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { DynamicForm } from "@/component/form/DynamicForm";
-import { createStationSchema, stationFormSections } from "./ChargingStationsCreateConfig";
-import { type CreateStationFormValues } from "../types/ChargingStations.types";
+import {
+  createStationSchema,
+  stationCreateFormSections,
+  type CreateStationFormValues,
+} from "../config/station.form";
 
 export default function StationCreate() {
   const navigate = useNavigate();
@@ -38,7 +41,7 @@ export default function StationCreate() {
         <div className="mt-2 text-left">
           <DynamicForm<CreateStationFormValues>
             schema={createStationSchema}
-            sections={stationFormSections}
+            sections={stationCreateFormSections}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
             submitLabel="Add Station"

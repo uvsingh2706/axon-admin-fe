@@ -4,76 +4,44 @@ import Breadcrumb from "@/component/Breadcrumb";
 import PageWrapper from "@/component/PageWrapper";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import { Pathname } from "@/utils/pathname";
-import { editStationSchema, stationEditFormSections } from "./ChargingStationsEditConfig";
-import { type EditStationFormValues } from "../types/ChargingStations.types";
-
-// ─── Dummy data lookup (matching StationDetails structure) ──────────────────
-const STATION_MAP: Record<string, any> = {
-  "CS-001": {
-    name: "My Home Tarkshya",
-    sessions: "4",
-    revenue: "₹1,200",
-    energy: "1.75",
-    address: "Sector 15, Petrol Pump Station",
-    addressLine2: "-",
-    pincode: "110015",
-    city: "new-delhi",
-    state: "delhi",
-    latLng: "28.6139, 77.2090",
-    commissionOn: "2021-06-26",
-    areaManager: {
-      name: "Rahul Sharma",
-      email: "rahul123@gmail.com",
-      phone: "+91 98765 43210"
-    },
-    onSiteExecutive: {
-      name: "Arjun Mehta",
-      email: "arjun123@gmail.com",
-      phone: "+91 87 0008 6088"
-    },
-    energyCapacity: {
-      solar: "50 KWp",
-      bess: "100 KWh",
-      nonSolar: "100 KW",
-      totalCapacity: "100 KW",
-      totalLoad: "100 KW"
-    }
-  }
-};
+import {
+  editStationSchema,
+  stationEditFormSections,
+  type EditStationFormValues,
+} from "../config/station.form";
+import { mockStationEditById } from "../mocks/station.mock";
 
 export default function StationEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   // For demonstration, default to "CS-001" if ID is not found
-  const stationId = id && STATION_MAP[id] ? id : "CS-001";
-  const station = STATION_MAP[stationId];
+  const stationId = id && mockStationEditById[id] ? id : "CS-001";
+  const station = mockStationEditById[stationId];
 
   const [formValues, setFormValues] = useState<EditStationFormValues | null>(null);
 
   useEffect(() => {
     if (station) {
-      const [lat, lng] = (station.latLng || "").split(",").map((s: string) => s.trim());
-
       setFormValues({
-        stationName: station.name,
-        stationImage: null, // Image typically handled separately/requires manual re-upload or showing current
-        addressLine1: station.address,
-        addressLine2: station.addressLine2 === "-" ? "" : station.addressLine2,
+        stationName: station.stationName,
+        stationImage: station.stationImage,
+        addressLine1: station.addressLine1,
+        addressLine2: station.addressLine2,
         pincode: station.pincode,
         city: station.city,
         state: station.state,
-        latitude: lat || "",
-        longitude: lng || "",
+        latitude: station.latitude,
+        longitude: station.longitude,
         commissionOn: station.commissionOn,
-        supportPersonName: station.areaManager.name,
-        contactNumber: station.areaManager.phone,
-        emailId: station.areaManager.email,
-        solar: station.energyCapacity.solar,
-        bess: station.energyCapacity.bess,
-        nonSolarGeneration: station.energyCapacity.nonSolar,
-        totalChargingCapacity: station.energyCapacity.totalCapacity,
-        totalOnSiteLoad: station.energyCapacity.totalLoad,
+        supportPersonName: station.supportPersonName,
+        contactNumber: station.contactNumber,
+        emailId: station.emailId,
+        solar: station.solar,
+        bess: station.bess,
+        nonSolarGeneration: station.nonSolarGeneration,
+        totalChargingCapacity: station.totalChargingCapacity,
+        totalOnSiteLoad: station.totalOnSiteLoad,
       });
     }
   }, [station]);
@@ -103,7 +71,7 @@ export default function StationEdit() {
         items={[
           { label: "Asset Management", path: Pathname.ASSET_MANAGEMENT },
           { label: "Charging Stations", path: Pathname.ASSET_MANAGEMENT },
-          { label: station.name, path: `${Pathname.ASSET_MANAGEMENT}/charging-stations/${stationId}` },
+          { label: station.stationName, path: `${Pathname.ASSET_MANAGEMENT}/charging-stations/${stationId}` },
           { label: "Edit" },
         ]}
       />

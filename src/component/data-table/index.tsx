@@ -1,5 +1,4 @@
 import {
-  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
@@ -30,75 +29,16 @@ import {
   useCallback,
   useRef,
   useEffect,
-  type ReactNode,
 } from "react";
 import ArrowLeftIcon from "@/assets/icons/ArrowLeftIcon";
 import ArrowRightIcon from "@/assets/icons/ArrowRightIcon";
 import UpDownIcon from "@/assets/icons/UpDownIcon";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export type ExtendedColumnDef<TData, TValue = unknown> = ColumnDef<
-  TData,
-  TValue
->;
-
-export interface DataTableProps<TData extends RowData, TValue = unknown> {
-  columns: ExtendedColumnDef<TData, TValue>[];
-  data: TData[];
-
-  // Styling overrides
-  cellClassName?: string;
-  headClassName?: string;
-  tbodyClassName?: string;
-  theadClassName?: string;
-  wrapperClassName?: string;
-
-  // Loading state
-  isLoading?: boolean;
-  /** Number of skeleton rows to show while loading. Defaults to 10. */
-  skeletonRows?: number;
-
-  // Pagination
-  disablePagination?: boolean;
-  /** Default page size for client-side pagination. Defaults to 10. */
-  defaultPageSize?: number;
-
-  // Server-side mode — pass these when your API owns pagination/sorting/filtering
-  isServerSide?: boolean;
-  pagination?: PaginationState;
-  onPaginationChange?: (updater: Updater<PaginationState>) => void;
-  pageCount?: number;
-  totalItems?: number;
-
-  /**
-   * Global search string (client-side only).
-   * Filters every cell that contains this value (case-insensitive).
-   * For server-side mode, manage filtering yourself — do NOT pass this prop.
-   */
-  search?: string;
-
-  /**
-   * Column-level filters (client-side only).
-   * Format: [{ id: "status", value: ["Active", "Inactive"] }]
-   * Must be a STABLE reference (from useState / useMemo) to avoid re-render loops.
-   */
-  columnFilters?: ColumnFiltersState;
-
-  // Row click navigation
-  isLink?: boolean;
-  link?: (row: TData) => string;
-
-  // Toolbar slot — your Search, Filter, Tabs, Buttons live here.
-  toolbar?: ReactNode;
-
-  // Filter pills slot — your active filter chips live here.
-  filterPills?: ReactNode;
-
-  // Empty state customisation
-  emptyIcon?: string;
-  emptyMessage?: string;
-}
+import type {
+  DataTableProps,
+  ExtendedColumnDef,
+  PageButtonProps,
+} from "./DataTable.types";
+export type { DataTableProps, ExtendedColumnDef, PageButtonProps } from "./DataTable.types";
 
 // ─── Stable empty fallbacks ───────────────────────────────────────────────────
 // These are module-level constants so they are the SAME reference on every render.
@@ -441,15 +381,6 @@ export function DataTable<TData extends RowData, TValue = unknown>({
   );
 }
 
-// ─── PageButton ───────────────────────────────────────────────────────────────
-
-interface PageButtonProps {
-  children: ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-  active?: boolean;
-  "aria-label"?: string;
-}
 
 function PageButton({
   children,
@@ -478,10 +409,6 @@ function PageButton({
   );
 }
 
-// ─── buildPageNumbers ─────────────────────────────────────────────────────────
-// Produces a smart page list with ellipsis.
-// `currentIndex` is 0-based; `total` is the page count.
-// e.g. currentIndex=4, total=10 → [1, "...", 4, 5, 6, "...", 10]
 
 function buildPageNumbers(
   currentIndex: number,

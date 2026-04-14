@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
-import { createTaxSchema, taxFormSections } from "./TaxCreateConfig";
-import type { CreateTaxFormValues } from "./TaxCreateConfig";
+import {
+  createTaxSchema,
+  taxCreateFormSections,
+  type CreateTaxFormValues,
+} from "../config/tax.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 
@@ -39,7 +42,7 @@ export default function TaxCreate() {
             schema={createTaxSchema}
             defaultValues={{ type: "Percentage", name: "", percentageValue: "" }}
             onSubmit={handleSubmit}
-            sections={taxFormSections}
+            sections={taxCreateFormSections}
             submitLabel="Create Tax"
             cancelLabel="Cancel"
             onCancel={handleCancel}

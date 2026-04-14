@@ -3,25 +3,18 @@ import { useEffect, useState } from "react";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { DynamicForm } from "@/component/form/DynamicForm";
-import { createTaxSchema, taxFormSections } from "./TaxCreateConfig";
-import type { CreateTaxFormValues } from "./TaxCreateConfig";
+import {
+  editTaxSchema,
+  taxEditFormSections,
+  type EditTaxFormValues,
+} from "../config/tax.form";
 import PageWrapper from "@/component/PageWrapper";
-
-const TAX_MAP: Record<string, { taxName: string; type: string; percentageValue: string }> = {
-  "1": { taxName: "star-1 3968", type: "Percentage", percentageValue: "18" },
-  "2": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18" },
-  "3": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18" },
-  "4": { taxName: "Systematic services", type: "Percentage", percentageValue: "18" },
-  "5": { taxName: "Systematic services", type: "Percentage", percentageValue: "18" },
-  "6": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18" },
-  "7": { taxName: "Systematic services", type: "Percentage", percentageValue: "18" },
-  "8": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18" },
-};
+import { mockTaxEditById } from "../mocks/tax.mock";
 
 export default function TaxEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const tax = id ? TAX_MAP[id] : null;
+  const tax = id ? mockTaxEditById[id] : null;
 
   const [form, setForm] = useState({
     name: "",
@@ -43,7 +36,7 @@ export default function TaxEdit() {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tax not found.</div>;
   }
 
-  const handleSubmit = (data: CreateTaxFormValues) => {
+  const handleSubmit = (data: EditTaxFormValues) => {
     console.log("Update tax:", id, data);
     navigate(`${Pathname.TARIFF_MANAGEMENT}/tax/${id}`);
   };
@@ -73,10 +66,10 @@ export default function TaxEdit() {
         {form.name && (
           <div className="mt-2">
             <DynamicForm
-              schema={createTaxSchema}
+              schema={editTaxSchema}
               defaultValues={form}
               onSubmit={handleSubmit}
-              sections={taxFormSections}
+              sections={taxEditFormSections}
               submitLabel="Save Changes"
               cancelLabel="Cancel"
               onCancel={handleCancel}

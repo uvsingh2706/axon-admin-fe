@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
-import { createTariffSchema, tariffFormSections } from "./TarrifConfig";
-import type { CreateTariffFormValues } from "./TarrifConfig";
+import {
+  createTariffSchema,
+  tariffCreateFormSections,
+  type CreateTariffFormValues,
+} from "../config/tariff.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 
@@ -46,7 +49,7 @@ export default function CreateTariff({ onCancel }: CreateTariffProps) {
           <DynamicForm
             schema={createTariffSchema}
             onSubmit={handleSubmit}
-            sections={tariffFormSections}
+            sections={tariffCreateFormSections}
             submitLabel="Create Tariff"
             cancelLabel="Cancel"
             onCancel={handleCancel}
