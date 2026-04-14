@@ -1,22 +1,21 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import { useLogin } from "../../services/auth";
 import { Pathname } from "../../utils/pathname";
 import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
-import Logo from "@/assets/images/logo.webp";
 import OnboardingImage from "@/assets/images/Onboardingimage.webp";
-import { useAuthStore } from "@/store/authStore";
-import { Role } from "@/types/roles";
+import { useWhiteLabel } from "@/whitelabel";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const setAuth = useAuthStore((s) => s.setAuth);
   const navigate = useNavigate();
+  const { assets } = useWhiteLabel();
   const loginMutation = useLogin();
   
 
@@ -31,7 +30,7 @@ export default function Login() {
       email,
       role: "FINANCE",
     });
-    setIsLoading(false);
+    // setIsLoading(false);
     navigate(Pathname.DASHBOARD);
 
     // e.preventDefault();
@@ -141,8 +140,8 @@ export default function Login() {
               </div>
 
               <img
-                alt="axon energies"
-                src={Logo}
+                alt={assets.logoAlt}
+                src={assets.logo}
                 className="h-10 w-auto max-w-28 object-contain"
               />
             </div>
