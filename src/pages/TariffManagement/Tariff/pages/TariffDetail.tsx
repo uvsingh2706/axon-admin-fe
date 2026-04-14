@@ -7,9 +7,6 @@ import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
 
-
-// ─── Dummy data lookup (replace with API call) ───────────────────────────────
-
 const TARIFF_MAP: Record<string, { name: string; value: string; serviceFee: string; tax: string }> = {
   "1": { name: "Zaptec Tariff", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
   "2": { name: "Systematic Services", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
@@ -20,8 +17,6 @@ const TARIFF_MAP: Record<string, { name: string; value: string; serviceFee: stri
   "7": { name: "Systematic Services", value: "₹23.25", serviceFee: "₹12", tax: "Tax type 1" },
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export default function TariffDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -30,11 +25,7 @@ export default function TariffDetail() {
   const tariff = id ? TARIFF_MAP[id] : null;
 
   if (!tariff) {
-    return (
-      <div className="p-8 text-center text-text-500 subtitle-2-medium">
-        Tariff not found.
-      </div>
-    );
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tariff not found.</div>;
   }
 
   const handleEdit = () => {
@@ -42,13 +33,11 @@ export default function TariffDetail() {
   };
 
   const handleDelete = () => {
-    // TODO: confirm dialog + API call
     console.log("Delete tariff:", id);
   };
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Breadcrumb */}
       <Breadcrumb
         items={[
           { label: "Tariff Management", path: Pathname.TARIFF_MANAGEMENT },
@@ -57,14 +46,12 @@ export default function TariffDetail() {
         ]}
       />
 
-      {/* Detail Card */}
       <PageWrapper
         showSearch={false}
         showFilter={false}
         titleClassName="heading-3-semibold"
         className="w-full"
         title="Tariff Details"
-        
         headerActions={
           <div className="flex items-center gap-3">
             <button
@@ -90,23 +77,19 @@ export default function TariffDetail() {
           </div>
         }
       >
-        {/* Detail Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Tariff Name</span>
             <span className="subtitle-2-semibold text-text-950">{tariff.name}</span>
           </div>
-
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Value (per Kwh)</span>
             <span className="subtitle-2-semibold text-text-950">{tariff.value}</span>
           </div>
-
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Service Fee</span>
             <span className="subtitle-2-semibold text-text-950">{tariff.serviceFee}</span>
           </div>
-
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Tax</span>
             <span className="subtitle-2-semibold text-text-950">{tariff.tax}</span>

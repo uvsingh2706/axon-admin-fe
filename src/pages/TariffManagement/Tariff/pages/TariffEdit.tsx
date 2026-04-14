@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { DynamicForm } from "@/component/form/DynamicForm";
@@ -7,12 +7,7 @@ import { editTariffSchema, tariffEditFormSections } from "./TarrifEditConfig";
 import type { EditTariffFormValues } from "./TarrifEditConfig";
 import PageWrapper from "@/component/PageWrapper";
 
-// ─── Dummy data lookup (replace with API call) ───────────────────────────────
-
-const TARIFF_MAP: Record<
-  string,
-  { name: string; value: string; serviceFee: string; tax: string }
-> = {
+const TARIFF_MAP: Record<string, { name: string; value: string; serviceFee: string; tax: string }> = {
   "1": { name: "Zaptec Tariff", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
   "2": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
   "3": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
@@ -22,12 +17,9 @@ const TARIFF_MAP: Record<
   "7": { name: "Systematic Services", value: "23.25", serviceFee: "12", tax: "tax-type-1" },
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 export default function TariffEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
   const tariff = id ? TARIFF_MAP[id] : null;
 
   const [form, setForm] = useState({
@@ -37,7 +29,6 @@ export default function TariffEdit() {
     tax: "",
   });
 
-  // Pre-fill form with existing tariff data
   useEffect(() => {
     if (tariff) {
       setForm({
@@ -50,15 +41,10 @@ export default function TariffEdit() {
   }, [tariff]);
 
   if (!tariff) {
-    return (
-      <div className="p-8 text-center text-text-500 subtitle-2-medium">
-        Tariff not found.
-      </div>
-    );
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tariff not found.</div>;
   }
 
   const handleSubmit = (data: EditTariffFormValues) => {
-    // TODO: API call to update tariff
     console.log("Update tariff:", id, data);
     navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}`);
   };
@@ -69,7 +55,6 @@ export default function TariffEdit() {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Breadcrumb */}
       <Breadcrumb
         items={[
           { label: "Tariff Management", path: Pathname.TARIFF_MANAGEMENT },
@@ -79,28 +64,27 @@ export default function TariffEdit() {
         ]}
       />
 
-      {/* Form Card */}
-        <PageWrapper
-          title="Edit Tariff"
-          showSearch={false}
-          showFilter={false}
-          titleClassName="heading-3-semibold"
-          className="w-full"
-        >
-          {form.name && (
-            <div className="mt-2">
-              <DynamicForm
-                schema={editTariffSchema}
-                defaultValues={form}
-                onSubmit={handleSubmit}
-                sections={tariffEditFormSections}
-                submitLabel="Save Changes"
-                cancelLabel="Cancel"
-                onCancel={handleCancel}
-              />
-            </div>
-          )}
-        </PageWrapper>
+      <PageWrapper
+        title="Edit Tariff"
+        showSearch={false}
+        showFilter={false}
+        titleClassName="heading-3-semibold"
+        className="w-full"
+      >
+        {form.name && (
+          <div className="mt-2">
+            <DynamicForm
+              schema={editTariffSchema}
+              defaultValues={form}
+              onSubmit={handleSubmit}
+              sections={tariffEditFormSections}
+              submitLabel="Save Changes"
+              cancelLabel="Cancel"
+              onCancel={handleCancel}
+            />
+          </div>
+        )}
+      </PageWrapper>
     </div>
   );
 }

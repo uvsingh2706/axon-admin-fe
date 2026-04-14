@@ -1,37 +1,42 @@
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
-import { createTaxSchema, taxFormSections } from "./TaxCreateConfig";
-import type { CreateTaxFormValues } from "./TaxCreateConfig";
+import { createTariffSchema, tariffFormSections } from "./TarrifConfig";
+import type { CreateTariffFormValues } from "./TarrifConfig";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 
-export default function TaxCreate() {
+interface CreateTariffProps {
+  onCancel?: () => void;
+}
+
+export default function CreateTariff({ onCancel }: CreateTariffProps) {
   const navigate = useNavigate();
-  
+
   const handleCancel = () => {
-    navigate(Pathname.TARIFF_MANAGEMENT);
+    if (onCancel) {
+      onCancel();
+    } else {
+      navigate(Pathname.TARIFF_MANAGEMENT);
+    }
   };
 
-  const handleSubmit = (data: CreateTaxFormValues) => {
+  const handleSubmit = (data: CreateTariffFormValues) => {
     console.log("Form Submitted:", data);
-    // TODO: Add actual API call here
     handleCancel();
   };
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Breadcrumb */}
       <Breadcrumb
         items={[
           { label: "Tariff Management", path: Pathname.TARIFF_MANAGEMENT },
-          { label: "Create Tax" },
+          { label: "Create Tariff" },
         ]}
       />
 
-      {/* Form Card */}
       <PageWrapper
-        title="Create Tax"
+        title="Create Tariff"
         showSearch={false}
         showFilter={false}
         titleClassName="heading-3-semibold"
@@ -39,11 +44,10 @@ export default function TaxCreate() {
       >
         <div className="mt-2">
           <DynamicForm
-            schema={createTaxSchema}
-            defaultValues={{ type: "Percentage", name: "", percentageValue: "" }}
+            schema={createTariffSchema}
             onSubmit={handleSubmit}
-            sections={taxFormSections}
-            submitLabel="Create Tax"
+            sections={tariffFormSections}
+            submitLabel="Create Tariff"
             cancelLabel="Cancel"
             onCancel={handleCancel}
           />

@@ -1,30 +1,54 @@
-import { useRoutes } from "react-router-dom";
-import { tariffRoutes } from "./Components/Routes";
-
-// ─── Tariff Management Module ─────────────────────────────────────────────────
-//
-// Module root — renders the matching sub-route from tariffRoutes.
-//
-// Folder structure:
-//   TariffManagement/
-//     index.tsx                        ← this file (module entry)
-//     Components/
-//       Routes/index.tsx               ← route config (single source of truth)
-//       TarrifList/index.tsx           ← list view (PageWrapper + DataTable)
-//       TarriffCreate/index.tsx        ← create form
-//       TarrifDetail/index.tsx         ← detail view + edit/delete actions
-//       TarrifEdit/index.tsx           ← pre-filled edit form
-//
-// Route map:
-//   /tariff-management              → TarrifList     (index)
-//   /tariff-management/create       → TarriffCreate
-//   /tariff-management/:id          → TarrifDetail
-//   /tariff-management/:id/edit     → TarrifEdit
-// ──────────────────────────────────────────────────────────────────────────────
+import AddIcon from "@/assets/icons/AddIcon";
+import PageWrapper from "@/component/PageWrapper";
+import { TabsContent } from "@/component/ui/tabs";
+import { useState } from "react";
+import { useNavigate, useRoutes } from "react-router-dom";
+import { tariffRoutes } from "./Routes";
+import { TariffList } from "./Tariff";
+import { TaxList } from "./Tax";
+import { TARIFF_MANAGEMENT_TABS } from "./constant";
 
 const TariffManagement = () => {
+  const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState("tariff");
+  const navigate = useNavigate();
   const element = useRoutes(tariffRoutes);
-  return element;
+
+  const handleActionClick = () => {
+    if (activeTab === "tariff") {
+      navigate("create-tariff");
+    } else {
+      navigate("create-tax");
+    }
+  };
+
+  
+  if (element) {
+    return element;
+  }
+
+  return (
+    <PageWrapper
+      tabs={TARIFF_MANAGEMENT_TABS}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      searchPlaceholder={activeTab === "tariff" ? "Search Tariff" : "Search Tax"}
+      searchValue={search}
+      onSearchChange={setSearch}
+      onFilterClick={() => console.log("filter clicked")}
+      actionLabel={activeTab === "tariff" ? "Create Tariff" : "Create Tax"}
+      actionIcon={<AddIcon />}
+      onActionClick={handleActionClick}
+    >
+      <TabsContent value="tariff">
+        <TariffList search={search} />
+      </TabsContent>
+
+      <TabsContent value="tax">
+        <TaxList search={search} />
+      </TabsContent>
+    </PageWrapper>
+  );
 };
 
 export default TariffManagement;

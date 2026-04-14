@@ -7,8 +7,6 @@ import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
 
-// ─── Dummy data lookup (replace with API call) ───────────────────────────────
-
 const TAX_MAP: Record<string, { taxName: string; type: string; percentageValue: string }> = {
   "1": { taxName: "star-1 3968", type: "Percentage", percentageValue: "18%" },
   "2": { taxName: "zaptec tax", type: "Percentage", percentageValue: "18%" },
@@ -28,11 +26,7 @@ export default function TaxDetails() {
   const tax = id ? TAX_MAP[id] : null;
 
   if (!tax) {
-    return (
-      <div className="p-8 text-center text-text-500 subtitle-2-medium">
-        Tax not found.
-      </div>
-    );
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tax not found.</div>;
   }
 
   const handleEdit = () => {
@@ -40,13 +34,11 @@ export default function TaxDetails() {
   };
 
   const handleDelete = () => {
-    // TODO: confirm dialog + API call
     console.log("Delete tax:", id);
   };
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Breadcrumb */}
       <Breadcrumb
         items={[
           { label: "Tariff Management", path: Pathname.TARIFF_MANAGEMENT },
@@ -55,7 +47,6 @@ export default function TaxDetails() {
         ]}
       />
 
-      {/* Detail Card */}
       <PageWrapper
         title="Tax Details"
         showSearch={false}
@@ -87,13 +78,11 @@ export default function TaxDetails() {
           </div>
         }
       >
-        {/* Detail Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Tax Name</span>
             <span className="subtitle-2-semibold text-text-950">{tax.taxName}</span>
           </div>
-
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Percentage Value</span>
             <span className="subtitle-2-semibold text-text-950">{tax.percentageValue}</span>
