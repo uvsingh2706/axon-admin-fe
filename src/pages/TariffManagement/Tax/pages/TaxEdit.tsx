@@ -1,13 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { DynamicForm } from "@/component/form/DynamicForm";
-import { createTaxSchema, taxFormSections } from "../TaxCreate/TaxCreateConfig";
-import type { CreateTaxFormValues } from "../TaxCreate/TaxCreateConfig";
+import { createTaxSchema, taxFormSections } from "./TaxCreateConfig";
+import type { CreateTaxFormValues } from "./TaxCreateConfig";
 import PageWrapper from "@/component/PageWrapper";
-
-// ─── Dummy data lookup (replace with API call) ───────────────────────────────
 
 const TAX_MAP: Record<string, { taxName: string; type: string; percentageValue: string }> = {
   "1": { taxName: "star-1 3968", type: "Percentage", percentageValue: "18" },
@@ -23,7 +21,6 @@ const TAX_MAP: Record<string, { taxName: string; type: string; percentageValue: 
 export default function TaxEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
   const tax = id ? TAX_MAP[id] : null;
 
   const [form, setForm] = useState({
@@ -32,7 +29,6 @@ export default function TaxEdit() {
     percentageValue: "",
   });
 
-  // Pre-fill form with existing tax data
   useEffect(() => {
     if (tax) {
       setForm({
@@ -44,15 +40,10 @@ export default function TaxEdit() {
   }, [tax]);
 
   if (!tax) {
-    return (
-      <div className="p-8 text-center text-text-500 subtitle-2-medium">
-        Tax not found.
-      </div>
-    );
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tax not found.</div>;
   }
 
   const handleSubmit = (data: CreateTaxFormValues) => {
-    // TODO: API call to update tax
     console.log("Update tax:", id, data);
     navigate(`${Pathname.TARIFF_MANAGEMENT}/tax/${id}`);
   };
@@ -63,7 +54,6 @@ export default function TaxEdit() {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Breadcrumb */}
       <Breadcrumb
         items={[
           { label: "Tariff Management", path: Pathname.TARIFF_MANAGEMENT },
@@ -73,28 +63,27 @@ export default function TaxEdit() {
         ]}
       />
 
-      {/* Form Card */}
-        <PageWrapper
-          title="Edit Tax"
-          showSearch={false}
-          showFilter={false}
-          titleClassName="heading-3-semibold"
-          className="w-full"
-        >
-          {form.name && (
-            <div className="mt-2">
-              <DynamicForm
-                schema={createTaxSchema}
-                defaultValues={form}
-                onSubmit={handleSubmit}
-                sections={taxFormSections}
-                submitLabel="Save Changes"
-                cancelLabel="Cancel"
-                onCancel={handleCancel}
-              />
-            </div>
-          )}
-        </PageWrapper>
+      <PageWrapper
+        title="Edit Tax"
+        showSearch={false}
+        showFilter={false}
+        titleClassName="heading-3-semibold"
+        className="w-full"
+      >
+        {form.name && (
+          <div className="mt-2">
+            <DynamicForm
+              schema={createTaxSchema}
+              defaultValues={form}
+              onSubmit={handleSubmit}
+              sections={taxFormSections}
+              submitLabel="Save Changes"
+              cancelLabel="Cancel"
+              onCancel={handleCancel}
+            />
+          </div>
+        )}
+      </PageWrapper>
     </div>
   );
 }
