@@ -2,15 +2,7 @@ import { DataTable, type ExtendedColumnDef } from "@/component/data-table"
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pathname } from "@/utils/pathname";
-
-type ChargingStationData = {
-  id: string;
-  stationName: string;
-  address: string;
-  supportPerson: string;
-  updatedAt: string;
-  updatedBy: string;
-};
+import { type ChargingStationData } from "../types/ChargingStations.types";
 
 const dummyData: ChargingStationData[] = [
   { id: "CS-001", stationName: "My Home Tarkshya", address: "Sector 15, New Delhi, Delhi - 110015, Petrol...", supportPerson: "Rahul Rathore", updatedAt: "May 18, 2023 1:27:08 PM", updatedBy: "admin" },
@@ -36,7 +28,7 @@ function ChargingStationList() {
       header: "Station Name",
       enableSorting: true,
       cell: ({ row }) => (
-        <span 
+        <span
           onClick={() => navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${row.original.id}`)}
           className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline cursor-pointer hover:text-opacity-80"
         >
@@ -65,10 +57,8 @@ function ChargingStationList() {
       enableSorting: true,
     },
   ];
-  
-  return (
-   <DataTable columns={columns} data={dummyData} search={search} />
-  )
+
+  return <DataTable columns={columns} data={dummyData} search={search} />;
 }
 
 export default ChargingStationList;

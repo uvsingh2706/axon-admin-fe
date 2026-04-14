@@ -9,7 +9,7 @@ import { Pathname } from "@/utils/pathname";
 import Bolt from "@/assets/icons/Bolt";
 import Pump from "@/assets/icons/Pump";
 import Wallet from "@/assets/icons/Wallet";
-import ChargePointTable from "./ChargePointTable";
+import ChargePointTable from "./ChargingGunsList";
 import type { ReactNode } from "react";
 
 

@@ -1,20 +1,21 @@
 import { useNavigate } from "react-router-dom";
+import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
+import { createPointSchema, pointFormSections } from "./ChargingPointsCreateConfig";
+import { type CreatePointFormValues } from "../types/ChargingPoints.types";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
-import { DynamicForm } from "@/component/form/DynamicForm";
-import { createStationSchema, stationFormSections, type CreateStationFormValues } from "./StationCreateConfig";
 
-export default function StationCreate() {
+export default function PointCreate() {
   const navigate = useNavigate();
-
-  const handleSubmit = (data: CreateStationFormValues) => {
-    console.log("Form submitted", data);
+  
+  const handleBack = () => {
     navigate(Pathname.ASSET_MANAGEMENT);
   };
 
-  const handleCancel = () => {
-    navigate(Pathname.ASSET_MANAGEMENT);
+  const handleSubmit = (data: CreatePointFormValues) => {
+    console.log("Form Submitted:", data);
+    handleBack();
   };
 
   return (
@@ -22,26 +23,27 @@ export default function StationCreate() {
       <Breadcrumb
         items={[
           { label: "Asset Management", path: Pathname.ASSET_MANAGEMENT },
-          { label: "Charging Stations", path: Pathname.ASSET_MANAGEMENT },
-          { label: "Add Station" },
+          { label: "Charging Points", path: Pathname.ASSET_MANAGEMENT },
+          { label: "Add Charging Point" },
         ]}
       />
 
       <PageWrapper
-        title="Add Station"
+        title="Add Charging Point"
         showSearch={false}
         showFilter={false}
         titleClassName="heading-3-semibold"
         className="w-full"
       >
         <div className="mt-2 text-left">
-          <DynamicForm<CreateStationFormValues>
-            schema={createStationSchema}
-            sections={stationFormSections}
+          <DynamicForm
+            schema={createPointSchema}
             onSubmit={handleSubmit}
-            onCancel={handleCancel}
-            submitLabel="Add Station"
+            sections={pointFormSections}
+            submitLabel="Save"
             cancelLabel="Cancel"
+            onCancel={handleBack}
+            // defaultValues={{ isPublic: true }}
           />
         </div>
       </PageWrapper>
