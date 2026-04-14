@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
-import WalletIcon from "@/assets/icons/WalletIcon";
-import LightningIcon from "@/assets/icons/LightningIcon";
-import TruckIcon from "@/assets/icons/TruckIcon";
-import ProfileUserIcon from "@/assets/icons/ProfileUserIcon";
+import Wallet from "@/assets/icons/Wallet";
+import Bolt from "@/assets/icons/Bolt";
+import CarIcon from "@/assets/icons/CarIcon";
+import User from "@/assets/icons/User";
 import EditIcon from "@/assets/icons/EditIcon";
 import DeleteIcon from "@/assets/icons/DeleteIcon";
 import ImagePlaceholderIcon from "@/assets/icons/ImagePlaceholderIcon";
@@ -27,22 +27,29 @@ export default function FleetDetail() {
 
   // Dynamic data fetching based on URL ID
   const fleetData = dummyData.find(item => item.id === id) || {
-    id: id || "N/A",station: "Unknown",connectorType: "N/A",status: "Offline",power: "0 kW",lastSession: "N/A", energyDelivered: "0 kWh",organisation: "N/A", email: "N/A",contact: "N/A",tariff: "N/A",tax: "0%",location: "0.0, 0.0", revenue: "₹0",energy: "0",totalVehicles: "0", totalDrivers: "0"
+    id: id || "N/A",
+    logo: "",
+    organisationName: "N/A",
+    vehicleType: "N/A",
+    flatRate: "N/A",
+    email: "N/A",
+    contact: "N/A",
+    totalDrivers: "0",
+    totalVehicles: "0"
   };
 
   // Map to the format used in UI
   const details = {
-    name: fleetData.station || fleetData.organisation,
-    revenue: fleetData.revenue || "₹0",
-    energy: fleetData.energy || "0",
-    vehicles: fleetData.totalVehicles || "0",
-    drivers: fleetData.totalDrivers || "0",
-    email: fleetData.email || "N/A",
-    vehicleType: fleetData.connectorType || "N/A",
-    contact: fleetData.contact || "N/A",
-    tariff: fleetData.tariff || "N/A",
-    tax: fleetData.tax || "0%",
-    location: fleetData.location || "N/A",
+    name: fleetData.organisationName,
+    logo: fleetData.logo,
+    revenue: "₹0",
+    energy: "0",
+    vehicles: fleetData.totalVehicles,
+    drivers: fleetData.totalDrivers,
+    email: fleetData.email,
+    vehicleType: fleetData.vehicleType,
+    contact: fleetData.contact,
+    tariff: fleetData.flatRate,
   };
 
   const TABS = [
@@ -55,25 +62,25 @@ export default function FleetDetail() {
     {
       title: "Total Revenue",
       value: details.revenue,
-      icon: <WalletIcon className="w-5 h-5 text-primary-600" />,
+      icon: <Wallet className="w-5 h-5 text-primary-600" />,
       bgColor: "bg-primary-50",
     },
     {
       title: "Energy Delivered (kwh)",
       value: details.energy,
-      icon: <LightningIcon className="w-5 h-5 text-primary-600" />,
+      icon: <Bolt className="w-5 h-5 text-primary-600" />,
       bgColor: "bg-primary-50",
     },
     {
       title: "Total Vehicles",
       value: details.vehicles,
-      icon: <TruckIcon className="w-5 h-5 text-primary-600" />,
+      icon: <CarIcon className="w-5 h-5 text-primary-600" />,
       bgColor: "bg-primary-50",
     },
     {
       title: "Total Drivers",
       value: details.drivers,
-      icon: <ProfileUserIcon className="w-5 h-5 text-orange-c1" />,
+      icon: <User className="w-5 h-5 text-orange-c1" />,
       bgColor: "bg-primary-50",
     },
   ];
@@ -128,9 +135,13 @@ export default function FleetDetail() {
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-8 items-start">
-                  {/* Logo Box (Placeholder) */}
-                  <div className="w-27 h-27 rounded-xl border border-text-100 flex items-center justify-center overflow-hidden shrink-0">
-                    <ImagePlaceholderIcon className="w-full h-full" />
+                  {/* Logo Box */}
+                  <div className="w-27 h-27 rounded-xl border border-text-100 flex items-center justify-center overflow-hidden shrink-0 bg-white">
+                    {details.logo ? (
+                      <img src={details.logo} alt={details.name} className="w-full h-full object-contain p-2" />
+                    ) : (
+                      <ImagePlaceholderIcon className="w-full h-full" />
+                    )}
                   </div>
 
                   {/* Content Section */}
