@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 // import { toast } from "sonner";
+// import { toast } from "sonner";
 import { useLogin } from "../../services/auth";
 import { Pathname } from "../../utils/pathname";
 import { Button } from "@/component/ui/button";
@@ -9,6 +10,7 @@ import { Input } from "@/component/ui/input";
 import OnboardingImage from "@/assets/images/Onboardingimage.webp";
 import { useWhiteLabel } from "@/whitelabel";
 import { useAuthStore } from "@/store/authStore";
+// import { Role } from "@/types/roles";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,6 +21,7 @@ export default function Login() {
   const { assets } = useWhiteLabel();
   const loginMutation = useLogin();
   
+  // const { assets } = useWhiteLabel();
 
   const handleSubmit = async (e: FormEvent) => {
           navigate(Pathname.DASHBOARD);
