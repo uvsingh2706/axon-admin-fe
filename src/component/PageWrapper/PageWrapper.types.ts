@@ -24,4 +24,5 @@ export interface PageWrapperProps {
   titleClassName?: string;
   className?: string;
   headerActions?: ReactNode;
+  isSearchRight?: boolean;
 }
