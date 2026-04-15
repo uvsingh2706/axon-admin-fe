@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuthStore } from "../../store/authStore";
+import { toast } from "sonner";
+import { useLogin } from "../../services/auth";
 import { Pathname } from "../../utils/pathname";
 import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
@@ -15,19 +16,31 @@ export default function Login() {
   const setAuth = useAuthStore((s) => s.setAuth);
   const navigate = useNavigate();
   const { assets } = useWhiteLabel();
+  const loginMutation = useLogin();
+  
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+          navigate(Pathname.DASHBOARD);
+              e.preventDefault();
+    // setIsLoading(true);
     await new Promise((r) => setTimeout(r, 800));
     setAuth("fake-jwt-token", {
       id: "1",
       name: "Admin User",
       email,
-      role: "admin",
+      role: "FINANCE",
     });
     setIsLoading(false);
     navigate(Pathname.DASHBOARD);
+
+    // e.preventDefault();
+    // try {
+    //   // await loginMutation.mutateAsync({ email, password });
+    //   // toast.success("Login successful");
+    //   navigate(Pathname.DASHBOARD);
+    // } catch (error: any) {
+    //   toast.error(error?.response?.data?.message || "Login failed");
+    // }
   };
 
   return (
@@ -46,7 +59,7 @@ export default function Login() {
           <div className="w-full max-w-[384px] min-w-65 mx-auto flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500">
 
             <div className="w-full mb-8 text-center sm:text-left">
-              <h1 className="text-[1.75rem] leading-[1.35] font-semibold text-[#101828] mb-2 tracking-tight">
+              <h1 className="text-[1.75rem] leading-[1.35] font-semibold text-black-c1 mb-2 tracking-tight">
                 Log in to your account
               </h1>
               <p className="text-[#475467] text-base leading-relaxed">
@@ -96,8 +109,9 @@ export default function Login() {
                   type="submit"
                   className="w-full h-11 mt-1 text-base border border-[#EAECF0] font-semibold bg-[#F2F4F7] hover:bg-primary-700 text-[#98A2B3] hover:text-white shadow-none rounded-lg transition-all duration-200"
                   isIcon={false}
+                  disabled={loginMutation.isPending}
                 >
-                  {isLoading ? "Signing in…" : "Sign in"}
+                  {loginMutation.isPending ? "Signing in…" : "Sign in"}
                 </Button>
               </div>
             </form>
