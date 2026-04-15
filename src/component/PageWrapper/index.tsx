@@ -27,6 +27,8 @@ export default function PageWrapper({
   isTable,
   className,
   headerActions,
+  isSearchRight=false
+
 }: PageWrapperProps) {
   const defaultTab = tabs?.[0]?.value;
 
@@ -82,7 +84,7 @@ export default function PageWrapper({
           {/* Toolbar row: tabs left, search/filter/action right */}
           <div className="flex items-center justify-between gap-4 mb-5">
             <TabsList>
-              {tabs.map((tab) => (
+              {tabs?.map((tab) => (
                 <TabsTrigger key={tab.value} value={tab.value}>
                   {tab.label}
                 </TabsTrigger>
@@ -98,6 +100,26 @@ export default function PageWrapper({
           {/* Tab content — pages pass children as TabsContent blocks */}
           {children}
         </Tabs>
+      </div>
+    );
+  }
+
+  // ── Search-right layout: title left, search + actions right (no tabs) ──────
+  if (isSearchRight) {
+    return (
+      <div className={cn("flex flex-col gap-0 bg-white p-6 rounded-lg", className)}>
+        <div className="flex items-center justify-between w-full mb-5">
+          {title && (
+            <h1 className={cn("heading-2-semibold text-text-950", titleClassName)}>
+              {title}
+            </h1>
+          )}
+          <div className="flex items-center gap-3">
+            {searchNode}
+            {actionsRight}
+          </div>
+        </div>
+        {children}
       </div>
     );
   }
