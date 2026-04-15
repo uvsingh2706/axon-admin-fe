@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter } from "react-router-dom";
 import { queryClient } from "../lib/queryClient";
 import { Toaster } from "@/component/ui/sonner";
+import { WhiteLabelProvider } from "@/whitelabel";
 
 interface AppProvidersProps {
   children: ReactNode;
@@ -18,9 +19,9 @@ interface AppProvidersProps {
 export default function AppProviders({ children }: AppProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        {children}
-      </BrowserRouter>
+      <WhiteLabelProvider>
+        <BrowserRouter>{children}</BrowserRouter>
+      </WhiteLabelProvider>
       {/* Devtools only appear in development builds */}
       <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
       <Toaster/>
