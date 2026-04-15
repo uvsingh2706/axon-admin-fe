@@ -5,10 +5,8 @@ import { useAuthStore } from "../store/authStore";
 // ── All base URLs from environment ──────────────────────────────────
 // Add new service URLs here as your backend grows.
 const API_URLS = {
-  default: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api",
-  auth: import.meta.env.VITE_AUTH_API_URL || "http://localhost:3001/api",
-  stations: import.meta.env.VITE_STATIONS_API_URL || "http://localhost:3002/api",
-  sessions: import.meta.env.VITE_SESSIONS_API_URL || "http://localhost:3003/api",
+  default: import.meta.env.VITE_API_BASE_URL,
+  // auth: import.meta.env.VITE_AUTH_API_URL || "http://localhost:3001/api",
 } as const;
 
 export type ApiServiceKey = keyof typeof API_URLS;
