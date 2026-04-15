@@ -8,6 +8,7 @@ import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
 import OnboardingImage from "@/assets/images/Onboardingimage.webp";
 import { useWhiteLabel } from "@/whitelabel";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Login() {
   const [email, setEmail] = useState("");
