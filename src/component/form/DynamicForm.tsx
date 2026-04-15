@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils"
 import { DatePicker } from "@/component/form-date"
 import { Switch } from "@/component/ui/switch"
 import ImageUploadField from "./imageUploadField/ImageUploadField"
+import DriverImageUploadField from "./imageUploadField/AvatarImageUploadField"
 import type { DynamicFormProps, FieldConfig } from "./DynamicForm.types"
 export type {
   DynamicFormProps,
@@ -68,6 +69,24 @@ export function DynamicForm<T extends FieldValues>({
                     />
                   )}
                   <ImageUploadField
+                    onChange={field.onChange}
+                    value={field.value}
+                    error={!!fieldState.error}
+                  />
+                  <ErrorMessage message={errorMsg} />
+                </div>
+              )
+
+            case "image-upload":
+              return (
+                <div className={cn("flex flex-col", fieldConfig.className)}>
+                  {fieldConfig.label && (
+                    <FieldLabel
+                      label={fieldConfig.label}
+                      required={fieldConfig.required}
+                    />
+                  )}
+                  <DriverImageUploadField
                     onChange={field.onChange}
                     value={field.value}
                     error={!!fieldState.error}

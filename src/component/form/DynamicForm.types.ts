@@ -12,6 +12,7 @@ export type FieldType =
   | "select"
   | "phone"
   | "image"
+  | "image-upload"
   | "switch"
   | "custom";
 
