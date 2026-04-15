@@ -7,12 +7,13 @@ import Wallet from "@/assets/icons/Wallet";
 import Bolt from "@/assets/icons/Bolt";
 import CarIcon from "@/assets/icons/CarIcon";
 import User from "@/assets/icons/User";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/component/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/component/ui/tabs";
 import { getFleetById, mockFleetStatsById } from "../mocks/fleet.mock";
 import { FLEET_MANAGEMENT_TABS } from "../constant";
 import FleetOverview from "./Overview";
 import type { FleetStatCard } from "../types/fleet.type";
 import Vehicles from "./Vehicles";
+import Drivers from "./Drivers";
 
 export default function FleetDetails() {
   const { id } = useParams<{ id: string }>();
@@ -106,11 +107,8 @@ export default function FleetDetails() {
 
             <Vehicles embedded fleetId={fleet.id} />
 
-            <TabsContent value="drivers">
-              <div className="h-40 flex flex-col items-center justify-center text-text-500 border-2 border-dashed border-secondary-00 rounded-xl bg-secondary-00/10">
-                <span className="subtitle-2-medium">No Drivers Found</span>
-              </div>
-            </TabsContent>
+            <Drivers embedded fleetId={fleet.id} />
+
           </Tabs>
         </div>
       </PageWrapper>
