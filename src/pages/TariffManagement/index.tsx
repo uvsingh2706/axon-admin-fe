@@ -36,7 +36,7 @@ const TariffManagement = () => {
       searchValue={search}
       onSearchChange={setSearch}
       onFilterClick={() => console.log("filter clicked")}
-      actionLabel={activeTab === "tariff" ? "Create Tariff" : "Create Tax"}
+        actionLabel={activeTab === "tariff" ? "Create Tariff" : "Create Tax"}
       actionIcon={<AddIcon />}
       onActionClick={handleActionClick}
     >

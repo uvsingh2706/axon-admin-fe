@@ -5,6 +5,7 @@ import type { User } from "../../store/authStore";
 
 export const authApi = {
   login: async (payload: LoginPayload): Promise<LoginResponse> => {
+    console.log('hello', payload);
     const { data } = await apiClient.post<LoginResponse>(ApiEndpoints.LOGIN, payload);
     return data;
   },

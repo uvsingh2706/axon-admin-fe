@@ -22,7 +22,7 @@ const TransactionOverview = () => {
   return (
     <div className="flex flex-col gap-8 bg-white p-6 rounded-lg border border-text-100 shadow-sm">
       {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="flex items-center justify-start gap-3">
         {statCardsData.map((data, index) => (
           <StatCard
             key={index}

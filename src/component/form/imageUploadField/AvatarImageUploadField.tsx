@@ -3,6 +3,7 @@ import { Button } from "@/component/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/component/ui/avatar";
 import { cn } from "@/lib/utils";
 import AvatarIcon from "@/assets/icons/AvatarIcon";
+import { DeleteIcon } from "@/assets/icons";
 
 type DriverImageUploadFieldProps = {
   onChange: (file: File | null) => void;
@@ -18,8 +19,8 @@ export default function DriverImageUploadField({
   accept = "image/png,image/jpeg",
 }: DriverImageUploadFieldProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [filename, setFilename] = useState<string>("");
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
+  const [forceCleared, setForceCleared] = useState(false);
 
   useEffect(() => {
     if (!(value instanceof File)) {
@@ -31,23 +32,35 @@ export default function DriverImageUploadField({
     return () => URL.revokeObjectURL(url);
   }, [value]);
 
+  useEffect(() => {
+    // If parent provides a value again, re-enable preview.
+    if (value) setForceCleared(false);
+  }, [value]);
+
   const previewSrc = useMemo(() => {
+    if (forceCleared) return null;
     if (typeof value === "string") return value;
     if (value instanceof File) return objectUrl;
     return null;
-  }, [objectUrl, value]);
+  }, [forceCleared, objectUrl, value]);
 
-  const derivedFilename = useMemo(() => {
-    if (filename) return filename;
-    if (value instanceof File) return value.name;
-    if (typeof value === "string") return value.split("/").pop() || "";
-    return "";
-  }, [filename, value]);
+  // Keeping filename state for future UI needs (e.g. showing filename).
+  // derivedFilename removed since it's not currently rendered.
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
-    setFilename(file?.name ?? "");
     onChange(file);
+  };
+
+  const handlePickFile = () => {
+    inputRef.current?.click();
+  };
+
+  const handleDelete = () => {
+    setObjectUrl(null);
+    // setForceCleared(true);
+    if (inputRef.current) inputRef.current.value = "";
+    onChange(null);
   };
 
   return (
@@ -72,23 +85,49 @@ export default function DriverImageUploadField({
         onChange={handleFileChange}
       />
 
-      <Button
-        type="button"
-        variant="secondary"
-        className={cn(
-          "h-10 rounded-md px-6",
-          "border-text-200 text-text-700",
-          "hover:border-text-200 hover:text-text-700",
-          "focus-visible:ring-text-200"
-        )}
-        onClick={() => inputRef.current?.click()}
-      >
-        Upload
-      </Button>
+      <div className="flex items-center gap-2">
+        {previewSrc ? (
+          <>
 
-      <div className="subtitle-3-regular text-text-400">
-        {derivedFilename || "PNG or JPG"}
+
+              <button onClick={handleDelete} className="cursor-pointer flex items-center gap-1">
+               <DeleteIcon className="w-5 h-5 text-gray-c3" />
+               Remove
+               </button>
+            <Button
+              type="button"
+              variant="secondary"
+              className={cn(
+                "h-10 rounded-md px-6",
+                "border-text-200 text-text-700",
+                "hover:border-text-200 hover:text-text-700",
+                "focus-visible:ring-text-200"
+              )}
+              onClick={handlePickFile}
+            >
+              Replace
+            </Button>
+          </>
+        ) : (
+          <Button
+            type="button"
+            variant="secondary"
+            className={cn(
+              "h-10 rounded-md px-6",
+              "border-text-200 text-text-700",
+              "hover:border-text-200 hover:text-text-700",
+              "focus-visible:ring-text-200"
+            )}
+            onClick={handlePickFile}
+          >
+            Upload
+          </Button>
+        )}
       </div>
+
+      {/* <div className="subtitle-3-regular text-text-400">
+        {derivedFilename || "PNG or JPG"}
+      </div> */}
     </div>
   );
 }

@@ -36,4 +36,10 @@ export type DriverDetailsData = DriverData & {
   vehicleInfo: DriverVehicleInfo;
   chargingHistory: ChargingHistoryRow[];
 };
+export type DriverStatCard = {
+  title: string;
+  value: string;
+  icon: React.ReactNode;
+  bgColor: string;
+};
 
