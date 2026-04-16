@@ -22,13 +22,15 @@ export default function TransactionDetails() {
         {
             title: "Personal Information",
             fields: [
-                { label: "User Name", value: transaction.userName },
+                { label: "User Name", value: transaction.userName, isUser: true },
                 {
                     label: "User Type",
                     value: transaction.userType,
                     isBadge: true,
-                    badgeStyles: transaction.userType === "Driver" ? "bg-pink-c2 text-pink-c3" : "bg-blue-c1 text-blue-c2"
+                    badgeStyles: transaction.userType === "Driver" ? "flex items-center justify-center bg-pink-c2 text-pink-c3 w-13 h-6 rounded" : "flex items-center justify-center bg-blue-c1 text-blue-c2 w-[4.625rem] h-[1.5625rem] rounded"
                 },
+                { label: "Vehicle Make", value: transaction.vehicleMake || "-" },
+                { label: "Vehicle Model", value: transaction.vehicleModel || "-" },
             ],
         },
         {
@@ -43,13 +45,15 @@ export default function TransactionDetails() {
         {
             title: "Charging Information",
             fields: [
-                { label: "Charging Station", value: transaction.chargingStation },
+                { label: "Charging Station", value: transaction.chargingStation || "-" },
                 {
                     label: "Charging Point & Charging Type",
-                    value: `${transaction.chargingPoint} | ${transaction.chargingType || "-"}`
+                    value: `${transaction.chargingPoint || "-"}, | ${transaction.chargingType || "-"}`
                 },
-                { label: "Duration (hrs)", value: transaction.duration },
-                { label: "Energy Consumption (kWH)", value: transaction.energy },
+                { label: "Duration (hrs)", value: transaction.duration || "-" },
+                { label: "Energy Consumption (kWH)", value: transaction.energy && transaction.energy !== "-" ? `${transaction.energy} kWH` : "-" },
+                { label: "Initial SoC", value: transaction.initialSoC || "-" },
+                { label: "Last SoC", value: transaction.lastSoC || "-" },
             ],
         },
     ];
@@ -66,9 +70,16 @@ export default function TransactionDetails() {
             <PageWrapper
                 title={
                     <div className="flex flex-col gap-1">
-                        <span className="subtitle-2-semibold text-text-950 leading-none">
-                            {transaction.userName}
-                        </span>
+                        <div className="flex items-center gap-3">
+                            <span className="subtitle-2-semibold text-text-950 leading-none">
+                                {transaction.userName}
+                            </span>
+                            {transaction.status === "Success" && (
+                                <span className="flex items-center justify-center subtitle-3-5-medium bg-green-c1 text-success w-16 h-6 gap-2 rounded px-2 py-1">
+                                    Success
+                                </span>
+                            )}
+                        </div>
                         <span className="subtitle-3-regular text-text-400 leading-none">
                             {transaction.invoiceId}
                         </span>
@@ -97,7 +108,7 @@ export default function TransactionDetails() {
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
                                 {section.fields.map((field, fIdx) => (
-                                    <div key={fIdx} className="flex flex-col gap-1.5">
+                                    <div key={fIdx} className="flex flex-col gap-1.5 relative">
                                         <span className="subtitle-3-regular text-text-500">{field.label}</span>
                                         {field.isBadge ? (
                                             <div className="flex">

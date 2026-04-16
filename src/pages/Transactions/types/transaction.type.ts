@@ -4,7 +4,7 @@ export interface TransactionData {
   id: string;
   userName: string;
   invoiceId: string;
-  userType: "Driver" | "B2C Users";
+  userType: "Driver" | "B2C User" | "B2C Users";
   invoiceType: string;
   entryType: string;
   chargingStation: string;
@@ -21,6 +21,14 @@ export interface TransactionData {
     flatRate: string;
     totalAmount: string;
   };
+  vehicleMake?: string;
+  vehicleModel?: string;
+  status?: string;
+  ocppTxnId?: string;
+  cpStop?: string;
+  closedBy?: string;
+  initialSoC?: string;
+  lastSoC?: string;
 }
 
 export interface TransactionStatCard {

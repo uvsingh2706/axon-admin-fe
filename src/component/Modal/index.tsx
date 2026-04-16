@@ -23,6 +23,8 @@ export const Modal = ({
     confirmLabel = "Delete",
     cancelLabel = "Cancel",
     icon = <AlertCircleIcon />,
+    confirmClassName,
+    cancelClassName,
 }: ModalProps) => {
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -41,8 +43,8 @@ export const Modal = ({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
-                    <AlertDialogAction onClick={onConfirm}>
+                    <AlertDialogCancel className={cancelClassName}>{cancelLabel}</AlertDialogCancel>
+                    <AlertDialogAction className={confirmClassName} onClick={onConfirm}>
                         {confirmLabel}
                     </AlertDialogAction>
                 </AlertDialogFooter>

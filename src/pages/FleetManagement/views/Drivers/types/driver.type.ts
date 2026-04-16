@@ -20,12 +20,19 @@ export type DriverVehicleInfo = {
 
 export type ChargingHistoryRow = {
   id: string;
+  invoiceId?: string;
   stationName: string;
   chargingPointName: string;
+  vehicleMake?: string;
   dateTime: string;
+  connectorId?: string;
+  ocppTxnId?: string;
   durationHours: number;
   energyConsumptionKwh: number;
   amount: string;
+  cpStop?: string;
+  closedBy?: string;
+  status?: string;
 };
 
 export type DriverDetailsData = DriverData & {

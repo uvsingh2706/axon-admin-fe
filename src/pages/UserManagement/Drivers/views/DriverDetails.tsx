@@ -14,7 +14,9 @@ import type { ReactNode } from "react";
 import { mockDriverList } from "../mocks/driver.mock";
 import { cn } from "@/lib/utils";
 import MoneyIcon from "@/assets/icons/MoneyIcon";
-import { Bolt } from "@/assets/icons";
+import { Bolt, DownloadIcon } from "@/assets/icons";
+import Eye from "@/assets/icons/Eye";
+import UpDownIcon from "@/assets/icons/UpDownIcon";
 
 function initials(name: string) {
   return name
@@ -26,21 +28,21 @@ function initials(name: string) {
 }
 
 
-  const statCardsData: DriverStatCard[] = [
-    {
-      title: "Charging Transactions",
-      value: '5',
-      icon: <MoneyIcon className="w-5 h-5 text-primary-600" />,
-      bgColor: "bg-primary-50",
-    },
-    {
-      title: "Energy Delivered (kwh)",
-      value: '300',
-      icon: <Bolt className="w-5 h-5 text-primary-600" />,
-      bgColor: "bg-primary-50",
-    },
-  
-  ];
+const statCardsData: DriverStatCard[] = [
+  {
+    title: "Charging Transactions",
+    value: '5',
+    icon: <MoneyIcon className="w-5 h-5 text-primary-600" />,
+    bgColor: "bg-primary-50",
+  },
+  {
+    title: "Energy Delivered (kwh)",
+    value: '300',
+    icon: <Bolt className="w-5 h-5 text-primary-600" />,
+    bgColor: "bg-primary-50",
+  },
+
+];
 
 type StatCardProps = DriverStatCard
 function StatCard({ title, value, icon, bgColor }: StatCardProps) {
@@ -127,12 +129,97 @@ export default function DriverDetails() {
 
   const chargingColumns: ExtendedColumnDef<ChargingHistoryRow, unknown>[] = useMemo(
     () => [
-      { accessorKey: "stationName", header: "Station Name" },
-      { accessorKey: "chargingPointName", header: "Charging Point Name" },
-      { accessorKey: "dateTime", header: "Date & Time" },
-      { accessorKey: "durationHours", header: "Duration (hrs)" },
-      { accessorKey: "energyConsumptionKwh", header: "Energy Consumption (kWh)" },
-      { accessorKey: "amount", header: "Amount" },
+      //   { accessorKey: "stationName", header: "Station Name" },
+      // { accessorKey: "chargingPointName", header: "Charging Point Name" },
+      // { accessorKey: "dateTime", header: "Date & Time" },
+      // { accessorKey: "durationHours", header: "Duration (hrs)" },
+      // { accessorKey: "energyConsumptionKwh", header: "Energy Consumption (kWh)" },
+      // { accessorKey: "amount", header: "Amount" },
+      {
+        accessorKey: "invoiceId",
+        header: () => <div className="flex items-center gap-1 cursor-pointer">Invoice ID <UpDownIcon className="w-3 h-3" /></div>,
+        cell: ({ row }) => row.original.invoiceId || "-",
+      },
+      {
+        accessorKey: "stationName",
+        header: () => <div className="flex items-center gap-1 cursor-pointer">Station Name <UpDownIcon className="w-3 h-3" /></div>,
+      },
+      {
+        accessorKey: "chargingPointName",
+        header: () => <div className="flex items-center gap-1 cursor-pointer">Charging Point Name <UpDownIcon className="w-3 h-3" /></div>,
+      },
+      {
+        accessorKey: "vehicleMake",
+        header: () => <div className="flex items-center gap-1 cursor-pointer">Vehicle make <UpDownIcon className="w-3 h-3" /></div>,
+        cell: ({ row }) => row.original.vehicleMake || "-",
+      },
+      {
+        accessorKey: "dateTime",
+        header: () => <div className="flex items-center gap-1 cursor-pointer">Date & Time <UpDownIcon className="w-3 h-3" /></div>,
+      },
+      {
+        accessorKey: "connectorId",
+        header: "Connector ID",
+        cell: ({ row }) => row.original.connectorId || "-",
+      },
+      {
+        accessorKey: "ocppTxnId",
+        header: "OCPP Txn ID",
+        cell: ({ row }) => row.original.ocppTxnId || "-",
+      },
+      {
+        accessorKey: "energyConsumptionKwh",
+        header: "Energy Consumption (kWh)",
+        cell: ({ row }) => `${row.original.energyConsumptionKwh} kWH`,
+      },
+      {
+        accessorKey: "durationHours",
+        header: "Duration (hrs)",
+      },
+      {
+        accessorKey: "amount",
+        header: "Amount",
+      },
+      {
+        accessorKey: "cpStop",
+        header: "CP Stop",
+        cell: ({ row }) => row.original.cpStop || "-",
+      },
+      {
+        accessorKey: "closedBy",
+        header: () => <div className="flex items-center gap-1 cursor-pointer">Closed By <UpDownIcon className="w-3 h-3" /></div>,
+        cell: ({ row }) => row.original.closedBy || "-",
+      },
+      {
+        accessorKey: "status",
+        header: () => <div className="flex items-center gap-1 cursor-pointer">Status <UpDownIcon className="w-3 h-3" /></div>,
+        cell: ({ row }) => {
+          const status = row.original.status;
+          const styles =
+            status === "Success"
+              ? "bg-green-c1 text-success"
+              : status === "Failed"
+                ? "bg-pink-c2 text-error"
+                : "bg-gray-c2 text-gray-c3";
+
+          if (!status) return <span>-</span>;
+          return (
+            <span className={`flex items-center justify-center subtitle-3-5-medium w-16 h-6 gap-2 rounded px-2 py-1 ${styles}`}>
+              {status}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "id",
+        header: "Action",
+        cell: () => (
+          <div className="flex items-center gap-3 text-secondary-500">
+            <Eye className="w-4 h-4 cursor-pointer" />
+            <DownloadIcon className="w-4 h-4 cursor-pointer" />
+          </div>
+        ),
+      },
     ],
     []
   );
@@ -205,70 +292,70 @@ export default function DriverDetails() {
         <div className="flex flex-col gap-6 mt-6">
           <div className="rounded-xl bg-white">
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {statCardsData.map((data, index) => (
-            <StatCard
-              key={index}
-              title={data.title}
-              value={data.value}
-              icon={data.icon}
-              bgColor={data.bgColor}
-            />
-          ))}
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {statCardsData.map((data, index) => (
+                <StatCard
+                  key={index}
+                  title={data.title}
+                  value={data.value}
+                  icon={data.icon}
+                  bgColor={data.bgColor}
+                />
+              ))}
+            </div>
             {/* Avatar row + fields */}
             <div className="border border-text-100 rounded-lg mt-2">
-            <div className="p-6 flex items-start gap-6">
-              {/* Square avatar like designs */}
-              <Avatar className="size-16 shrink-0 rounded-xl">
-                {d.avatarUrl ? <AvatarImage src={d.avatarUrl} alt={d.name} /> : null}
-                <AvatarFallback className="subtitle-2-medium rounded-xl">
-                  {initials(d.name)}
-                </AvatarFallback>
-              </Avatar>
+              <div className="p-6 flex items-start gap-6">
+                {/* Square avatar like designs */}
+                <Avatar className="size-16 shrink-0 rounded-xl">
+                  {d.avatarUrl ? <AvatarImage src={d.avatarUrl} alt={d.name} /> : null}
+                  <AvatarFallback className="subtitle-2-medium rounded-xl">
+                    {initials(d.name)}
+                  </AvatarFallback>
+                </Avatar>
 
-              <div className="flex-1 min-w-0">
-                <div className="heading-4-semibold text-text-950">{d.name}</div>
-                <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-4">
-                  {headerFields.map((f) => (
+                <div className="flex-1 min-w-0">
+                  <div className="heading-4-semibold text-text-950">{d.name}</div>
+                  <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-4">
+                    {headerFields.map((f) => (
+                      <DetailField key={f.label} label={f.label} value={String(f.value)} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Other Details */}
+              <div className="border-t border-text-100 px-6 py-5">
+                <div className="subtitle-2-semibold text-text-950 mb-4">Other Details</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
+                  {otherDetails.map((f) => (
                     <DetailField key={f.label} label={f.label} value={String(f.value)} />
                   ))}
                 </div>
               </div>
-            </div>
 
-            {/* Other Details */}
-            <div className="border-t border-text-100 px-6 py-5">
-              <div className="subtitle-2-semibold text-text-950 mb-4">Other Details</div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
-                {otherDetails.map((f) => (
-                  <DetailField key={f.label} label={f.label} value={String(f.value)} />
-                ))}
-              </div>
-            </div>
-          
 
-          {/* Vehicle info */}
-          <CardSection title="Current Vehicle Information">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-8">
-              <DetailField label="Brand" value={d.vehicleInfo.vehicleName} />
-              <DetailField label="Model" value={d.vehicleInfo.model} />
-              <DetailField
-                label="Registration Number"
-                value={d.vehicleInfo.registrationNumber}
-              />
-              <DetailField label="Connector Type" value={d.vehicleInfo.connectorType} />
-              <DetailField label="Vehicle ID" value={d.vehicleInfo.vehicleId} />
-            </div>
-          </CardSection>
+              {/* Vehicle info */}
+              <CardSection title="Current Vehicle Information">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-8">
+                  <DetailField label="Brand" value={d.vehicleInfo.vehicleName} />
+                  <DetailField label="Model" value={d.vehicleInfo.model} />
+                  <DetailField
+                    label="Registration Number"
+                    value={d.vehicleInfo.registrationNumber}
+                  />
+                  <DetailField label="Connector Type" value={d.vehicleInfo.connectorType} />
+                  <DetailField label="Vehicle ID" value={d.vehicleInfo.vehicleId} />
+                </div>
+              </CardSection>
 
+            </div>
           </div>
-          </div>
-                <div className="subtitle-2-semibold text-text-950">Charging History</div>
+          <div className="subtitle-2-semibold text-text-950">Transactions History</div>
 
 
-            <DataTable columns={chargingColumns} data={d.chargingHistory} />
-  
+          <DataTable columns={chargingColumns} data={d.chargingHistory} />
+
         </div>
       </PageWrapper>
     </div>
