@@ -20,6 +20,7 @@ export default function Header() {
   const pageTitle = usePageTitle();
   const navigate = useNavigate();
   const logout = useAuthStore((s) => s.logout);
+  const user = useAuthStore((s) => s.user);
   const [open, setOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -69,8 +70,12 @@ export default function Header() {
             >
               <UsersIcon className="h-8 w-8" />
               <div className="text-left">
-                <p className="subtitle-3-semibold text-black-c1 leading-tight">Admin User</p>
-                <p className="subtitle-3-5-regular text-text-500 leading-tight">admin@evcharge.com</p>
+                <p className="subtitle-3-semibold text-black-c1 leading-tight capitalize">
+                  {user?.name || user?.role || "Admin User"}
+                </p>
+                <p className="subtitle-3-5-regular text-text-500 leading-tight">
+                  {user?.email || "admin@evcharge.com"}
+                </p>
               </div>
             </button>
           </PopoverTrigger>

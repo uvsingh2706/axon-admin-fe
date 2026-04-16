@@ -2,13 +2,14 @@ export const ApiEndpoints = {
 
     //auth api endpoints
     LOGIN: '/admin-user/login',
-    PROFILE: '/auth/profile',
+    PROFILE: '/admin-user/profile',
     LOGOUT: '/auth/logout',
 
 
 
-    //CS-CP EndPoints 
-    GET_CHARGING_STATIONS: '/charging-station',
+    //tariff
+    TARIFF_LIST: '/tariff',
+
     
 
 };

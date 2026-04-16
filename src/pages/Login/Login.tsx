@@ -9,42 +9,32 @@ import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
 import OnboardingImage from "@/assets/images/Onboardingimage.webp";
 import { useWhiteLabel } from "@/whitelabel";
-import { useAuthStore } from "@/store/authStore";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 // import { Role } from "@/types/roles";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const [isLoading, setIsLoading] = useState(false);
-  const setAuth = useAuthStore((s) => s.setAuth);
   const navigate = useNavigate();
   const { assets } = useWhiteLabel();
   const loginMutation = useLogin();
   
-  // const { assets } = useWhiteLabel();
+  const isEmailValid = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
+  const isPasswordValid = password.length > 5;
+  const isFormValid = isEmailValid && isPasswordValid;
 
   const handleSubmit = async (e: FormEvent) => {
-          navigate(Pathname.DASHBOARD);
-              e.preventDefault();
-    // setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setAuth("fake-jwt-token", {
-      id: "1",
-      name: "Admin User",
-      email,
-      role: "FINANCE",
-    });
-    // setIsLoading(false);
-    navigate(Pathname.DASHBOARD);
-
-    // e.preventDefault();
-    // try {
-    //   // await loginMutation.mutateAsync({ email, password });
-    //   // toast.success("Login successful");
-    //   navigate(Pathname.DASHBOARD);
-    // } catch (error: any) {
-    //   toast.error(error?.response?.data?.message || "Login failed");
-    // }
+    e.preventDefault();
+    if (!isFormValid) return;
+    try {
+      await loginMutation.mutateAsync({ email, password });
+      toast.success("Login successful");
+      navigate(Pathname.DASHBOARD);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Login failed, please check your credentials");
+    }
   };
 
   return (
@@ -111,9 +101,14 @@ export default function Login() {
                 <Button
                   id="login-submit"
                   type="submit"
-                  className="w-full h-11 mt-1 text-base border border-[#EAECF0] font-semibold bg-[#F2F4F7] hover:bg-primary-700 text-[#98A2B3] hover:text-white shadow-none rounded-lg transition-all duration-200"
+                  className={cn(
+                    "w-full h-11 mt-1 text-base border font-semibold shadow-none rounded-lg transition-all duration-200",
+                    isFormValid && !loginMutation.isPending
+                      ? "bg-primary-600 hover:bg-primary-700 text-white border-primary-600"
+                      : "bg-[#F2F4F7] border-[#EAECF0] text-[#98A2B3] cursor-not-allowed"
+                  )}
                   isIcon={false}
-                  disabled={loginMutation.isPending}
+                  disabled={!isFormValid || loginMutation.isPending}
                 >
                   {loginMutation.isPending ? "Signing in…" : "Sign in"}
                 </Button>

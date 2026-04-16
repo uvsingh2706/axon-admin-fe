@@ -4,9 +4,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 // ── Types ───────────────────────────────────────────────────────────
 export interface User {
   id: string;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   role: string;
+  profilePicture?: string | null;
+  mobileNumber?: string;
+  address?: string | null;
+  accountDisable?: boolean;
+  fleetId?: string | null;
 }
 
 interface AuthState {

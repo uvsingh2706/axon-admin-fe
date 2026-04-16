@@ -6,6 +6,5 @@ export enum Role {
   TECH = "TECH",
   SUB_ADMIN = "SUB_ADMIN",
 }
-
 export type RoleValue = `${Role}` | (string & {});
 

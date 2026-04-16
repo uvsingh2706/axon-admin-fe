@@ -45,6 +45,22 @@ function normalizeActions(actions: unknown): ModulePermission {
   return base;
 }
 
+function setModulePermission(
+  out: RbacPermissions,
+  moduleName: string,
+  permission: ModulePermission
+) {
+  const module = moduleName.trim();
+  if (!module) return;
+
+  const normalizedKey = module.toUpperCase();
+  const slugKey = normalizedKey.replace(/\s+/g, "_");
+
+  out[module] = permission;
+  out[normalizedKey] = permission;
+  out[slugKey] = permission;
+}
+
 /**
  * Accepts multiple backend shapes and returns:
  * { [moduleKey]: { view, create, update, delete } }
@@ -64,7 +80,7 @@ export function normalizeBackendPermissions(input: unknown): RbacPermissions {
   if (typeof input === "object" && !Array.isArray(input)) {
     const rec = input as Record<ModuleKey, unknown>;
     for (const [module, value] of Object.entries(rec)) {
-      out[module] = normalizeActions(value);
+      setModulePermission(out, module, normalizeActions(value));
     }
     return out;
   }
@@ -74,11 +90,24 @@ export function normalizeBackendPermissions(input: unknown): RbacPermissions {
     for (const row of input) {
       if (!row || typeof row !== "object") continue;
       const obj = row as Record<string, unknown>;
+      const resource = obj.resource as Record<string, unknown> | undefined;
+      const resourceName = typeof resource?.name === "string" ? resource.name : null;
       const module = obj.module ?? obj.key ?? obj.moduleKey ?? obj.name;
-      if (typeof module !== "string" || !module.trim()) continue;
+      const moduleName = typeof module === "string" ? module : resourceName;
+      if (typeof moduleName !== "string" || !moduleName.trim()) continue;
 
-      const permissions = obj.permissions ?? obj.actions ?? obj.action ?? obj.permission;
-      out[module] = normalizeActions(permissions);
+      const permissions =
+        obj.permissions ??
+        obj.actions ??
+        obj.action ??
+        obj.permission ?? {
+          create: obj.create,
+          read: obj.read,
+          update: obj.update,
+          delete: obj.delete,
+        };
+
+      setModulePermission(out, moduleName, normalizeActions(permissions));
     }
   }
 

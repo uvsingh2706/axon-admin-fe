@@ -4,6 +4,7 @@ import { CardIcon, GridIcon, LightningIcon, TruckIcon, WalletIcon } from "../ass
 import { Pathname } from "../utils/pathname";
 import GasStation from "@/assets/icons/GasStation";
 import ProfileUserIcon from "@/assets/icons/ProfileUserIcon";
+import { MODULE } from "@/rbac/modules";
 
 
 
@@ -26,6 +27,7 @@ export const navItems: NavItem[] = [
     path: Pathname.DASHBOARD,
     icon: GridIcon,
     component: Dashboard,
+    rbac: { modules: [MODULE.DASHBOARD], action: "view", mode: "any" },
   },
   {
     key: "tariff-management",
@@ -33,6 +35,7 @@ export const navItems: NavItem[] = [
     path: Pathname.TARIFF_MANAGEMENT,
     icon: CardIcon,
     component: TariffManagement,
+    rbac: { modules: [MODULE.TAX, MODULE.TARIFF], action: "view", mode: "any" },
   },
   {
     key: "asset-management",
@@ -40,6 +43,11 @@ export const navItems: NavItem[] = [
     path: Pathname.ASSET_MANAGEMENT,
     icon: GasStation,
     component: AssetManagement,
+    rbac: {
+      modules: [MODULE.CHARGING_POINT, MODULE.CHARGING_STATION],
+      action: "view",
+      mode: "any",
+    },
   },
   {
     key: "fleet-management",
@@ -47,6 +55,11 @@ export const navItems: NavItem[] = [
     path: Pathname.FLEET_MANAGEMENT,
     icon: TruckIcon,
     component: FleetManagement,
+    rbac: {
+      modules: [MODULE.FLEET_MANAGEMENT, MODULE.VEHICLE_MANAGEMENT],
+      action: "view",
+      mode: "any",
+    },
   },
   {
     key: "user-management",
@@ -54,6 +67,12 @@ export const navItems: NavItem[] = [
     path: Pathname.USER_MANAGEMENT,
     icon: ProfileUserIcon,
     component: UserManagement,
+    rbac: {
+      // Driver/vehicle management is controlled by VEHICLE_MANAGEMENT in the backend.
+      modules: [MODULE.B2B, MODULE.B2C, MODULE.VEHICLE_MANAGEMENT],
+      action: "view",
+      mode: "any",
+    },
   },
   {
     key: "transactions",
@@ -61,6 +80,7 @@ export const navItems: NavItem[] = [
     path: Pathname.TRANSACTIONS,
     icon: WalletIcon,
     component: Transactions,
+    rbac: { modules: [MODULE.TRANSACTION], action: "view", mode: "any" },
   },
   {
     key: "active-charging-sessions",
@@ -68,5 +88,6 @@ export const navItems: NavItem[] = [
     path: Pathname.ACTIVE_CHARGING_SESSIONS,
     icon: LightningIcon,
     component: ActiveChargingSession,
+    rbac: { modules: [MODULE.ACTIVE_SESSION], action: "view", mode: "any" },
   },
 ];

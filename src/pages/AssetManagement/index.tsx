@@ -1,12 +1,14 @@
 import AddIcon from "@/assets/icons/AddIcon";
 import PageWrapper from "@/component/PageWrapper";
 import { TabsContent } from "@/component/ui/tabs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useRoutes } from "react-router-dom";
 import { assetRoutes } from "./Routes";
 import { ChargingStationList } from "./ChargingStations";
 import { ChargingPointList } from "./ChargingPoints";
-import {ASSET_MANAGEMENT_TABS} from "./constant"
+import { ASSET_MANAGEMENT_TABS } from "./constant";
+import { useCan } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 const AssetManagement = () => {
   const [search, setSearch] = useState("");
@@ -14,7 +16,27 @@ const AssetManagement = () => {
   const navigate = useNavigate();
   const element = useRoutes(assetRoutes);
 
+  const canViewStations = useCan(MODULE.CHARGING_STATION, "view");
+  const canViewPoints = useCan(MODULE.CHARGING_POINT, "view");
+  const canCreateStations = useCan(MODULE.CHARGING_STATION, "create");
+  const canCreatePoints = useCan(MODULE.CHARGING_POINT, "create");
+
+  const allowedTabs = ASSET_MANAGEMENT_TABS.filter((tab) => {
+    if (tab.value === "charging-stations") return canViewStations;
+    if (tab.value === "charging-points") return canViewPoints;
+    return true;
+  });
+
+  useEffect(() => {
+    if (!allowedTabs.some((t) => t.value === activeTab)) {
+      setActiveTab(allowedTabs[0]?.value ?? "charging-stations");
+    }
+  }, [allowedTabs, activeTab]);
+
   const handleActionClick = () => {
+    if (activeTab === "charging-stations" && !canCreateStations) return;
+    if (activeTab === "charging-points" && !canCreatePoints) return;
+
     if (activeTab === "charging-stations") {
       navigate("create-station");
     } else {
@@ -26,10 +48,27 @@ const AssetManagement = () => {
     return element;
   }
 
+  if (allowedTabs.length === 0) {
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        You do not have permission to view asset management.
+      </div>
+    );
+  }
+
+  const actionLabel =
+    activeTab === "charging-stations"
+      ? canCreateStations
+        ? "Add Charging Station"
+        : undefined
+      : canCreatePoints
+        ? "Add Charging Point"
+        : undefined;
+
   return (
     <PageWrapper
       title="Asset Management"
-      tabs={ASSET_MANAGEMENT_TABS}
+      tabs={allowedTabs}
       activeTab={activeTab}
       onTabChange={setActiveTab}
       searchPlaceholder={activeTab === "charging-stations" ? "Search Charging Station" : "Search Charging Point"}
@@ -37,17 +76,21 @@ const AssetManagement = () => {
       onSearchChange={setSearch}
       showFilter={false}
       onFilterClick={() => console.log("filter clicked")}
-      actionLabel={activeTab === "charging-stations" ? "Add Charging Station" : "Add Charging Point"}
+      actionLabel={actionLabel}
       actionIcon={<AddIcon />}
-      onActionClick={handleActionClick}
+      onActionClick={actionLabel ? handleActionClick : undefined}
     >
-      <TabsContent value="charging-stations">
-        <ChargingStationList />
-      </TabsContent>
+      {canViewStations && (
+        <TabsContent value="charging-stations">
+          <ChargingStationList />
+        </TabsContent>
+      )}
 
-      <TabsContent value="charging-points">
-        <ChargingPointList />
-      </TabsContent>
+      {canViewPoints && (
+        <TabsContent value="charging-points">
+          <ChargingPointList />
+        </TabsContent>
+      )}
     </PageWrapper>
   );
 };
