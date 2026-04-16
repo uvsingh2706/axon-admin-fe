@@ -65,6 +65,11 @@ export const connectorTypeOptions = [
   { label: "Type 2", value: "Type 2" },
   { label: "CHAdeMO", value: "CHAdeMO" },
 ];
+export const chargingRateOptions = [
+  { label: "CCS2", value: "CCS2" },
+  { label: "Type 2", value: "Type 2" },
+  { label: "CHAdeMO", value: "CHAdeMO" },
+];
 
 export const getVehiclesByFleetId = (fleetId?: string) =>
   mockVehicles.filter((vehicle) => vehicle.fleetId === fleetId);

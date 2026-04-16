@@ -1,6 +1,6 @@
 import * as z from "zod";
 import type { SectionConfig } from "@/component/form/DynamicForm";
-import { brandOptions, connectorTypeOptions, modelOptions } from "../mocks/vehicles.mock";
+import { brandOptions, chargingRateOptions, connectorTypeOptions, modelOptions } from "../mocks/vehicles.mock";
 
 export const createVehicleSchema = z.object({
   brand: z.string().min(1, "Brand is required"),
@@ -8,6 +8,8 @@ export const createVehicleSchema = z.object({
   registrationNumber: z.string().min(1, "Registration Number is required"),
   connectorType: z.string().min(1, "Connector Type is required"),
   vehicleId: z.string().min(1, "Vehicle ID is required"),
+  batteryPack: z.string().min(1, "Battery Pack is required"),
+  chargingRate: z.string().min(1, "Charging Rate is required"),
 });
 
 export type CreateVehicleFormValues = z.infer<typeof createVehicleSchema>;
@@ -55,6 +57,21 @@ const vehicleFormSections: SectionConfig<CreateVehicleFormValues>[] = [
         type: "text",
         placeholder: "E.g. 123-234-245",
         required: true,
+      },
+      {
+        name: "batteryPack",
+        label: "Battery Pack",
+        type: "text",
+        placeholder: "12KWH",
+        required: true,
+      },
+      {
+        name: "chargingRate",
+        label: "Charging Rate",
+        type: "select",
+        placeholder: "E.g. 123-234-245",
+        required: true,
+        options: chargingRateOptions,
       },
     ],
   },
