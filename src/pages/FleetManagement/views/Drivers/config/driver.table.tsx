@@ -30,11 +30,11 @@ export const driverTableColumns: ExtendedColumnDef<DriverData, unknown>[] = [
       </div>
     ),
   },
-  { accessorKey: "contact", header: "Contact", enableSorting: true },
-  { accessorKey: "driverId", header: "Driver ID", enableSorting: true },
-  { accessorKey: "assignedVehicle", header: "Assigned Vehicle", enableSorting: true },
-  { accessorKey: "email", header: "Email", enableSorting: true },
-  { accessorKey: "gender", header: "Gender", enableSorting: true },
-  { accessorKey: "updatedBy", header: "Updated By", enableSorting: true },
+  { accessorKey: "contact", header: "Contact", enableSorting: false },
+  { accessorKey: "driverId", header: "Driver ID", enableSorting: false },
+  { accessorKey: "assignedVehicle", header: "Assigned Vehicle", enableSorting: false },
+  { accessorKey: "email", header: "Email", enableSorting: false },
+  { accessorKey: "gender", header: "Gender", enableSorting: false },
+  { accessorKey: "updatedBy", header: "Updated By", enableSorting: false },
 ];
 

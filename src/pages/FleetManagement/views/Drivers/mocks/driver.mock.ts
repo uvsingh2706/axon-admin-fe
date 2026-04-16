@@ -124,7 +124,7 @@ export const mockDriverDetailsById: Record<string, DriverDetailsData> = {
     organisationName: "Ola Electric Private Ltd.",
     personalEmailId: "info@ola.com",
     licenseNumber: "KA-01-20190012345",
-    licenseExpiryDate: "31/12/2027",
+    licenseExpiryDate: "2027-12-31",
     vehicleInfo: {
       vehicleName: "Tata Nexon EV",
       model: "Tigor EV XE",
@@ -153,3 +153,22 @@ export function getDriverDetailsById(driverId: string) {
   return mockDriverDetailsById[driverId];
 }
 
+export function getDriverEditDefaultValues(fleetId: string, driverId: string) {
+  const details = mockDriverDetailsById[driverId];
+  const driver = mockDrivers.find((d) => d.fleetId === fleetId && d.id === driverId);
+  const source = details ?? driver;
+  if (!source) return null;
+
+  return {
+    driverName: source.name,
+    personalEmailId: details?.personalEmailId ?? driver?.email ?? "",
+    phoneNumber: source.contact,
+    gender: source.gender as string,
+    driverId: source.driverId,
+    licenseNumber: details?.licenseNumber ?? "",
+    licenseExpiryDate: details?.licenseExpiryDate ?? "",
+    organisationFleet: details?.organisationName ?? "",
+    vehicleId: "veh_001",
+    image: source.avatarUrl ?? "",
+  };
+}

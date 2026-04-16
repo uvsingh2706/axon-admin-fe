@@ -16,6 +16,11 @@ export const createDriverSchema = z.object({
 
 export type CreateDriverFormValues = z.infer<typeof createDriverSchema>;
 
+// Edit schema — identical fields, image is optional (may already exist)
+export const editDriverSchema = createDriverSchema;
+export type EditDriverFormValues = CreateDriverFormValues;
+
+
 export const driverCreateFormSections: SectionConfig<CreateDriverFormValues>[] = [
   {
     title: "Personal Information",

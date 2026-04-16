@@ -20,7 +20,7 @@ export default function CreateDrivers() {
   }
 
   const handleCancel = () => {
-    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers`);
+    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}`);
   };
 
   const handleSubmit = (data: CreateDriverFormValues) => {

@@ -1,7 +1,15 @@
 import AddIcon from "@/assets/icons/AddIcon";
 import Breadcrumb from "@/component/Breadcrumb";
+import CsvModal from "@/component/CsvModal";
 import PageWrapper from "@/component/PageWrapper";
+import { Button } from "@/component/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/component/ui/popover";
 import { TabsContent } from "@/component/ui/tabs";
+import { cn } from "@/lib/utils";
 import { Pathname } from "@/utils/pathname";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -19,22 +27,20 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
   const id = fleetId ?? routeFleetId;
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  // const [isOpen, setIsOpen] = useState(false);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   const fleet = getFleetById(id);
 
-  // const handleAddDriverClick = () => {
-  //       setIsOpen(!isOpen);
+  const handleAddNew = () => {
+    setPopoverOpen(false);
+    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/create`);
+  };
 
-  //       if(addnew){
-  //               navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/create`);
-
-  //       }
-  //       else {
-  //         //openmodal
-  //       }
-  
-  // }
+  const handleOpenImportModal = () => {
+    setPopoverOpen(false);
+    setIsImportModalOpen(true);
+  };
 
   if (!fleet || !id) {
     return (
@@ -43,6 +49,46 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
       </div>
     );
   }
+
+  const addDriverTrigger = (
+    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="primary"
+          isIcon={<AddIcon />}
+          onClick={() => setPopoverOpen((prev) => !prev)}
+        >
+          {DRIVERS_ACTION_LABEL}
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent
+        align="end"
+        sideOffset={8}
+        className="w-52 p-2 rounded-xl gap-0"
+      >
+        <button
+          type="button"
+          className={cn(
+            "flex items-center font-semibold gap-3 w-full px-4 py-3 rounded-lg subtitle-3-medium text-text-700 hover:bg-secondary-00 transition-colors cursor-pointer"
+          )}
+          onClick={handleAddNew}
+        >
+          Add New
+        </button>
+        <button
+          type="button"
+          className={cn(
+            "flex items-center font-semibold gap-3 w-full px-4 py-3 rounded-lg subtitle-3-medium text-text-700 hover:bg-secondary-00 transition-colors cursor-pointer"
+
+          )}
+          onClick={handleOpenImportModal}
+        >
+          Import From CSV Or xlsx
+        </button>
+      </PopoverContent>
+    </Popover>
+  );
 
   const content = (
     <div className="flex flex-col gap-4">
@@ -62,19 +108,22 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
         searchPlaceholder={DRIVERS_SEARCH_PLACEHOLDER}
         onSearchChange={setSearch}
         onFilterClick={() => console.log("filter clicked")}
-        actionIcon={<AddIcon />}
-        actionLabel={DRIVERS_ACTION_LABEL}
-        onActionClick={() => navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/create`)}
+        headerActions={addDriverTrigger}
         isTable={true}
         isSearchRight={true}
         className="w-full"
       >
         <DriverList search={search} fleetId={id} />
       </PageWrapper>
+
+      <CsvModal
+        open={isImportModalOpen}
+        onOpenChange={setIsImportModalOpen}
+        title="Add Drivers"
+        description="Import from CSV or xlsx"
+      />
     </div>
   );
-  
-
 
   if (embedded) {
     return <TabsContent value="drivers">{content}</TabsContent>;
