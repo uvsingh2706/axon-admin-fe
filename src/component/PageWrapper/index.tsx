@@ -117,6 +117,7 @@ export default function PageWrapper({
           <div className="flex items-center gap-3">
             {searchNode}
             {actionsRight}
+            {headerActions && <div>{headerActions}</div>}
           </div>
         </div>
         {children}

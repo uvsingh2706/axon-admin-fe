@@ -21,4 +21,4 @@ export { default as ProfileUserIcon } from './ProfileUserIcon';
 export { default as ImagePlaceholderIcon } from './ImagePlaceholderIcon';
 export { default as CopyIcon } from './CopyIcon';
 export { default as UsersIcon } from './User';
-
+export { default as FileUpload } from './FileUpload'

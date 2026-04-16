@@ -1,18 +1,45 @@
+import { useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Breadcrumb from "@/component/Breadcrumb";
+import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
 import { Pathname } from "@/utils/pathname";
-import { useParams } from "react-router-dom";
 import { getFleetById } from "../../../mocks/fleet.mock";
-import { getDriverById } from "../mocks/driver.mock";
+import {
+  editDriverSchema,
+  driverCreateFormSections,
+  type EditDriverFormValues,
+} from "../config/driver.form";
+import { getDriverById, getDriverEditDefaultValues } from "../mocks/driver.mock";
 
 export default function EditDrivers() {
   const { id, driverId } = useParams<{ id: string; driverId: string }>();
+  const navigate = useNavigate();
+
   const fleet = getFleetById(id);
   const driver = id && driverId ? getDriverById(id, driverId) : undefined;
+  const defaults = id && driverId ? getDriverEditDefaultValues(id, driverId) : null;
 
-  if (!fleet || !driver || !id || !driverId) {
-    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Driver not found.</div>;
+  // Keep ALL sections including image-upload — identical to CreateDrivers
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const formSections = useMemo(() => driverCreateFormSections, []);
+
+  if (!fleet || !driver || !id || !driverId || !defaults) {
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        Driver not found.
+      </div>
+    );
   }
+
+  const handleSubmit = (data: EditDriverFormValues) => {
+    console.log("Edit driver submitted:", data);
+    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}`);
+  };
+
+  const handleCancel = () => {
+    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}`);
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -21,8 +48,11 @@ export default function EditDrivers() {
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
           { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           { label: "Drivers", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
-          { label: driver.name, path: `${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}` },
-          { label: "Edit" },
+          {
+            label: driver.name,
+            path: `${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}`,
+          },
+          { label: "Edit Driver" },
         ]}
       />
 
@@ -33,11 +63,18 @@ export default function EditDrivers() {
         titleClassName="heading-3-semibold"
         className="w-full"
       >
-        <div className="h-40 flex flex-col items-center justify-center text-text-500 border-2 border-dashed border-secondary-00 rounded-xl bg-secondary-00/10">
-          <span className="subtitle-2-medium">Edit action</span>
+        <div className="mt-2">
+          <DynamicForm<EditDriverFormValues>
+            schema={editDriverSchema}
+            defaultValues={defaults as EditDriverFormValues}
+            sections={formSections}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            submitLabel="Save Changes"
+            cancelLabel="Cancel"
+          />
         </div>
       </PageWrapper>
     </div>
   );
 }
-
