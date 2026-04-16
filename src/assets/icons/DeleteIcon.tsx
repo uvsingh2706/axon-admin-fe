@@ -1,5 +1,3 @@
-
-
 function DeleteIcon({ className }: { className?: string }) {
   return (
     <svg
