@@ -6,7 +6,7 @@ export interface TabConfig {
 }
 
 export interface PageWrapperProps {
-  title?: string;
+  title?: ReactNode;
   tabs?: TabConfig[];
   activeTab?: string;
   onTabChange?: (value: string) => void;
@@ -25,4 +25,5 @@ export interface PageWrapperProps {
   className?: string;
   headerActions?: ReactNode;
   isSearchRight?: boolean;
+  searchClassName?: string;
 }

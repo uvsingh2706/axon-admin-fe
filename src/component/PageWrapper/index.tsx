@@ -27,8 +27,8 @@ export default function PageWrapper({
   isTable,
   className,
   headerActions,
-  isSearchRight=false
-
+  isSearchRight = false,
+  searchClassName,
 }: PageWrapperProps) {
   const defaultTab = tabs?.[0]?.value;
 
@@ -41,6 +41,7 @@ export default function PageWrapper({
       value={searchValue}
       onChange={onSearchChange}
       placeholder={searchPlaceholder}
+      className={searchClassName}
     />
   );
 
@@ -138,8 +139,8 @@ export default function PageWrapper({
           {headerActions && <div>{headerActions}</div>}
         </div>
       )}
-      
-      {!isTable && <div className="w-full border-b h-2 border-text-200"/>}
+
+      {!isTable && <div className="w-full border-b h-2 border-text-200" />}
 
       <div className="flex items-center justify-between gap-4 mb-5">
         {searchNode || <div />}

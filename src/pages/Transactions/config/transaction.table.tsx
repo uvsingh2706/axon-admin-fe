@@ -1,53 +1,83 @@
+
 import type { ExtendedColumnDef } from "@/component/data-table";
 import type { TransactionData } from "../types/transaction.type";
+import Eye from "@/assets/icons/Eye";
+import { DownloadIcon } from "@/assets/icons";
 
 export const transactionColumns: ExtendedColumnDef<TransactionData, unknown>[] = [
   {
-    accessorKey: "transactionId",
-    header: "Transaction ID",
-    enableSorting: true,
+    accessorKey: "userName",
+    header: "User Name",
   },
   {
-    accessorKey: "user",
-    header: "User",
+    accessorKey: "invoiceId",
+    header: "Invoice ID",
   },
   {
-    accessorKey: "amount",
-    header: "Amount",
-    enableSorting: true,
-    cell: ({ row }) => (
-      <span className="font-semibold text-gray-900">
-        {row.original.amount}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "paymentMethod",
-    header: "Payment Method",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "userType",
+    header: "User Type",
     cell: ({ row }) => {
-      const status = row.original.status;
-      let styles = 'bg-gray-100 text-gray-700';
+      const type = row.original.userType;
 
-      if (status === 'Completed') styles = 'bg-green-100 text-green-700';
-      if (status === 'Pending') styles = 'bg-yellow-100 text-yellow-700';
-      if (status === 'Failed') styles = 'bg-red-100 text-red-700';
+      const styles =
+        type === "Driver"
+          ? "bg-pink-c2 text-pink-c3"
+          : "bg-blue-c1 text-blue-c2";
 
       return (
-        <span className={`text-[14px] px-2 py-1 rounded-[4px] font-medium ${styles}`}>
-          {status}
+        <span className={`subtitle-3-5-medium px-2 py-1 rounded-md ${styles}`}>
+          {type}
         </span>
       );
     },
   },
   {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => {
-      return <span>{new Date(row.original.date).toLocaleString()}</span>;
-    }
+    accessorKey: "invoiceType",
+    header: "Invoice Type",
+  },
+  {
+    accessorKey: "entryType",
+    header: "Entry Type",
+  },
+  {
+    accessorKey: "chargingStation",
+    header: "Charging Station",
+  },
+  {
+    accessorKey: "chargingPoint",
+    header: "Charging Point",
+  },
+  {
+    accessorKey: "dateTime",
+    header: "Date & Time",
+  },
+  {
+    accessorKey: "duration",
+    header: "Duration (hrs)",
+  },
+  {
+    accessorKey: "energy",
+    header: "Energy Consumption (kWh)",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ row }) => (
+      <span className="subtitle-3-medium text-text-950 leading-none tracking-normal">
+        ₹{row.original.amount}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "id",
+    header: "Action",
+    cell: () => {
+      return (
+        <div className="flex items-center gap-3">
+          <Eye className="w-4 h-4 cursor-pointer" />
+          <DownloadIcon className="w-4 h-4 cursor-pointer" />
+        </div>
+      );
+    },
   },
 ];

@@ -24,6 +24,7 @@
 
 
   /* ── Secondary / Purple scale ── */
+  --color-secondary-0: #F8F9FB;
   --color-secondary-00: #F6F6F8;
   --color-secondary-50: #F3F1F8;
   --color-secondary-100: #DBD5EA;
@@ -79,12 +80,20 @@
 
   /* pink color */
   --color-pink-c1: #FBEAE9;
+  --color-pink-c2: #FEECF1;
+  --color-pink-c3: #6F065D;
+
   /* orange */
   --color-orange-c1: #FE6A00;
   --color-orange-c2: #FFE6C9;
 
   /* green colors */
   --color-green-c1: #DDF9E4;
+  /* blue colors */
+  --color-blue-c1: #E3F7FF;
+  --color-blue-c2: #1A4050;
+  
+
 
 
 

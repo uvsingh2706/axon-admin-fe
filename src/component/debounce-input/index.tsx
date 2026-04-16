@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/component/ui/input";
 import SearchIcon from "@/assets/icons/SearchIcon";
+import { cn } from "@/lib/utils";
 
 interface DebouncedInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
@@ -13,6 +14,7 @@ export default function DebouncedInput({
   value: externalValue = "",
   onChange,
   debounceMs = 300,
+  className,
   ...props
 }: DebouncedInputProps) {
   const [internalValue, setInternalValue] = useState(externalValue);
@@ -37,7 +39,7 @@ export default function DebouncedInput({
       {...props}
       value={internalValue}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInternalValue(e.target.value)}
-      className="max-w-80 w-full border-text-200 rounded-lg h-11"
+      className={cn("max-w-80 w-full border-text-200 rounded-lg h-11", className)}
       prefixIcon={<SearchIcon className="h-4.5 w-4.5 text-text-500" />}
     />
   );

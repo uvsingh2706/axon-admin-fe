@@ -15,10 +15,16 @@ export { default as NotificationIcon } from './NotificationIcon';
 export { default as StationIcon } from './StationICon';
 export { default as TruckIcon } from './TruckIcon';
 export { default as WalletIcon } from './WalletIcon';
+export { default as Download } from './Download';
 export { default as CarIcon } from './CarIcon';
 export { default as Bolt } from './Bolt';
 export { default as ProfileUserIcon } from './ProfileUserIcon';
 export { default as ImagePlaceholderIcon } from './ImagePlaceholderIcon';
 export { default as CopyIcon } from './CopyIcon';
 export { default as UsersIcon } from './User';
-export { default as FileUpload } from './FileUpload'
+export { default as FileUpload } from './FileUpload';
+export { default as Wallet } from './Wallet';
+export { default as Eye } from './Eye';
+export { DownloadIcon } from './DownloadIcon';
+export { default as MoneyIcon } from './MoneyIcon';
+
