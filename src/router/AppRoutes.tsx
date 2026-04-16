@@ -7,9 +7,38 @@ import Login from "../pages/Login/Login";
 import ForgetPassword from "../pages/ForgetPassword";
 import ComponentsShowcase from "../pages/ComponentsShowcase";
 import { useAuthStore } from "../store/authStore";
+import { useRbacStore } from "@/rbac";
+import { Role } from "@/types/role";
+import { canByRbacMeta } from "@/rbac/rbac.guard";
 
 export default function AppRoutes() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const authRole = useAuthStore((s) => s.user?.role ?? null);
+  const rbacRole = useRbacStore((s) => s.role);
+  const permissions = useRbacStore((s) => s.permissions);
+  const isRbacLoaded = useRbacStore((s) => s.isLoaded);
+
+  const role = rbacRole ?? authRole;
+
+  const visibleNavItems = navItems.filter((item) => {
+    if (!item.rbac) return true;
+
+    const action = item.rbac.action ?? "view";
+    const mode = item.rbac.mode ?? "any";
+
+    if (!isRbacLoaded) {
+      if (role === Role.SUPER_ADMIN) return true;
+      return item.key === "dashboard";
+    }
+
+    return canByRbacMeta({
+      role,
+      permissions,
+      modules: item.rbac.modules,
+      action,
+      mode,
+    });
+  });
 
   return (
     <Routes>
@@ -34,8 +63,8 @@ export default function AppRoutes() {
         }
       >
       
-        {/* Auto-generate routes from navItems config (Sidebar visible) */}
-        {navItems.map((item) => (
+        {/* Auto-generate routes from navItems config with RBAC filtering */}
+        {visibleNavItems.map((item) => (
           <Route
             key={item.key}
             path={`${item.path}/*`}

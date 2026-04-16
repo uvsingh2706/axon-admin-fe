@@ -19,3 +19,4 @@ export type TariffEditData = {
   serviceFee: string;
   tax: string;
 };
+
