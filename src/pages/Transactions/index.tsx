@@ -20,7 +20,7 @@ const TransactionOverview = () => {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex flex-col gap-8 bg-white p-6 rounded-lg border border-text-100 shadow-sm">
+    <div className="flex flex-col gap-8 bg-white p-6 rounded-lg">
       {/* Stats Section */}
       <div className="flex items-center justify-start gap-3">
         {statCardsData.map((data, index) => (

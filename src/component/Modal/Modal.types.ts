@@ -10,4 +10,6 @@ export interface ModalProps {
   icon?: ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  confirmClassName?: string;
+  cancelClassName?: string;
 }
