@@ -6,14 +6,20 @@ import { Pathname } from "@/utils/pathname";
 import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
-import { mockTariffDetailsById } from "../mocks/tariff.mock";
+import { useTariffById } from "../services/tarrif.hooks";
+import { format } from "date-fns";
 
 export default function TariffDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const tariff = id ? mockTariffDetailsById[id] : null;
+  const { data: tariffResponse, isLoading } = useTariffById(id ?? "");
+  const tariff = tariffResponse?.data;
+
+  if (isLoading) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading…</div>;
+  }
 
   if (!tariff) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tariff not found.</div>;
@@ -25,6 +31,21 @@ export default function TariffDetail() {
 
   const handleDelete = () => {
     console.log("Delete tariff:", id);
+    // TODO: integrate delete API
+  };
+
+  const formatCurrency = (value: string) => {
+    const symbol = tariff.currency === "INR" ? "₹" : tariff.currency;
+    const parsed = parseFloat(value);
+    return `${symbol} ${isNaN(parsed) ? value : parsed.toFixed(2)}`;
+  };
+
+  const formatDate = (dateStr: string) => {
+    try {
+      return format(new Date(dateStr), "MMM dd, yyyy hh:mm a");
+    } catch {
+      return dateStr;
+    }
   };
 
   return (
@@ -33,7 +54,7 @@ export default function TariffDetail() {
         items={[
           { label: "Tariff Management", path: Pathname.TARIFF_MANAGEMENT },
           { label: "Tariff", path: Pathname.TARIFF_MANAGEMENT },
-          { label: tariff.name },
+          { label: tariff.tariffName },
         ]}
       />
 
@@ -71,19 +92,26 @@ export default function TariffDetail() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Tariff Name</span>
-            <span className="subtitle-2-semibold text-text-950">{tariff.name}</span>
+            <span className="subtitle-2-semibold text-text-950 capitalize">{tariff.tariffName}</span>
           </div>
+
           <div className="flex flex-col gap-1">
-            <span className="subtitle-3-regular text-text-500">Value (per Kwh)</span>
-            <span className="subtitle-2-semibold text-text-950">{tariff.value}</span>
+            <span className="subtitle-3-regular text-text-500">Value (per kWh)</span>
+            <span className="subtitle-2-semibold text-text-950">{formatCurrency(tariff.ratePerUnit)}</span>
           </div>
+
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Service Fee</span>
-            <span className="subtitle-2-semibold text-text-950">{tariff.serviceFee}</span>
+            <span className="subtitle-2-semibold text-text-950">{formatCurrency(tariff.serviceFees)}</span>
           </div>
+
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Tax</span>
-            <span className="subtitle-2-semibold text-text-950">{tariff.tax}</span>
+            <span className="subtitle-2-semibold text-text-950 capitalize">
+              {tariff.tax
+                ? `${tariff.tax.taxName} (${tariff.tax.type})`
+                : "NA"}
+            </span>
           </div>
         </div>
       </PageWrapper>

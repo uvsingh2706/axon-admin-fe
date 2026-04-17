@@ -10,7 +10,7 @@ function ChargingPointList() {
   const navigate = useNavigate();
 
   const columns = chargingPointColumns.map((column) => {
-    if (column.accessorKey === "id") {
+    if ((column as any).accessorKey === "id") {
       return {
         ...column,
         cell: ({ row }: any) => (
@@ -23,7 +23,7 @@ function ChargingPointList() {
         ),
       };
     }
-    if (column.accessorKey === "station") {
+    if ((column as any).accessorKey === "station") {
       return {
         ...column,
         cell: ({ row }: any) => (
@@ -33,7 +33,7 @@ function ChargingPointList() {
         ),
       };
     }
-    if (column.accessorKey === "status") {
+    if ((column as any).accessorKey === "status") {
       return {
         ...column,
         cell: ({ row }: any) => {
