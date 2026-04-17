@@ -12,6 +12,7 @@ import { DownloadIcon } from "@/assets/icons/DownloadIcon";
 import { Pathname } from "@/utils/pathname";
 import { mockPointDetailsById, pointDetailFields } from "../mocks/point.mock";
 import type { PointDetailsData } from "../types/ChargingPoints.types";
+import { Can, MODULE } from "@/rbac";
 
 type PointSummaryCard = {
   title: string;
@@ -84,26 +85,30 @@ export default function PointDetails() {
         title="Charging Point Details"
         headerActions={
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleEdit}
-              className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
-              aria-label="Edit charging point"
-            >
-              <EditIcon className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-              aria-label="Delete charging point"
-            >
-              <DeleteIcon className="w-5 h-5" />
-            </button>
-            <Modal
-              open={isModalOpen}
-              onOpenChange={setIsModalOpen}
-              description="Are you sure you want to delete this charging point?"
-              onConfirm={handleDelete}
-            />
+            <Can module={MODULE.CHARGING_POINT} action="update">
+              <button
+                onClick={handleEdit}
+                className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+                aria-label="Edit charging point"
+              >
+                <EditIcon className="w-5 h-5" />
+              </button>
+            </Can>
+            <Can module={MODULE.CHARGING_POINT} action="delete">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                aria-label="Delete charging point"
+              >
+                <DeleteIcon className="w-5 h-5" />
+              </button>
+              <Modal
+                open={isModalOpen}
+                onOpenChange={setIsModalOpen}
+                description="Are you sure you want to delete this charging point?"
+                onConfirm={handleDelete}
+              />
+            </Can>
           </div>
         }
       >

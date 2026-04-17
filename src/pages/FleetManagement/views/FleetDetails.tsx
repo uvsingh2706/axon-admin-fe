@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import Breadcrumb from "@/component/Breadcrumb";
 import PageWrapper from "@/component/PageWrapper";
@@ -14,6 +14,8 @@ import FleetOverview from "./Overview";
 import type { FleetStatCard } from "../types/fleet.type";
 import Vehicles from "./Vehicles";
 import Drivers from "./Drivers";
+import { useCan } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 export default function FleetDetails() {
   const { id } = useParams<{ id: string }>();
@@ -21,13 +23,42 @@ export default function FleetDetails() {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
   const fleet = getFleetById(id);
+  const canViewFleet = useCan(MODULE.FLEET_MANAGEMENT, "view");
+  const canUpdateFleet = useCan(MODULE.FLEET_MANAGEMENT, "update");
+  const canDeleteFleet = useCan(MODULE.FLEET_MANAGEMENT, "delete");
+  const canViewVehicles = useCan(MODULE.VEHICLE_MANAGEMENT, "view");
+  const canViewDrivers = useCan(MODULE.VEHICLE_MANAGEMENT, "view");
+
+  const allowedTabs = useMemo(
+    () =>
+      FLEET_MANAGEMENT_TABS.filter((tab) => {
+        if (tab.value === "vehicles") return canViewVehicles;
+        if (tab.value === "drivers") return canViewDrivers;
+        return true;
+      }),
+    [canViewDrivers, canViewVehicles]
+  );
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    if (tab && FLEET_MANAGEMENT_TABS.some((item) => item.value === tab)) {
+    if (tab && allowedTabs.some((item) => item.value === tab)) {
       setActiveTab(tab);
     }
-  }, [searchParams]);
+  }, [searchParams, allowedTabs]);
+
+  useEffect(() => {
+    if (!allowedTabs.some((item) => item.value === activeTab)) {
+      setActiveTab(allowedTabs[0]?.value ?? "overview");
+    }
+  }, [allowedTabs, activeTab]);
+
+  if (!canViewFleet) {
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        You do not have permission to view fleet details.
+      </div>
+    );
+  }
 
   if (!fleet) {
     return (
@@ -88,7 +119,7 @@ export default function FleetDetails() {
         <div className="mt-2 flex flex-col gap-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="mb-6">
-              {FLEET_MANAGEMENT_TABS.map((tab) => (
+              {allowedTabs.map((tab) => (
                 <TabsTrigger key={tab.value} value={tab.value}>
                   {tab.label}
                 </TabsTrigger>
@@ -98,11 +129,11 @@ export default function FleetDetails() {
             <FleetOverview
               fleet={fleet}
               statCardsData={statCardsData}
-              onEdit={() => navigate(`${Pathname.FLEET_MANAGEMENT}/${fleet.id}/edit`)}
-              onDelete={() => {
+              onEdit={canUpdateFleet ? () => navigate(`${Pathname.FLEET_MANAGEMENT}/${fleet.id}/edit`) : undefined}
+              onDelete={canDeleteFleet ? () => {
                 console.log("Delete fleet:", id);
                 navigate(Pathname.FLEET_MANAGEMENT);
-              }}
+              } : undefined}
             />
 
             <Vehicles embedded fleetId={fleet.id} />

@@ -16,6 +16,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getFleetById } from "../../mocks/fleet.mock";
 import { DRIVERS_ACTION_LABEL, DRIVERS_SEARCH_PLACEHOLDER } from "./constant";
 import DriverList from "./views/DriverList";
+import { useCan } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 type DriversProps = {
   fleetId?: string;
@@ -26,6 +28,8 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
   const { id: routeFleetId } = useParams<{ id: string }>();
   const id = fleetId ?? routeFleetId;
   const navigate = useNavigate();
+  const canViewDrivers = useCan(MODULE.FLEET_MANAGEMENT, "view");
+  const canCreateDrivers = useCan(MODULE.FLEET_MANAGEMENT, "create");
   const [search, setSearch] = useState("");
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
@@ -49,8 +53,16 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
       </div>
     );
   }
+  if (!canViewDrivers) {
+    if (embedded) return null;
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        You do not have permission to view drivers.
+      </div>
+    );
+  }
 
-  const addDriverTrigger = (
+  const addDriverTrigger = canCreateDrivers ? (
     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
       <PopoverTrigger asChild>
         <Button
@@ -88,7 +100,7 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
         </button>
       </PopoverContent>
     </Popover>
-  );
+  ) : null;
 
   const content = (
     <div className="flex flex-col gap-4">
@@ -116,12 +128,14 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
         <DriverList search={search} fleetId={id} />
       </PageWrapper>
 
-      <CsvModal
-        open={isImportModalOpen}
-        onOpenChange={setIsImportModalOpen}
-        title="Add Drivers"
-        description="Import from CSV or xlsx"
-      />
+      {canCreateDrivers && (
+        <CsvModal
+          open={isImportModalOpen}
+          onOpenChange={setIsImportModalOpen}
+          title="Add Drivers"
+          description="Import from CSV or xlsx"
+        />
+      )}
     </div>
   );
 

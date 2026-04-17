@@ -21,7 +21,7 @@ export const userManagementRoutes: RouteObject[] = [
   {
     path: "drivers",
     element: (
-      <Can module={MODULE.VEHICLE_MANAGEMENT} action="view" fallback={<NoAccess />}>
+      <Can module={MODULE.B2B} action="view" fallback={<NoAccess />}>
         <DriversList />
       </Can>
     ),
@@ -29,7 +29,7 @@ export const userManagementRoutes: RouteObject[] = [
   {
     path: "drivers/create",
     element: (
-      <Can module={MODULE.VEHICLE_MANAGEMENT} action="create" fallback={<NoAccess />}>
+      <Can module={MODULE.B2B} action="create" fallback={<NoAccess />}>
         <DriverCreate />
       </Can>
     ),
@@ -37,7 +37,7 @@ export const userManagementRoutes: RouteObject[] = [
   {
     path: "drivers/:id",
     element: (
-      <Can module={MODULE.VEHICLE_MANAGEMENT} action="view" fallback={<NoAccess />}>
+      <Can module={MODULE.B2B} action="view" fallback={<NoAccess />}>
         <DriverDetails />
       </Can>
     ),
@@ -45,7 +45,7 @@ export const userManagementRoutes: RouteObject[] = [
   {
     path: "drivers/:id/edit",
     element: (
-      <Can module={MODULE.VEHICLE_MANAGEMENT} action="update" fallback={<NoAccess />}>
+      <Can module={MODULE.B2B} action="update" fallback={<NoAccess />}>
         <DriverEdit />
       </Can>
     ),

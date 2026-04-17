@@ -8,22 +8,36 @@ import { Modal } from "@/component/Modal";
 
 
 import type { TransactionData } from "./types/activeChargingSession.type";
+import { useCan } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 
 const Active = () => {
   const [search, setSearch] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<TransactionData | null>(null);
+  const canViewActiveSessions = useCan(MODULE.ACTIVE_SESSION, "view");
+  const canTerminateSession = useCan(MODULE.ACTIVE_SESSION, "delete");
 
   const handleTerminate = (data: TransactionData) => {
+    if (!canTerminateSession) return;
     setSelectedSession(data);
     setIsDeleteModalOpen(true);
   };
 
   const onDelete = () => {
+    if (!canTerminateSession) return;
     console.log("Terminating session with ID:", selectedSession?.id);
     // Add actual termination logic here
   };
+
+  if (!canViewActiveSessions) {
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        You do not have permission to view active sessions.
+      </div>
+    );
+  }
 
   return (
     <div className="">
@@ -42,7 +56,7 @@ const Active = () => {
       </PageWrapper>
 
       <Modal
-        open={isDeleteModalOpen}
+        open={canTerminateSession ? isDeleteModalOpen : false}
         onOpenChange={setIsDeleteModalOpen}
         description={`Are you sure you want to terminate the session ${selectedSession?.ocppTxnId}?`}
         onConfirm={() => {

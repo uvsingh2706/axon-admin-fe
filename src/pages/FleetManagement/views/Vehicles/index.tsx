@@ -12,6 +12,8 @@ import { getVehiclesByFleetId, mockVehicleStatsByFleetId } from "./mocks/vehicle
 import type { VehicleSummaryStats } from "./types/vehicle.type";
 import { TabsContent } from "@/component/ui/tabs";
 import VehiclesList from "./views/VehiclesList"
+import { useCan } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 function VehicleStatCard({
   title,
@@ -46,9 +48,15 @@ export default function Vehicles({ fleetId, embedded = false }: VehiclesProps) {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const fleet = getFleetById(id);
+  const canViewVehicles = useCan(MODULE.FLEET_MANAGEMENT, "view");
+  const canCreateVehicles = useCan(MODULE.FLEET_MANAGEMENT, "create");
 
   if (!fleet || !id) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
+  }
+  if (!canViewVehicles) {
+    if (embedded) return null;
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">You do not have permission to view vehicles.</div>;
   }
 
   const vehicles = useMemo(() => getVehiclesByFleetId(id), [id]);
@@ -95,9 +103,9 @@ export default function Vehicles({ fleetId, embedded = false }: VehiclesProps) {
         searchPlaceholder="Search Vehicle"
         onSearchChange={setSearch}
         onFilterClick={() => console.log("filter clicked")}
-        actionIcon={<AddIcon />}
-        actionLabel="Add Vehicle"
-        onActionClick={() => navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles/create`)}
+        actionIcon={canCreateVehicles ? <AddIcon /> : undefined}
+        actionLabel={canCreateVehicles ? "Add Vehicle" : undefined}
+        onActionClick={canCreateVehicles ? () => navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles/create`) : undefined}
         isTable={true}
         isSearchRight={true}
       >

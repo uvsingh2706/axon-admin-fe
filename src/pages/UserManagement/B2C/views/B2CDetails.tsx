@@ -16,6 +16,7 @@ import Bolt from "@/assets/icons/Bolt";
 import MoneyIcon from "@/assets/icons/MoneyIcon";
 import { DownloadIcon } from "@/assets/icons/DownloadIcon";
 import { cn } from "@/lib/utils";
+import { Can, MODULE } from "@/rbac";
 
 function initials(name: string) {
   return name
@@ -234,22 +235,26 @@ export default function B2CDetails() {
               </div>
 
               <div className="flex items-center gap-3 shrink-0">
-                <button
-                  onClick={() =>
-                    navigate(`${Pathname.USER_MANAGEMENT}/b2c/${id}/edit`)
-                  }
-                  className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
-                  aria-label="Edit user"
-                >
-                  <EditIcon className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-                  aria-label="Delete user"
-                >
-                  <DeleteIcon className="w-5 h-5" />
-                </button>
+                <Can module={MODULE.B2C} action="update">
+                  <button
+                    onClick={() =>
+                      navigate(`${Pathname.USER_MANAGEMENT}/b2c/${id}/edit`)
+                    }
+                    className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+                    aria-label="Edit user"
+                  >
+                    <EditIcon className="w-5 h-5" />
+                  </button>
+                </Can>
+                <Can module={MODULE.B2C} action="delete">
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                    aria-label="Delete user"
+                  >
+                    <DeleteIcon className="w-5 h-5" />
+                  </button>
+                </Can>
               </div>
             </div>
           </div>

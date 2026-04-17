@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { ModuleKey, RbacAction } from "@/rbac";
 
 export interface TabConfig {
   value: string;
@@ -26,4 +27,13 @@ export interface PageWrapperProps {
   headerActions?: ReactNode;
   isSearchRight?: boolean;
   searchClassName?: string;
+  /**
+   * Optional RBAC rule to control visibility of the primary CTA button.
+   * If omitted, CTA uses existing behavior (shown when actionLabel + onActionClick are provided).
+   */
+  actionRbac?: {
+    modules: ModuleKey[];
+    action?: RbacAction;
+    mode?: "any" | "all";
+  };
 }

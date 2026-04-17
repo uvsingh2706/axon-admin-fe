@@ -4,6 +4,9 @@ import DebouncedInput from "@/component/debounce-input";
 import { Tabs, TabsList, TabsTrigger } from "@/component/ui/tabs";
 import { cn } from "@/lib/utils";
 import type { PageWrapperProps } from "./PageWrapper.types";
+import { useAuthStore } from "@/store/authStore";
+import { useRbacStore } from "@/rbac";
+import { canByRbacMeta } from "@/rbac/rbac.guard";
 export type { PageWrapperProps, TabConfig } from "./PageWrapper.types";
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -29,9 +32,24 @@ export default function PageWrapper({
   headerActions,
   isSearchRight = false,
   searchClassName,
+  actionRbac,
 }: PageWrapperProps) {
   const defaultTab = tabs?.[0]?.value;
+  const authRole = useAuthStore((s) => s.user?.role ?? null);
+  const rbacRole = useRbacStore((s) => s.role);
+  const permissions = useRbacStore((s) => s.permissions);
 
+  const role = rbacRole ?? authRole;
+  const canShowPrimaryAction = actionRbac
+    ? canByRbacMeta({
+        role,
+        permissions,
+        modules: actionRbac.modules,
+        action: actionRbac.action ?? "create",
+        mode: actionRbac.mode ?? "any",
+      })
+    : true;
+   console.log(canShowPrimaryAction, 'showmethedata');
   // Decide whether to use Tabs container or just a plain wrapper
   const hasTabs = tabs && tabs.length > 0;
 
@@ -61,7 +79,7 @@ export default function PageWrapper({
       )}
 
       {/* Primary action */}
-      {actionLabel && onActionClick && (
+      {actionLabel && onActionClick && canShowPrimaryAction && (
         <Button
           variant="primary"
           isIcon={actionIcon}

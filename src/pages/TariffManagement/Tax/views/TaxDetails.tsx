@@ -7,6 +7,7 @@ import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
 import { mockTaxDetailsById } from "../mocks/tax.mock";
+import { Can, MODULE } from "@/rbac";
 
 export default function TaxDetails() {
   const { id } = useParams<{ id: string }>();
@@ -45,26 +46,30 @@ export default function TaxDetails() {
         className="w-full"
         headerActions={
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleEdit}
-              className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
-              aria-label="Edit tax"
-            >
-              <EditIcon className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-              aria-label="Delete tax"
-            >
-              <DeleteIcon className="w-5 h-5" />
-            </button>
-            <Modal
-              open={isModalOpen}
-              onOpenChange={setIsModalOpen}
-              description="Are you sure you want to delete this Tax?"
-              onConfirm={handleDelete}
-            />
+            <Can module={MODULE.TAX} action="update">
+              <button
+                onClick={handleEdit}
+                className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+                aria-label="Edit tax"
+              >
+                <EditIcon className="w-5 h-5" />
+              </button>
+            </Can>
+            <Can module={MODULE.TAX} action="delete">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                aria-label="Delete tax"
+              >
+                <DeleteIcon className="w-5 h-5" />
+              </button>
+              <Modal
+                open={isModalOpen}
+                onOpenChange={setIsModalOpen}
+                description="Are you sure you want to delete this Tax?"
+                onConfirm={handleDelete}
+              />
+            </Can>
           </div>
         }
       >

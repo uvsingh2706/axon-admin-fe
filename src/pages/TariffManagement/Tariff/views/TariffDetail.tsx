@@ -8,6 +8,7 @@ import { Modal } from "@/component/Modal";
 import { useState } from "react";
 import { useTariffById } from "../services/tarrif.hooks";
 import { format } from "date-fns";
+import { Can, MODULE } from "@/rbac";
 
 export default function TariffDetail() {
   const { id } = useParams<{ id: string }>();
@@ -66,26 +67,30 @@ export default function TariffDetail() {
         title="Tariff Details"
         headerActions={
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleEdit}
-              className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
-              aria-label="Edit tariff"
-            >
-              <EditIcon className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-              aria-label="Delete tariff"
-            >
-              <DeleteIcon className="w-5 h-5" />
-            </button>
-            <Modal
-              open={isModalOpen}
-              onOpenChange={setIsModalOpen}
-              description="Are you sure you want to delete this Tariff?"
-              onConfirm={handleDelete}
-            />
+            <Can module={MODULE.TARIFF} action="update">
+              <button
+                onClick={handleEdit}
+                className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+                aria-label="Edit tariff"
+              >
+                <EditIcon className="w-5 h-5" />
+              </button>
+            </Can>
+            <Can module={MODULE.TARIFF} action="delete">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                aria-label="Delete tariff"
+              >
+                <DeleteIcon className="w-5 h-5" />
+              </button>
+              <Modal
+                open={isModalOpen}
+                onOpenChange={setIsModalOpen}
+                description="Are you sure you want to delete this Tariff?"
+                onConfirm={handleDelete}
+              />
+            </Can>
           </div>
         }
       >

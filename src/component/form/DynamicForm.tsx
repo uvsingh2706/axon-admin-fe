@@ -44,7 +44,6 @@ export function DynamicForm<T extends FieldValues>({
     defaultValues: defaultValues as any,
     mode: "onChange",
   })
-
   // Normalize structure: flat fields are wrapped in a default section
   const normalizedSections = sections.length
     ? sections

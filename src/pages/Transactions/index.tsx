@@ -6,15 +6,39 @@ import TransactionDetails from "./views/TransactionDetails";
 import { cn } from "@/lib/utils";
 import type { TransactionStatCard } from "./types/transaction.type";
 import { statCardsData } from "./mocks/transaction.mock";
+import { Can } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 const Transactions = () => {
   return (
     <Routes>
-      <Route path="/" element={<TransactionOverview />} />
-      <Route path="/:id" element={<TransactionDetails />} />
+      <Route
+        path="/"
+        element={
+          <Can module={MODULE.TRANSACTION} action="view" fallback={<NoAccess />}>
+            <TransactionOverview />
+          </Can>
+        }
+      />
+      <Route
+        path="/:id"
+        element={
+          <Can module={MODULE.TRANSACTION} action="view" fallback={<NoAccess />}>
+            <TransactionDetails />
+          </Can>
+        }
+      />
     </Routes>
   );
 };
+
+function NoAccess() {
+  return (
+    <div className="p-8 text-center text-text-500 subtitle-2-medium">
+      You do not have permission to view transactions.
+    </div>
+  );
+}
 
 const TransactionOverview = () => {
   const [search, setSearch] = useState("");

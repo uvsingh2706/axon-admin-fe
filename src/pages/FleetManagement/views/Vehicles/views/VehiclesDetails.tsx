@@ -8,11 +8,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { getFleetById } from "../../../mocks/fleet.mock";
 import { getVehicleById } from "../mocks/vehicles.mock";
+import { useCan } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 export default function VehiclesDetails() {
   const { id, vehicleId } = useParams<{ id: string; vehicleId: string }>();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const canEditVehicle = useCan(MODULE.VEHICLE_MANAGEMENT, "update");
+  const canDeleteVehicle = useCan(MODULE.VEHICLE_MANAGEMENT, "delete");
 
   const fleet = getFleetById(id);
   const vehicle = getVehicleById(id, vehicleId);
@@ -45,30 +49,36 @@ export default function VehiclesDetails() {
         className="w-full"
         headerActions={
           <div className="flex items-center gap-3">
-            <button
-              onClick={() =>
-                navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles/${vehicleId}/edit`)
-              }
-              className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
-              aria-label="Edit vehicle"
-            >
-              <EditIcon className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-              aria-label="Delete vehicle"
-            >
-              <DeleteIcon className="w-5 h-5" />
-            </button>
-            <Modal
-              open={isModalOpen}
-              onOpenChange={setIsModalOpen}
-              description="Are you sure you want to delete this vehicle?"
-              onConfirm={handleDelete}
-              confirmLabel="Delete"
-              cancelLabel="Cancel"
-            />
+            {canEditVehicle && (
+              <button
+                onClick={() =>
+                  navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles/${vehicleId}/edit`)
+                }
+                className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+                aria-label="Edit vehicle"
+              >
+                <EditIcon className="w-5 h-5" />
+              </button>
+            )}
+            {canDeleteVehicle && (
+              <>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                  aria-label="Delete vehicle"
+                >
+                  <DeleteIcon className="w-5 h-5" />
+                </button>
+                <Modal
+                  open={isModalOpen}
+                  onOpenChange={setIsModalOpen}
+                  description="Are you sure you want to delete this vehicle?"
+                  onConfirm={handleDelete}
+                  confirmLabel="Delete"
+                  cancelLabel="Cancel"
+                />
+              </>
+            )}
           </div>
         }
       >

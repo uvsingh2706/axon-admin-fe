@@ -17,9 +17,9 @@ const UserManagement = () => {
   const navigate = useNavigate();
   const element = useRoutes(userManagementRoutes);
 
-  const canViewDrivers = useCan(MODULE.VEHICLE_MANAGEMENT, "view");
+  const canViewDrivers = useCan(MODULE.B2B, "view");
   const canViewB2C = useCan(MODULE.B2C, "view");
-  const canCreateDrivers = useCan(MODULE.VEHICLE_MANAGEMENT, "create");
+  const canCreateDrivers = useCan(MODULE.B2B, "create");
   const canCreateB2C = useCan(MODULE.B2C, "create");
 
   const allowedTabs = USER_MANAGEMENT_TABS.filter((tab) => {
