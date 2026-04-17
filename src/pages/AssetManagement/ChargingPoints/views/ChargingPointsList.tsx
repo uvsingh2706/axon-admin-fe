@@ -10,15 +10,14 @@ function ChargingPointList() {
   const navigate = useNavigate();
 
   const columns = chargingPointColumns.map((column) => {
-    if ((column as any).accessorKey === "id") {
+    if ((column as any).accessorKey === "chargingPointName") {
       return {
         ...column,
         cell: ({ row }: any) => (
           <span
-            onClick={() => navigate(`${Pathname.ASSET_MANAGEMENT}/charging-points/${row.original.id}`)}
-            className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline cursor-pointer hover:text-opacity-80"
+            className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline"
           >
-            {row.original.id}
+            {row.original.chargingPointName}
           </span>
         ),
       };
@@ -27,8 +26,18 @@ function ChargingPointList() {
       return {
         ...column,
         cell: ({ row }: any) => (
-          <span className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline cursor-pointer hover:text-opacity-80">
+          <span className="font-sans font-normal text-[14px] leading-none text-secondary-600">
             {row.original.station}
+          </span>
+        ),
+      };
+    }
+    if ((column as any).accessorKey === "tariff") {
+      return {
+        ...column,
+        cell: ({ row }: any) => (
+          <span className="font-sans font-medium text-[14px] leading-none text-secondary-600 underline">
+            {row.original.tariff}
           </span>
         ),
       };
@@ -39,13 +48,30 @@ function ChargingPointList() {
         cell: ({ row }: any) => {
           const status = row.original.status;
           const styles: Record<string, string> = {
-            Online: "bg-green-100 text-green-700",
+            Available: "bg-green-100 text-green-700",
+            Unavailable: "bg-gray-100 text-gray-700",
             Charging: "bg-blue-100 text-blue-700",
             Offline: "bg-red-100 text-red-700",
-            Maintenance: "bg-yellow-100 text-yellow-700",
           };
           return (
-            <span className={`text-[14px] px-2 py-1 rounded-[4px] font-medium ${styles[status]}`}>
+            <span className={`text-[12px] px-2 py-1 rounded-[4px] font-medium ${styles[status]}`}>
+              {status}
+            </span>
+          );
+        },
+      };
+    }
+    if ((column as any).accessorKey === "publishedStatus") {
+      return {
+        ...column,
+        cell: ({ row }: any) => {
+          const status = row.original.publishedStatus;
+          const styles: Record<string, string> = {
+            Yes: "bg-green-100 text-green-700",
+            No: "bg-gray-100 text-gray-700",
+          };
+          return (
+            <span className={`text-[12px] px-2 py-1 rounded-[4px] font-medium ${styles[status]}`}>
               {status}
             </span>
           );
@@ -55,7 +81,15 @@ function ChargingPointList() {
     return column;
   });
 
-  return <DataTable columns={columns} data={mockChargingPoints} search={search} />;
+  return (
+    <DataTable
+      columns={columns}
+      data={mockChargingPoints}
+      search={search}
+      isLink={true}
+      link={(row: any) => `${Pathname.ASSET_MANAGEMENT}/charging-points/${row.id}`}
+    />
+  );
 }
 
 export default ChargingPointList;

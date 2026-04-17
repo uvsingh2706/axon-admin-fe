@@ -1,11 +1,16 @@
 export type ChargingPointData = {
   id: string;
+  chargingPointName: string;
+  oem: string;
+  model: string;
   station: string;
-  connectorType: string;
-  status: "Online" | "Charging" | "Offline" | "Maintenance";
-  power: string;
-  lastSession: string;
-  energyDelivered: string;
+  lastHeartbeatReceived: string;
+  status: string;
+  tariff: string;
+  connectionType: string;
+  publishedStatus: "Yes" | "No";
+  updatedAt: string;
+  updatedBy: string;
 };
 
 export type CreatePointFormValues = {
