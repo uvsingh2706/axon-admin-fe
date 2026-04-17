@@ -1,0 +1,9 @@
+services:
+  axon-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: axon-frontend
+    ports:
+      - "3032:3000"
+    restart: unless-stopped
