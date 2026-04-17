@@ -7,12 +7,13 @@ import { Modal } from "@/component/Modal";
 import { TabsContent } from "@/component/ui/tabs";
 import { cn } from "@/lib/utils";
 import type { FleetData, FleetStatCard } from "../../types/fleet.type";
+import { Can, MODULE } from "@/rbac";
 
 type FleetOverviewProps = {
   fleet: FleetData;
   statCardsData: FleetStatCard[];
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
 export default function FleetOverview({
@@ -56,32 +57,36 @@ export default function FleetOverview({
               <div className="flex items-start justify-between w-full">
                 <h3 className="heading-3-semibold text-text-950">{fleet.organisationName}</h3>
                 <div className="flex items-center gap-3">
-                  <button
-                    className="p-1.5 rounded-md hover:bg-secondary-50 transition-colors cursor-pointer group"
-                    title="Edit"
-                    onClick={onEdit}
-                  >
-                    <EditIcon className="w-5 h-5 text-text-400 group-hover:text-text-700" />
-                  </button>
+                  <Can module={MODULE.FLEET_MANAGEMENT} action="update">
+                    <button
+                      className="p-1.5 rounded-md hover:bg-secondary-50 transition-colors cursor-pointer group"
+                      title="Edit"
+                      onClick={() => onEdit?.()}
+                    >
+                      <EditIcon className="w-5 h-5 text-text-400 group-hover:text-text-700" />
+                    </button>
+                  </Can>
 
-                  <button
-                    className="p-1.5 rounded-md hover:bg-danger/5 transition-colors cursor-pointer group"
-                    title="Delete"
-                    onClick={() => setIsDeleteModalOpen(true)}
-                  >
-                    <DeleteIcon className="w-5 h-5 text-text-400 group-hover:text-danger" />
-                  </button>
-                  <Modal
-                    open={isDeleteModalOpen}
-                    onOpenChange={setIsDeleteModalOpen}
-                    description="Are you sure you want to delete this fleet?"
-                    onConfirm={() => {
-                      setIsDeleteModalOpen(false);
-                      onDelete();
-                    }}
-                    confirmLabel="Delete"
-                    cancelLabel="Cancel"
-                  />
+                  <Can module={MODULE.FLEET_MANAGEMENT} action="delete">
+                    <button
+                      className="p-1.5 rounded-md hover:bg-danger/5 transition-colors cursor-pointer group"
+                      title="Delete"
+                      onClick={() => setIsDeleteModalOpen(true)}
+                    >
+                      <DeleteIcon className="w-5 h-5 text-text-400 group-hover:text-danger" />
+                    </button>
+                    <Modal
+                      open={isDeleteModalOpen}
+                      onOpenChange={setIsDeleteModalOpen}
+                      description="Are you sure you want to delete this fleet?"
+                      onConfirm={() => {
+                        setIsDeleteModalOpen(false);
+                        onDelete?.();
+                      }}
+                      confirmLabel="Delete"
+                      cancelLabel="Cancel"
+                    />
+                  </Can>
                 </div>
               </div>
 

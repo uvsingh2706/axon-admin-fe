@@ -14,6 +14,8 @@ import type { ChargingHistoryRow } from "../types/driver.type";
 import CarIcon from "@/assets/icons/CarIcon";
 import CopyIcon from "@/assets/icons/CopyIcon";
 import type { ReactNode } from "react";
+import { useCan } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 function initials(name: string) {
     return name
@@ -101,6 +103,8 @@ export default function DriverDetails() {
     const { id, driverId } = useParams<{ id: string; driverId: string }>();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const canEditDriver = useCan(MODULE.VEHICLE_MANAGEMENT, "update");
+    const canDeleteDriver = useCan(MODULE.VEHICLE_MANAGEMENT, "delete");
 
     const fleet = getFleetById(id);
     const driver = id && driverId ? getDriverById(id, driverId) : undefined;
@@ -172,30 +176,36 @@ export default function DriverDetails() {
                 className="w-full"
                 headerActions={
                     <div className="flex items-center gap-3">
-                        <button
-                            onClick={() =>
-                                navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}/edit`)
-                            }
-                            className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
-                            aria-label="Edit driver"
-                        >
-                            <EditIcon className="w-5 h-5" />
-                        </button>
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-                            aria-label="Delete driver"
-                        >
-                            <DeleteIcon className="w-5 h-5" />
-                        </button>
-                        <Modal
-                            open={isModalOpen}
-                            onOpenChange={setIsModalOpen}
-                            description="Are you sure you want to delete this driver?"
-                            onConfirm={handleDelete}
-                            confirmLabel="Delete"
-                            cancelLabel="Cancel"
-                        />
+                        {canEditDriver && (
+                            <button
+                                onClick={() =>
+                                    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}/edit`)
+                                }
+                                className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
+                                aria-label="Edit driver"
+                            >
+                                <EditIcon className="w-5 h-5" />
+                            </button>
+                        )}
+                        {canDeleteDriver && (
+                            <>
+                                <button
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="p-2 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                                    aria-label="Delete driver"
+                                >
+                                    <DeleteIcon className="w-5 h-5" />
+                                </button>
+                                <Modal
+                                    open={isModalOpen}
+                                    onOpenChange={setIsModalOpen}
+                                    description="Are you sure you want to delete this driver?"
+                                    onConfirm={handleDelete}
+                                    confirmLabel="Delete"
+                                    cancelLabel="Cancel"
+                                />
+                            </>
+                        )}
                     </div>
                 }
             >

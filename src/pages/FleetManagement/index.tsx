@@ -4,11 +4,14 @@ import { useState } from "react";
 import { useNavigate, useRoutes } from "react-router-dom";
 import { fleetRoutes } from "./Routes";
 import FleetManagementList from "./views/FleetManagementList";
+import { useCan } from "@/rbac";
+import { MODULE } from "@/rbac/modules";
 
 const FleetManagement = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const element = useRoutes(fleetRoutes);
+  const canCreate = useCan(MODULE.FLEET_MANAGEMENT, "create");
 
   if (element) {
     return element;
@@ -20,9 +23,9 @@ const FleetManagement = () => {
       searchValue={search}
       onSearchChange={setSearch}
       onFilterClick={() => console.log("filter clicked")}
-      actionLabel="Add Fleet"
-      actionIcon={<AddIcon />}
-      onActionClick={() => navigate("create")}
+      actionLabel={canCreate ? "Add Fleet" : undefined}
+      actionIcon={canCreate ? <AddIcon /> : undefined}
+      onActionClick={canCreate ? () => navigate("create") : undefined}
       isTable={true}
     >
       <FleetManagementList search={search} />

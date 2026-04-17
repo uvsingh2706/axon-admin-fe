@@ -3,4 +3,5 @@ export * from "./rbac.store";
 export * from "./rbac.hooks";
 export * from "./Can";
 export * from "./rbac.normalize";
+export * from "./modules";
 

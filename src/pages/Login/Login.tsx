@@ -11,6 +11,7 @@ import OnboardingImage from "@/assets/images/Onboardingimage.webp";
 import { useWhiteLabel } from "@/whitelabel";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/authStore";
 // import { Role } from "@/types/roles";
 
 export default function Login() {
@@ -20,12 +21,26 @@ export default function Login() {
   const navigate = useNavigate();
   const { assets } = useWhiteLabel();
   const loginMutation = useLogin();
+  const setAuth = useAuthStore((s) => s.setAuth);
   
   const isEmailValid = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
   const isPasswordValid = password.length > 5;
   const isFormValid = isEmailValid && isPasswordValid;
 
   const handleSubmit = async (e: FormEvent) => {
+
+    // e.preventDefault();
+
+    // setAuth("fake-jwt-token", {
+    //   id: "demo-user",
+    //   role: "SUPER_ADMIN",
+    //   name: "Demo User",
+    //   email: "demo@example.com",
+    // });
+  
+    // navigate(Pathname.DASHBOARD);
+     
+
     e.preventDefault();
     if (!isFormValid) return;
     try {
