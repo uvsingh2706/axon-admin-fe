@@ -27,6 +27,8 @@ export default function EditVehicles() {
         registrationNumber: vehicle.registrationNumber,
         connectorType: vehicle.connectorType,
         vehicleId: vehicle.vehicleId,
+        batteryPack: "",
+        chargingRate: "",
       });
     }
   }, [vehicle]);

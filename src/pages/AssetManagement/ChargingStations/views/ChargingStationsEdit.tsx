@@ -84,7 +84,7 @@ export default function StationEdit() {
         className="w-full"
       >
         <div className="mt-2">
-          <DynamicForm<EditStationFormValues>
+          <DynamicForm<any>
             schema={editStationSchema}
             defaultValues={formValues}
             onSubmit={handleSubmit}

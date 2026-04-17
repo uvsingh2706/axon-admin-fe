@@ -10,7 +10,7 @@ function ChargingStationList() {
   const navigate = useNavigate();
 
   const columns = chargingStationColumns.map((column) =>
-    column?.accessorKey === "stationName"
+    (column as any)?.accessorKey === "stationName"
       ? {
           ...column,
           cell: ({ row }: any) => (

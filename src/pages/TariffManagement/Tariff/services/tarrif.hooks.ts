@@ -17,3 +17,10 @@ export const useTariffList = (params: TariffListParams) => {
         queryFn: () => tariffApi.getTariffList(params),
     })
 }
+
+export const useTariffById = (id: string) => {
+    return useQuery({
+        queryKey: [...tariffKeys.all, "detail", id],
+        queryFn: () => tariffApi.getTariffById(id),
+    })
+}
