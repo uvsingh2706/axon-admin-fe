@@ -60,4 +60,9 @@ export type StationDetailsData = {
   energyCapacity: StationEnergyCapacity;
 };
 
+export interface ChargingStationListProps {
+  // data: ChargingPointData[];
+  search: string;
+}
+
 export type StationEditSeedData = CreateStationFormValues;

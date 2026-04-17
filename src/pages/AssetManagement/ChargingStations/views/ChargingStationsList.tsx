@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Pathname } from "@/utils/pathname";
 import { chargingStationColumns } from "../config/station.table";
 import { mockChargingStations } from "../mocks/station.mock";
+import type { ChargingStationListProps } from "../types/ChargingStations.types";
 
-function ChargingStationList() {
-  const [search] = useState("");
-  const navigate = useNavigate();
+function ChargingStationList({ search }: ChargingStationListProps) {
+  const navigate = useNavigate(); 
 
   const columns = chargingStationColumns.map((column) =>
     (column as any)?.accessorKey === "stationName"

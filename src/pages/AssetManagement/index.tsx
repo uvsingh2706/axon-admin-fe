@@ -82,13 +82,13 @@ const AssetManagement = () => {
     >
       {canViewStations && (
         <TabsContent value="charging-stations">
-          <ChargingStationList />
+          <ChargingStationList search={search} />
         </TabsContent>
       )}
 
       {canViewPoints && (
         <TabsContent value="charging-points">
-          <ChargingPointList />
+          <ChargingPointList search={search} />
         </TabsContent>
       )}
     </PageWrapper>
