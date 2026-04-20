@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
@@ -9,17 +9,29 @@ import {
   type EditTariffFormValues,
 } from "../config/tariff.form";
 import PageWrapper from "@/component/PageWrapper";
-import { useTariffById } from "../services/tarrif.hooks";
+import { tariffApi } from "../services/tarrif.api";
+import { useQuery } from "@tanstack/react-query";
+import { tariffKeys } from "../services/tarrif.hooks";
 import { useTaxList } from "../../Tax/services/Tax.hooks";
 
 export default function TariffEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: tariffResponse, isLoading } = useTariffById(id || "");
-  const { data: taxData } = useTaxList({ limit: 50, page: 1 });
-  const tariff = tariffResponse?.data;
+  const location = useLocation();
+  
+  const stateTariff = location.state?.tariff;
 
-  const [form, setForm] = useState({
+  const { data: tariffResponse, isLoading } = useQuery({
+    queryKey: [...tariffKeys.all, "detail", id],
+    queryFn: () => tariffApi.getTariffById(id ?? ""),
+    enabled: !stateTariff && !!id,
+  });
+
+  const tariff = stateTariff || tariffResponse?.data;
+   const { data: taxData } = useTaxList({ limit: 50, page: 1 });
+  console.log(tariff, 'tariiiifdata');
+
+  const [form, setForm] = useState<EditTariffFormValues>({
     name: "",
     value: "",
     serviceFee: "",
@@ -30,8 +42,8 @@ export default function TariffEdit() {
     if (tariff) {
       setForm({
         name: tariff.tariffName,
-        value: tariff.ratePerUnit.toString(),
-        serviceFee: tariff.serviceFees.toString(),
+        value: tariff.ratePerUnit,
+        serviceFee: tariff.serviceFees,
         tax: tariff.taxId,
       });
     }
@@ -51,7 +63,7 @@ export default function TariffEdit() {
       if (field.name === "tax") {
         return {
           ...field,
-          options: taxData?.data?.data?.map(tax => ({
+          options: taxData?.data?.data?.map((tax:any) => ({
             label: tax.taxName,
             value: tax.id
           })) || []
