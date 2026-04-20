@@ -14,6 +14,7 @@ export const MODULE = {
   TARIFF: "TARIFF",
   HELP_SUPPORT: "HELP_SUPPORT",
   ROLE_PERMISSION: "ROLE_PERMISSION",
+  CHARGER_SPECIFICATION: "CHARGER_SPECIFICATION",
 } as const;
 
 export type BackendModuleKey = (typeof MODULE)[keyof typeof MODULE];

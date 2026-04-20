@@ -8,7 +8,7 @@ import {
 } from "../config/tax.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
-import { useCreateTax } from "../services/Tax.hooks";
+import { useCreateTax } from "../services/tax.hooks";
 import { toast } from "sonner";
 
 export default function TaxCreate() {

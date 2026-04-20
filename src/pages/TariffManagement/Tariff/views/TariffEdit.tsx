@@ -12,7 +12,7 @@ import PageWrapper from "@/component/PageWrapper";
 import { tariffApi } from "../services/tarrif.api";
 import { useQuery } from "@tanstack/react-query";
 import { tariffKeys } from "../services/tarrif.hooks";
-import { useTaxList } from "../../Tax/services/Tax.hooks";
+import { useTaxList } from "../../Tax/services/tax.hooks";
 
 export default function TariffEdit() {
   const { id } = useParams<{ id: string }>();

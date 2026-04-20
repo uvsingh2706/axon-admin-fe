@@ -9,6 +9,7 @@ import { ChargingPointList } from "./ChargingPoints";
 import { ASSET_MANAGEMENT_TABS } from "./constant";
 import { useCan } from "@/rbac";
 import { MODULE } from "@/rbac/modules";
+import ChargergerSpecificatoins from "./ChargerSpecifications";
 
 const AssetManagement = () => {
   const [search, setSearch] = useState("");
@@ -39,7 +40,7 @@ const AssetManagement = () => {
 
     if (activeTab === "charging-stations") {
       navigate("create-station");
-    } else {
+    } else if (activeTab === "charging-points") {
       navigate("create-point");
     }
   };
@@ -79,6 +80,7 @@ const AssetManagement = () => {
       actionLabel={actionLabel}
       actionIcon={<AddIcon />}
       onActionClick={actionLabel ? handleActionClick : undefined}
+      isChargerSpecifications={activeTab === 'charger-specifications'}
     >
       {canViewStations && (
         <TabsContent value="charging-stations">
@@ -91,6 +93,10 @@ const AssetManagement = () => {
           <ChargingPointList search={search} />
         </TabsContent>
       )}
+
+      <TabsContent value="charger-specifications">
+        <ChargergerSpecificatoins />
+      </TabsContent>
     </PageWrapper>
   );
 };

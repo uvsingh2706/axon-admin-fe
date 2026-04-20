@@ -33,6 +33,7 @@ export default function PageWrapper({
   isSearchRight = false,
   searchClassName,
   actionRbac,
+  isChargerSpecifications=false
 }: PageWrapperProps) {
   const defaultTab = tabs?.[0]?.value;
   const authRole = useAuthStore((s) => s.user?.role ?? null);
@@ -110,10 +111,10 @@ export default function PageWrapper({
               ))}
             </TabsList>
 
-            <div className="flex items-center gap-3">
+{      !isChargerSpecifications &&       <div className="flex items-center gap-3">
               {searchNode}
               {actionsRight}
-            </div>
+            </div>}
           </div>
 
           {/* Tab content — pages pass children as TabsContent blocks */}

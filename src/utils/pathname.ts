@@ -10,4 +10,4 @@ export const Pathname = {
     USER_MANAGEMENT: "/user-management",
     FLEET_MANAGEMENT: "/fleet-management",
     ASSET_MANAGEMENT: "/asset-management",
-}
+} 
