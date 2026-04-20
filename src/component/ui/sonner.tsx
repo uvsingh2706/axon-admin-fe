@@ -78,7 +78,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         warning: <TriangleAlertIcon className="size-4" />,
         error: <ErrorIcon className="w-12 h-12 shrink-0 -mt-8" />,
         loading: <Loader2Icon className="size-4 animate-spin" />,
-        close: <CloseIcon className="w-[1.5rem] h-[1.5rem] text-text-400 hover:text-text-600 transition-colors opacity-100 rotate-0" />,
+        close: <CloseIcon className="w-6 h-6 text-text-400 hover:text-text-600 transition-colors opacity-100 rotate-0" />,
       }}
       style={
         {
@@ -92,7 +92,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         classNames: {
           toast: "cn-toast relative flex items-center justify-between w-full max-w-md min-h-24 p-0 border opacity-100 gap-3",
           title: "text-[1rem] font-bold text-text-950 leading-tight",
-          description: "text-sm text-text-700 font-medium leading-tight",
+          description: "text-sm !text-text-700 !opacity-100 font-medium leading-tight",
           content: "flex-1 ml-8 py-[0.75rem]",
           closeButton: "absolute !top-[1.25rem] !right-[1.25rem] !left-auto !w-[1.5rem] !h-[1.5rem] !p-0 flex items-center justify-center !bg-transparent !hover:bg-transparent !border-none transition-colors opacity-100 rotate-0",
           error: "!border-red-c2",

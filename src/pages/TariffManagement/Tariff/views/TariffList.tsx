@@ -14,7 +14,7 @@ export default function TariffList({ search }: { search: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { data: tariffList, isLoading } = useTariffList({ page, limit });
+  const { data: tariffList, isLoading } = useTariffList({ page, limit, search });
 
   const handleEdit = (id: string) => {
     navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}/edit`);
@@ -54,6 +54,8 @@ export default function TariffList({ search }: { search: string }) {
           pageIndex: page - 1,
           pageSize: limit,
         }}
+        isServerSide={true}
+        totalItems={tariffList?.data?.count || 0}
         pageCount={tariffList?.data?.count ? Math.ceil(tariffList.data.count / limit) : 1}
         onPaginationChange={(updater) => {
           const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;

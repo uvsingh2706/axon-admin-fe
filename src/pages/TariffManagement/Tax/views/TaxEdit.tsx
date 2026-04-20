@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
@@ -10,18 +10,22 @@ import {
 } from "../config/tax.form";
 import PageWrapper from "@/component/PageWrapper";
 import { useTaxById, useUpdateTax } from "../services/Tax.hooks";
+import { toast } from "sonner";
 
 
 export default function TaxEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  const { data: taxRes, isLoading } = useTaxById(id || "");
-  const tax = taxRes?.data;
+  const location = useLocation();
+  const stateTax = location.state?.tax;
+  
+  const { data: taxRes, isLoading } = useTaxById(id || "", !stateTax && !!id);
+  const tax = stateTax || taxRes?.data;
   
   const { mutateAsync: updateTax, isPending } = useUpdateTax();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<EditTaxFormValues>({
     name: "",
     type: "Percentage",
     percentageValue: "",
@@ -56,8 +60,10 @@ export default function TaxEdit() {
           value: Number(data.percentageValue),
         },
       });
+      toast.success("Tax Updated", { description: "Tax details have been updated." });
       navigate(`${Pathname.TARIFF_MANAGEMENT}/tax/${id}`);
     } catch (error) {
+      toast.error("Failed to Update", { description: "An error occurred while updating the tax." });
       console.log(error);
     }
   };

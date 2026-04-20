@@ -9,6 +9,7 @@ import {
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { useCreateTax } from "../services/Tax.hooks";
+import { toast } from "sonner";
 
 export default function TaxCreate() {
   const navigate = useNavigate();
@@ -26,8 +27,11 @@ export default function TaxCreate() {
         type: data.type.toLowerCase(),
         value: Number(data.percentageValue),
       });
+      
+      toast.success("Tax Created", { description: "The tax has been successfully created." });
       handleCancel();
     } catch (error) {
+      toast.error("Failed to Create", { description: "There was an error creating the tax." });
       console.log(error);
     }
   };

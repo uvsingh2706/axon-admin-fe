@@ -5,6 +5,7 @@ import { getTaxTableColumns } from "../config/tax.table";
 import { useTaxList, useDeleteTax } from "../services/Tax.hooks";
 import { Modal } from "@/component/Modal";
 import { Pathname } from "@/utils/pathname";
+import { toast } from "sonner";
 
 export default function TaxList({ search }: { search: string }) {
   const navigate = useNavigate();
@@ -29,9 +30,11 @@ export default function TaxList({ search }: { search: string }) {
     if (deleteId) {
       try {
         await deleteTax({ id: deleteId});
+        toast.success("Tax Deleted", { description: "The tax has been removed." });
         setIsModalOpen(false);
         setDeleteId(null);
       } catch (error) {
+        toast.error("Deletion Failed", { description: "An error occurred while deleting the tax." });
         console.log("Failed to delete tax", error);
       }
     }
@@ -55,6 +58,8 @@ export default function TaxList({ search }: { search: string }) {
         pageIndex: page - 1,
         pageSize: limit,
       }}
+      isServerSide={true}
+      totalItems={taxList?.data?.meta?.total || 0}
       pageCount={taxList?.data?.meta?.totalPages || 1}
       onPaginationChange={(updater) => {
         const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;
