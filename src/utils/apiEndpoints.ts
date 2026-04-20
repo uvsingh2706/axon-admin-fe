@@ -14,5 +14,9 @@ export const ApiEndpoints = {
     TAX_LIST: '/tax',
 
 
+    //oem
+    OEM_LIST: '/oem',
+
+
 
 };

@@ -32,5 +32,8 @@ export const useCreateTariff = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: tariffKeys.all });
         },
+        onError(error) {
+            console.log(error);
+        },
     });
 };

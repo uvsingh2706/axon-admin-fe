@@ -1,5 +1,5 @@
 import type { ExtendedColumnDef } from "@/component/data-table";
-import type { TaxDTO } from "../services/Tax.types";
+import type { TaxDTO } from "../services/tax.types";
 import EditIcon from "@/assets/icons/EditIcon";
 import DeleteIcon from "@/assets/icons/DeleteIcon";
 import { Can, MODULE } from "@/rbac";

@@ -6,7 +6,7 @@ import { Pathname } from "@/utils/pathname";
 import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
-import { useTaxById, useDeleteTax } from "../services/Tax.hooks";
+import { useTaxById, useDeleteTax } from "../services/tax.hooks";
 import { toast } from "sonner";
 
 import { Can, MODULE } from "@/rbac";

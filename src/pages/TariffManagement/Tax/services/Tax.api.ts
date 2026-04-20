@@ -1,12 +1,12 @@
 import { apiClient } from "@/lib/axios";
 import { ApiEndpoints } from "@/utils/apiEndpoints";
-import type { 
-  TaxListParams, 
-  TaxListResponse, 
-  TaxDetailResponse, 
-  CreateTaxRequest, 
-  UpdateTaxRequest 
-} from "./Tax.types";
+import type {
+    TaxListParams,
+    TaxListResponse,
+    TaxDetailResponse,
+    CreateTaxRequest,
+    UpdateTaxRequest
+} from "./tax.types";
 
 export const taxApi = {
     getTaxList: async (params: TaxListParams): Promise<TaxListResponse> => {

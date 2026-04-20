@@ -9,20 +9,20 @@ import {
   type EditTaxFormValues,
 } from "../config/tax.form";
 import PageWrapper from "@/component/PageWrapper";
-import { useTaxById, useUpdateTax } from "../services/Tax.hooks";
+import { useTaxById, useUpdateTax } from "../services/tax.hooks";
 import { toast } from "sonner";
 
 
 export default function TaxEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+
   const location = useLocation();
   const stateTax = location.state?.tax;
   
   const { data: taxRes, isLoading } = useTaxById(id || "", !stateTax && !!id);
   const tax = stateTax || taxRes?.data;
-  
+
   const { mutateAsync: updateTax, isPending } = useUpdateTax();
 
   const [form, setForm] = useState<EditTaxFormValues>({

@@ -1,6 +1,13 @@
 import type { RouteObject } from "react-router-dom";
 import { PointCreate, PointDetails, PointEdit } from "../ChargingPoints";
 import { StationCreate, StationDetails, StationEdit } from "../ChargingStations";
+import ChargergerSpecificatoins from "../ChargerSpecifications";
+import ModelCreate from "../ChargerSpecifications/Model/views/ModelCreate";
+import ModelDetails from "../ChargerSpecifications/Model/views/ModelDetails";
+import ModelEdit from "../ChargerSpecifications/Model/views/ModelEdit";
+import ConnectorCreate from "../ChargerSpecifications/Connector/views/ConnectorCreate";
+import ConnectorDetails from "../ChargerSpecifications/Connector/views/ConnectorDetails";
+import ConnectorEdit from "../ChargerSpecifications/Connector/views/ConnectorEdit";
 import { Can } from "@/rbac";
 import { MODULE } from "@/rbac/modules";
 
@@ -61,4 +68,60 @@ export const assetRoutes: RouteObject[] = [
       </Can>
     ),
   },
+  {
+    path: 'charger-specifications',
+    element: (
+      <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
+        <ChargergerSpecificatoins/>
+      </Can>
+    )
+  },
+  {
+    path: 'charger-specifications/model/create',
+    element: (
+      <Can module={MODULE.CHARGER_SPECIFICATION} action="create" fallback={<NoAccess />}>
+        <ModelCreate />
+      </Can>
+    )
+  },
+  {
+    path: 'charger-specifications/model/:id',
+    element: (
+      <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
+        <ModelDetails />
+      </Can>
+    )
+  },
+  {
+    path: 'charger-specifications/model/:id/edit',
+    element: (
+      <Can module={MODULE.CHARGER_SPECIFICATION} action="update" fallback={<NoAccess />}>
+        <ModelEdit />
+      </Can>
+    )
+  },
+  {
+    path: 'charger-specifications/connector/create',
+    element: (
+      <Can module={MODULE.CHARGER_SPECIFICATION} action="create" fallback={<NoAccess />}>
+        <ConnectorCreate />
+      </Can>
+    )
+  },
+  {
+    path: 'charger-specifications/connector/:id',
+    element: (
+      <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
+        <ConnectorDetails />
+      </Can>
+    )
+  },
+  {
+    path: 'charger-specifications/connector/:id/edit',
+    element: (
+      <Can module={MODULE.CHARGER_SPECIFICATION} action="update" fallback={<NoAccess />}>
+        <ConnectorEdit />
+      </Can>
+    )
+  }
 ];
