@@ -52,7 +52,7 @@ const Active = () => {
         onFilterClick={() => console.log("filter clicked")}
         className=""
       >
-        <ActiveList onTerminate={handleTerminate} />
+        <ActiveList onTerminate={handleTerminate} search={search} />
       </PageWrapper>
 
       <Modal

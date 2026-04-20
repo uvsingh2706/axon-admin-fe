@@ -69,7 +69,7 @@ const TransactionOverview = () => {
         onFilterClick={() => console.log("filter clicked")}
         className="bg-transparent border-0 p-0 shadow-none"
       >
-        <TransactionList />
+        <TransactionList search={search} />
       </PageWrapper>
     </div>
   );

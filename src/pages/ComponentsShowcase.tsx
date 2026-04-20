@@ -32,6 +32,8 @@ import { Calendar } from "../component/ui/calendar";
 
 import { DynamicForm } from "../component/form/DynamicForm";
 import * as z from "zod";
+import { toast } from "sonner";
+
 
 const clientFormSchema = z.object({
   image: z.any().optional(),
@@ -591,6 +593,48 @@ export default function ComponentsShowcase() {
 
           </div>
         </section>
+
+
+
+        {/* Toasts & Notifications */}
+<section className="space-y-8">
+  <div className="flex items-center gap-6">
+    <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Toasts & Notifications</h2>
+    <div className="flex-1 h-[2px] bg-border/60"></div>
+  </div>
+
+  <div className="bg-surface/10 p-8 md:p-10 rounded-2xl border border-border shadow-xs">
+    <div className="flex flex-wrap gap-6 items-center">
+      <Button 
+        variant="primary" 
+        onClick={() => toast.success("Successfully uploaded Data", {
+          description: "The file listofdriver.csv has been uploaded successfully."
+        })}
+      >
+        Show Success Toast
+      </Button>
+      
+      <Button 
+        variant="tertiary" 
+        onClick={() => toast.error("Failed to upload data", {
+          description: "There was a problem connecting to the server. Please try again."
+        })}
+      >
+        Show Error Toast
+      </Button>
+
+      <Button 
+        variant="secondary" 
+        onClick={() => toast.info("System Update", {
+          description: "The charging station status is being updated in the background."
+        })}
+      >
+        Show Info Toast
+      </Button>
+    </div>
+  </div>
+</section>
+
 
       </div>
     </div>

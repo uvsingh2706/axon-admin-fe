@@ -15,4 +15,8 @@ export interface TransactionData {
     lastMeterReceived: string;
     vehicleType: string;
 }
+export interface ActiveListProps {
+    onTerminate: (data: TransactionData) => void;
+    search: string;
+}
 

@@ -37,3 +37,6 @@ export interface TransactionStatCard {
   icon: ElementType;
   bgColor: string;
 }
+export type TransactionListProps = {
+  search: string;
+};

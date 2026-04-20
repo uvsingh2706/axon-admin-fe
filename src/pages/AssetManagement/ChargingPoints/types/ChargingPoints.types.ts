@@ -60,3 +60,8 @@ export type PointEditData = {
   connectionType: EditPointFormValues["connectionType"];
   isPublic: boolean;
 };
+
+export interface ChargingPointListProps {
+  // data: ChargingPointData[];
+  search: string;
+}

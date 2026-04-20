@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { Pathname } from "@/utils/pathname";
 import { chargingPointColumns } from "../config/point.table";
 import { mockChargingPoints } from "../mocks/point.mock";
+import type { ChargingPointListProps } from "../types/ChargingPoints.types";
 
-function ChargingPointList() {
-  const [search] = useState("");
+function ChargingPointList({ search }: ChargingPointListProps) {
   const navigate = useNavigate();
 
   const columns = chargingPointColumns.map((column) => {
@@ -26,7 +26,7 @@ function ChargingPointList() {
       return {
         ...column,
         cell: ({ row }: any) => (
-          <span className="font-sans font-normal text-[14px] leading-none text-secondary-600">
+          <span className="font-sans font-medium text-[14px] leading-none">
             {row.original.station}
           </span>
         ),
