@@ -10,19 +10,39 @@ import {
   fleetFormSections,
   type EditFleetFormValues,
 } from "../config/fleet.form";
-import { getFleetById, getFleetEditDefaultValues } from "../mocks/fleet.mock";
+import { useFleetById } from "../services/Fleet.hooks";
 import type {
-  FleetEditDefaultValues,
   FleetEditSubmitPayload,
   FleetFormLogoValue,
 } from "../types/fleet.type";
 
 export default function FleetEdit() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const fleet = getFleetById(id);
-  const [formValues, setFormValues] = useState<FleetEditDefaultValues>(null);
+  
+  // Use live API hook for fetching (prevents blank page/crash)
+  const { data: fleetDetail, isLoading } = useFleetById(id ?? "");
+  const fleet = fleetDetail?.data;
+  
   const [logo, setLogo] = useState<FleetFormLogoValue>(null);
+
+  // Pre-fill form values when fleet data arrives
+  const formValues = useMemo(() => {
+    if (!fleet) return null;
+    return {
+      name: fleet.name,
+      email: fleet.email || "",
+      contact: fleet.contact_number || "",
+      vehicleType: fleet.vehicle_type || "",
+      flatRate: fleet.flatRate || "",
+    };
+  }, [fleet]);
+
+  useEffect(() => {
+    if (fleet?.logo) {
+      setLogo(fleet.logo);
+    }
+  }, [fleet]);
 
   const formSectionsWithoutLogo = useMemo(
     () =>
@@ -32,23 +52,20 @@ export default function FleetEdit() {
     []
   );
 
-  useEffect(() => {
-    const defaults = getFleetEditDefaultValues(id);
-    if (defaults) {
-      setFormValues(defaults);
-      setLogo(defaults.logo ?? null);
-    }
-  }, [id]);
-
   const handleSubmit = (data: EditFleetFormValues) => {
-    const payload: FleetEditSubmitPayload = { ...data, logo };
-    console.log("Form submitted", payload);
+    // Note: Update endpoint not yet available in backend
+    const payload = { ...data, logo: logo instanceof File ? logo.name : logo };
+    console.log("Form update (Mock - Endpoint not ready):", payload);
     navigate(`${Pathname.FLEET_MANAGEMENT}/${id}`);
   };
 
   const handleCancel = () => {
     navigate(`${Pathname.FLEET_MANAGEMENT}/${id}`);
   };
+
+  if (isLoading) {
+    return <div className="p-8 text-center text-text-500">Loading fleet...</div>;
+  }
 
   if (!fleet || !formValues) {
     return (
@@ -63,10 +80,11 @@ export default function FleetEdit() {
       <Breadcrumb
         items={[
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-          { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${fleet.id}` },
+          { label: fleet.name || "Fleet Details", path: `${Pathname.FLEET_MANAGEMENT}/${fleet.id}` },
           { label: "Edit" },
         ]}
       />
+
 
       <PageWrapper
         title="Edit Organization Details"
@@ -122,6 +140,8 @@ export default function FleetEdit() {
             submitLabel="Save Changes"
             cancelLabel="Cancel"
           />
+
+
         </div>
       </PageWrapper>
     </div>

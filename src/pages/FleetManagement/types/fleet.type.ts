@@ -35,5 +35,5 @@ export type FleetFormSectionsWithoutLogo = ReturnType<
 >;
 
 export type FleetEditDefaultValues = EditFleetFormValues | null;
-export type FleetCreateSubmitPayload = CreateFleetFormValues & { logo: FleetFormLogoValue };
+export type FleetCreateSubmitPayload = CreateFleetFormValues & { logo: string };
 export type FleetEditSubmitPayload = EditFleetFormValues & { logo: FleetFormLogoValue };

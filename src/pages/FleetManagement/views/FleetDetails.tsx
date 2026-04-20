@@ -8,10 +8,12 @@ import Bolt from "@/assets/icons/Bolt";
 import CarIcon from "@/assets/icons/CarIcon";
 import User from "@/assets/icons/User";
 import { Tabs, TabsList, TabsTrigger } from "@/component/ui/tabs";
-import { getFleetById, mockFleetStatsById } from "../mocks/fleet.mock";
+import { useFleetById } from "../services/Fleet.hooks";
+import { mockFleetStatsById } from "../mocks/fleet.mock";
 import { FLEET_MANAGEMENT_TABS } from "../constant";
 import FleetOverview from "./Overview";
 import type { FleetStatCard } from "../types/fleet.type";
+import type { FleetDTO } from "../services/Fleet.types";
 import Vehicles from "./Vehicles";
 import Drivers from "./Drivers";
 import { useCan } from "@/rbac";
@@ -22,7 +24,9 @@ export default function FleetDetails() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
-  const fleet = getFleetById(id);
+  const { data: fleetDetail, isLoading, isError, error } = useFleetById(id ?? "");
+  const fleet = fleetDetail?.data || ((fleetDetail as any)?.id ? (fleetDetail as unknown as FleetDTO) : null);
+
   const canViewFleet = useCan(MODULE.FLEET_MANAGEMENT, "view");
   const canUpdateFleet = useCan(MODULE.FLEET_MANAGEMENT, "update");
   const canDeleteFleet = useCan(MODULE.FLEET_MANAGEMENT, "delete");
@@ -60,13 +64,29 @@ export default function FleetDetails() {
     );
   }
 
-  if (!fleet) {
+  if (isError) {
     return (
-      <div className="p-8 text-center text-text-500 subtitle-2-medium">
-        Fleet not found.
+      <div className="p-8 text-center text-danger subtitle-2-medium">
+        Error loading fleet: {(error as any)?.message || "Unknown error"}
       </div>
     );
   }
+
+  if (isLoading) {
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        Loading fleet details...
+      </div>
+    );
+  }
+
+  // if (!fleet) {
+  //   return (
+  //     <div className="p-8 text-center text-text-500 subtitle-2-medium">
+  //       Fleet not found.
+  //     </div>
+  //   );
+  // }
 
   const fleetStats = mockFleetStatsById[fleet.id] ?? {
     availableBalance: "₹0",
@@ -88,13 +108,13 @@ export default function FleetDetails() {
     },
     {
       title: "Total Vehicles",
-      value: fleet.totalVehicles,
+      value: fleet.totalVehicles || "0",
       icon: <CarIcon className="w-5 h-5 text-primary-600" />,
       bgColor: "bg-primary-50",
     },
     {
       title: "Total Drivers",
-      value: fleet.totalDrivers,
+      value: fleet.totalDrivers || "0",
       icon: <User className="w-5 h-5 text-orange-c1" />,
       bgColor: "bg-primary-50",
     },
@@ -105,12 +125,12 @@ export default function FleetDetails() {
       <Breadcrumb
         items={[
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-          { label: fleet.organisationName },
+          { label: fleet.name },
         ]}
       />
 
       <PageWrapper
-        title={fleet.organisationName}
+        title={fleet.name}
         showSearch={false}
         showFilter={false}
         titleClassName="heading-3-semibold"

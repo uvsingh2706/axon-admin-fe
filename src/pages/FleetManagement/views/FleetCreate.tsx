@@ -14,10 +14,12 @@ import type {
   FleetCreateSubmitPayload,
   FleetFormLogoValue,
 } from "../types/fleet.type";
+import { useCreateFleet } from "../services/Fleet.hooks";
 
 export default function FleetCreate() {
   const navigate = useNavigate();
   const [logo, setLogo] = useState<FleetFormLogoValue>(null);
+  const { mutate: createFleet, isPending } = useCreateFleet();
 
   const formSectionsWithoutLogo = useMemo(
     () =>
@@ -28,10 +30,20 @@ export default function FleetCreate() {
   );
 
   const handleSubmit = (data: CreateFleetFormValues) => {
-    const payload: FleetCreateSubmitPayload = { ...data, logo };
-    console.log("Form submitted", payload);
-    navigate(Pathname.FLEET_MANAGEMENT);
+    // Map frontend keys to backend keys
+    const payload: FleetCreateSubmitPayload = {
+      name: data.name,
+      email: data.email,
+      contact_number: data.contact,
+      vehicle_type: data.vehicleType,
+      // Sending logo as a string (using the file name or a default if no file)
+      logo: logo instanceof File ? logo.name : (typeof logo === "string" ? logo : ""),
+    };
+    
+    console.log("Submitting payload:", payload);
+    createFleet(payload);
   };
+
 
   const handleCancel = () => {
     navigate(Pathname.FLEET_MANAGEMENT);
@@ -100,7 +112,9 @@ export default function FleetCreate() {
             onCancel={handleCancel}
             submitLabel="Add Fleet"
             cancelLabel="Cancel"
+            isSubmitting={isPending}
           />
+
         </div>
       </PageWrapper>
     </div>
