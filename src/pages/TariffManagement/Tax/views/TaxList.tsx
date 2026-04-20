@@ -1,15 +1,73 @@
+import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/component/data-table";
-import { taxTableColumns } from "../config/tax.table";
-import { mockTaxList } from "../mocks/tax.mock";
+import { getTaxTableColumns } from "../config/tax.table";
+import { useTaxList, useDeleteTax } from "../services/Tax.hooks";
+import { Modal } from "@/component/Modal";
+import { Pathname } from "@/utils/pathname";
 
 export default function TaxList({ search }: { search: string }) {
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  
+  const { data: taxList, isLoading } = useTaxList({ page, limit, search });
+  const { mutateAsync: deleteTax } = useDeleteTax();
+
+  const handleEdit = (id: string) => {
+    navigate(`${Pathname.TARIFF_MANAGEMENT}/tax/${id}/edit`);
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setDeleteId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (deleteId) {
+      try {
+        await deleteTax({ id: deleteId});
+        setIsModalOpen(false);
+        setDeleteId(null);
+      } catch (error) {
+        console.log("Failed to delete tax", error);
+      }
+    }
+  };
+
+  const TaxTableColumns = useMemo(
+    () => getTaxTableColumns({ onEdit: handleEdit, onDelete: handleDeleteClick }),
+    []
+  );
+
   return (
-    <DataTable
-      columns={taxTableColumns}
-      data={mockTaxList}
+    <>
+      <DataTable
+      columns={TaxTableColumns}
+      data={taxList?.data?.data ?? []}
       search={search}
       isLink
       link={(row) => "tax/" + row.id}
+      isLoading={isLoading}
+      pagination={{
+        pageIndex: page - 1,
+        pageSize: limit,
+      }}
+      pageCount={taxList?.data?.meta?.totalPages || 1}
+      onPaginationChange={(updater) => {
+        const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;
+        setPage(next.pageIndex + 1);
+        setLimit(next.pageSize);
+      }}
     />
+    <Modal
+      open={isModalOpen}
+      onOpenChange={setIsModalOpen}
+      description="Are you sure you want to delete this tax?"
+      onConfirm={handleConfirmDelete}
+    />
+    </>
   );
 }

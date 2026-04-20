@@ -25,6 +25,7 @@ export interface TariffDTO {
   serviceFees: string;
   currency: string;
   taxId: string;
+  updatedBy: string;
   tax?: TaxDTO;
   charging_point?: unknown[];
 }
@@ -43,3 +44,13 @@ export interface TariffDetailResponse {
   status: number;
   data: TariffDTO;
 }
+
+export interface CreateTariffRequest {
+  tariffName: string;
+  ratePerUnit: number;
+  serviceFees: number;
+  currency: string;
+  taxId: string;
+}
+
+export type UpdateTariffRequest = Partial<CreateTariffRequest>;

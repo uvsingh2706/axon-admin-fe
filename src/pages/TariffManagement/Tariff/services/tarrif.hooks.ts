@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { tariffApi } from "./tarrif.api";
 
-import type {TariffListParams}  from "./tarrif.types";
+import type {TariffListParams, CreateTariffRequest}  from "./tarrif.types";
 
 
 export const tariffKeys = {
@@ -24,3 +24,13 @@ export const useTariffById = (id: string) => {
         queryFn: () => tariffApi.getTariffById(id),
     })
 }
+
+export const useCreateTariff = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data: CreateTariffRequest) => tariffApi.createTariff(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: tariffKeys.all });
+        },
+    });
+};

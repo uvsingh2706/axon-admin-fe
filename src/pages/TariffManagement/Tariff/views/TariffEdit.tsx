@@ -9,12 +9,15 @@ import {
   type EditTariffFormValues,
 } from "../config/tariff.form";
 import PageWrapper from "@/component/PageWrapper";
-import { mockTariffEditById } from "../mocks/tariff.mock";
+import { useTariffById } from "../services/tarrif.hooks";
+import { useTaxList } from "../../Tax/services/Tax.hooks";
 
 export default function TariffEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const tariff = id ? mockTariffEditById[id] : null;
+  const { data: tariffResponse, isLoading } = useTariffById(id || "");
+  const { data: taxData } = useTaxList({ limit: 50, page: 1 });
+  const tariff = tariffResponse?.data;
 
   const [form, setForm] = useState({
     name: "",
@@ -26,17 +29,37 @@ export default function TariffEdit() {
   useEffect(() => {
     if (tariff) {
       setForm({
-        name: tariff.name,
-        value: tariff.value,
-        serviceFee: tariff.serviceFee,
-        tax: tariff.tax,
+        name: tariff.tariffName,
+        value: tariff.ratePerUnit.toString(),
+        serviceFee: tariff.serviceFees.toString(),
+        tax: tariff.taxId,
       });
     }
   }, [tariff]);
 
+  if (isLoading) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading...</div>;
+  }
+
   if (!tariff) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tariff not found.</div>;
   }
+
+  const dynamicSections = tariffEditFormSections.map(section => ({
+    ...section,
+    fields: section.fields.map(field => {
+      if (field.name === "tax") {
+        return {
+          ...field,
+          options: taxData?.data?.data?.map(tax => ({
+            label: tax.taxName,
+            value: tax.id
+          })) || []
+        };
+      }
+      return field;
+    })
+  }));
 
   const handleSubmit = (data: EditTariffFormValues) => {
     console.log("Update tariff:", id, data);
@@ -53,7 +76,7 @@ export default function TariffEdit() {
         items={[
           { label: "Tariff Management", path: Pathname.TARIFF_MANAGEMENT },
           { label: "Tariff", path: Pathname.TARIFF_MANAGEMENT },
-          { label: tariff.name, path: `${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}` },
+          { label: tariff.tariffName, path: `${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}` },
           { label: "Edit" },
         ]}
       />
@@ -71,7 +94,7 @@ export default function TariffEdit() {
               schema={editTariffSchema}
               defaultValues={form}
               onSubmit={handleSubmit}
-              sections={tariffEditFormSections}
+              sections={dynamicSections}
               submitLabel="Save Changes"
               cancelLabel="Cancel"
               onCancel={handleCancel}

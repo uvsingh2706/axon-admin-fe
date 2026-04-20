@@ -4,10 +4,10 @@ import type { SectionConfig } from "@/component/form/DynamicForm";
 export const createTaxSchema = z.object({
   name: z.string().min(1, "Tax name is required"),
   type: z.string().min(1, "Type is required"),
-  // percentageValue: z
-  //   .string()
-  //   .min(1, "Percentage value is required")
-  //   .regex(/^\d*\.?\d*$/, "Value must be a valid number"),
+  percentageValue: z
+    .string()
+    .min(1, "Percentage value is required")
+    .regex(/^\d*\.?\d*$/, "Value must be a valid number"),
 });
 
 export type CreateTaxFormValues = z.infer<typeof createTaxSchema>;

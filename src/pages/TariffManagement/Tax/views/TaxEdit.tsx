@@ -9,12 +9,17 @@ import {
   type EditTaxFormValues,
 } from "../config/tax.form";
 import PageWrapper from "@/component/PageWrapper";
-import { mockTaxEditById } from "../mocks/tax.mock";
+import { useTaxById, useUpdateTax } from "../services/Tax.hooks";
+
 
 export default function TaxEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const tax = id ? mockTaxEditById[id] : null;
+  
+  const { data: taxRes, isLoading } = useTaxById(id || "");
+  const tax = taxRes?.data;
+  
+  const { mutateAsync: updateTax, isPending } = useUpdateTax();
 
   const [form, setForm] = useState({
     name: "",
@@ -27,18 +32,34 @@ export default function TaxEdit() {
       setForm({
         name: tax.taxName,
         type: tax.type,
-        percentageValue: tax.percentageValue.replace("%", "").trim(),
+        percentageValue: tax.value.toString().replace("%", "").trim(),
       });
     }
   }, [tax]);
+
+  if (isLoading) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading...</div>;
+  }
 
   if (!tax) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tax not found.</div>;
   }
 
-  const handleSubmit = (data: EditTaxFormValues) => {
-    console.log("Update tax:", id, data);
-    navigate(`${Pathname.TARIFF_MANAGEMENT}/tax/${id}`);
+  const handleSubmit = async (data: EditTaxFormValues) => {
+    if (!id) return;
+    try {
+      await updateTax({
+        id,
+        data: {
+          taxName: data.name,
+          type: data.type.toLowerCase(),
+          value: Number(data.percentageValue),
+        },
+      });
+      navigate(`${Pathname.TARIFF_MANAGEMENT}/tax/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCancel = () => {

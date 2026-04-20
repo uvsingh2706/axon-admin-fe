@@ -8,6 +8,7 @@ import {
 } from "../config/tax.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
+import { useCreateTax } from "../services/Tax.hooks";
 
 export default function TaxCreate() {
   const navigate = useNavigate();
@@ -16,9 +17,19 @@ export default function TaxCreate() {
     navigate(Pathname.TARIFF_MANAGEMENT);
   };
 
-  const handleSubmit = (data: CreateTaxFormValues) => {
-    console.log("Form Submitted:", data);
-    handleCancel();
+  const { mutateAsync: createTax, isPending } = useCreateTax();
+
+  const handleSubmit = async (data: CreateTaxFormValues) => {
+    try {
+      await createTax({
+        taxName: data.name,
+        type: data.type.toLowerCase(),
+        value: Number(data.percentageValue),
+      });
+      handleCancel();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -43,7 +54,7 @@ export default function TaxCreate() {
             defaultValues={{ type: "Percentage", name: "", percentageValue: "" }}
             onSubmit={handleSubmit}
             sections={taxCreateFormSections}
-            submitLabel="Create Tax"
+            submitLabel={isPending ? "Creating..." : "Create Tax"}
             cancelLabel="Cancel"
             onCancel={handleCancel}
           />
