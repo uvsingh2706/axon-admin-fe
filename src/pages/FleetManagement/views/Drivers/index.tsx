@@ -46,13 +46,13 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
     setIsImportModalOpen(true);
   };
 
-  if (!fleet || !id) {
-    return (
-      <div className="p-8 text-center text-text-500 subtitle-2-medium">
-        Fleet not found.
-      </div>
-    );
-  }
+  // if (!fleet || !id) {
+  //   return (
+  //     <div className="p-8 text-center text-text-500 subtitle-2-medium">
+  //       Fleet not found.
+  //     </div>
+  //   );
+  // }
   if (!canViewDrivers) {
     if (embedded) return null;
     return (

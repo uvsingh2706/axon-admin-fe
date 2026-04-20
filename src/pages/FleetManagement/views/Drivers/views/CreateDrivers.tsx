@@ -15,9 +15,9 @@ export default function CreateDrivers() {
   const navigate = useNavigate();
   const fleet = getFleetById(id);
 
-  if (!fleet || !id) {
-    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
-  }
+  // if (!fleet || !id) {
+  //   return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
+  // }
 
   const handleCancel = () => {
     navigate(`${Pathname.FLEET_MANAGEMENT}/${id}`);

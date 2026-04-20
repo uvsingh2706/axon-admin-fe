@@ -6,11 +6,12 @@ import CopyIcon from "@/assets/icons/CopyIcon";
 import { Modal } from "@/component/Modal";
 import { TabsContent } from "@/component/ui/tabs";
 import { cn } from "@/lib/utils";
-import type { FleetData, FleetStatCard } from "../../types/fleet.type";
+import type { FleetDTO } from "../../services/Fleet.types";
+import type { FleetStatCard } from "../../types/fleet.type";
 import { Can, MODULE } from "@/rbac";
 
 type FleetOverviewProps = {
-  fleet: FleetData;
+  fleet: FleetDTO;
   statCardsData: FleetStatCard[];
   onEdit?: () => void;
   onDelete?: () => void;
@@ -47,7 +48,7 @@ export default function FleetOverview({
           <div className="flex flex-col md:flex-row gap-8 items-start">
             <div className="w-27 h-27 rounded-xl border border-text-100 flex items-center justify-center overflow-hidden shrink-0 bg-white">
               {fleet.logo ? (
-                <img src={fleet.logo} alt={fleet.organisationName} className="w-full h-full object-contain p-2" />
+                <img src={fleet.logo} alt={fleet.name} className="w-full h-full object-contain p-2" />
               ) : (
                 <ImagePlaceholderIcon className="w-full h-full" />
               )}
@@ -55,7 +56,7 @@ export default function FleetOverview({
 
             <div className="flex flex-col flex-1 gap-6 w-full">
               <div className="flex items-start justify-between w-full">
-                <h3 className="heading-3-semibold text-text-950">{fleet.organisationName}</h3>
+                <h3 className="heading-3-semibold text-text-950">{fleet.name}</h3>
                 <div className="flex items-center gap-3">
                   <Can module={MODULE.FLEET_MANAGEMENT} action="update">
                     <button
@@ -91,10 +92,10 @@ export default function FleetOverview({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 w-full">
-                <DetailField label="Vehicle Type" value={fleet.vehicleType} />
-                <DetailField label="Email" value={fleet.email} isCopyable />
-                <DetailField label="Contact" value={fleet.contact} />
-                <DetailField label="Flat Rate" value={fleet.flatRate} />
+                <DetailField label="Vehicle Type" value={fleet.vehicle_type || "null"} />
+                <DetailField label="Email" value={fleet.email || "null"} isCopyable />
+                <DetailField label="Contact" value={fleet.contact_number || "null"} />
+
               </div>
             </div>
           </div>

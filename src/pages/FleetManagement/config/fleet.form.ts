@@ -2,7 +2,7 @@ import * as z from "zod";
 import type { SectionConfig } from "@/component/form/DynamicForm";
 
 export const createFleetSchema = z.object({
-  organisationName: z.string().min(1, "Organisation Name is required"),
+  name: z.string().min(1, "Organisation Name is required"),
   logo: z.any().optional(),
   vehicleType: z.string().min(1, "Vehicle Type is required"),
   flatRate: z.string().min(1, "Flat Rate is required"),
@@ -26,7 +26,7 @@ export const fleetFormSections: SectionConfig<CreateFleetFormValues>[] = [
   {
     gridCols: 2,
     fields: [
-      { name: "organisationName", label: "Organisation Name", type: "text", placeholder: "E.g. Ola Pvt. Ltd.", required: true },
+      { name: "name", label: "Organisation Name", type: "text", placeholder: "E.g. Ola Pvt. Ltd.", required: true },
       {
         name: "vehicleType",
         label: "Vehicle Type",
@@ -34,11 +34,9 @@ export const fleetFormSections: SectionConfig<CreateFleetFormValues>[] = [
         placeholder: "E.g. Buses",
         required: true,
         options: [
-          { label: "Trucks", value: "Trucks" },
-          { label: "Buses", value: "Buses" },
-          { label: "3-Wheelers", value: "3-Wheelers" },
-          { label: "Electric Cars", value: "Electric Cars" },
-          { label: "4-Wheelers", value: "4-Wheelers" },
+          { label: "E2W", value: "E2W" },
+          { label: "E4W", value: "E4W" },
+          { label: "Bus", value: "Bus" },
         ],
       },
       { name: "contact", label: "Contact Number", type: "text", placeholder: "E.g. 8713133245", required: true },

@@ -17,6 +17,9 @@ export const ApiEndpoints = {
     //oem
     OEM_LIST: '/oem',
 
+    //fleet
+    FLEET_LIST: '/fleet',
 
-
+    //vehicle
+    VEHICLE_LIST: '/vehicle',
 };
