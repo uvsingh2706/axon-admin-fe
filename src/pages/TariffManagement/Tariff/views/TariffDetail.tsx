@@ -27,7 +27,7 @@ export default function TariffDetail() {
   }
 
   const handleEdit = () => {
-    navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}/edit`);
+    navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}/edit`, { state: { tariff } });
   };
 
   const handleDelete = () => {
@@ -40,14 +40,32 @@ export default function TariffDetail() {
     const parsed = parseFloat(value);
     return `${symbol} ${isNaN(parsed) ? value : parsed.toFixed(2)}`;
   };
+  
 
-  const formatDate = (dateStr: string) => {
-    try {
-      return format(new Date(dateStr), "MMM dd, yyyy hh:mm a");
-    } catch {
-      return dateStr;
-    }
-  };
+  const tarrifData = [
+    { 
+      id: ' tariffName',
+      label: "Tariff Name",
+      value: tariff.tariffName,
+    },
+    {
+      id: 'value',
+      label: "Value (per kWh)",
+      value: formatCurrency(tariff.ratePerUnit),
+    },
+    {
+      id: 'serviceFee',
+      label: "Service Fee",
+      value: formatCurrency(tariff.serviceFees),
+    },
+    {
+      id: 'tax',
+      label: "Tax",
+      value: tariff.tax
+        ? `${tariff.tax.taxName} (${tariff.tax.type})`
+        : "NA",
+    },
+  ]
 
   return (
     <div className="flex flex-col gap-4">
@@ -95,29 +113,13 @@ export default function TariffDetail() {
         }
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <div className="flex flex-col gap-1">
-            <span className="subtitle-3-regular text-text-500">Tariff Name</span>
-            <span className="subtitle-2-semibold text-text-950 capitalize">{tariff.tariffName}</span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <span className="subtitle-3-regular text-text-500">Value (per kWh)</span>
-            <span className="subtitle-2-semibold text-text-950">{formatCurrency(tariff.ratePerUnit)}</span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <span className="subtitle-3-regular text-text-500">Service Fee</span>
-            <span className="subtitle-2-semibold text-text-950">{formatCurrency(tariff.serviceFees)}</span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <span className="subtitle-3-regular text-text-500">Tax</span>
-            <span className="subtitle-2-semibold text-text-950 capitalize">
-              {tariff.tax
-                ? `${tariff.tax.taxName} (${tariff.tax.type})`
-                : "NA"}
-            </span>
-          </div>
+          
+            {tarrifData.map((item) => (
+              <div key={item.id} className="flex flex-col gap-1">
+                <span className="subtitle-3-regular text-text-500">{item.label}</span>
+                <span className="subtitle-2-semibold text-text-950 capitalize">{item.value}</span>
+              </div>
+            ))}
         </div>
       </PageWrapper>
     </div>
