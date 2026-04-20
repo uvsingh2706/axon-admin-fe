@@ -10,6 +10,9 @@ export const ApiEndpoints = {
     //tariff
     TARIFF_LIST: '/tariff',
 
-    
+    //tax
+    TAX_LIST: '/tax',
+
+
 
 };

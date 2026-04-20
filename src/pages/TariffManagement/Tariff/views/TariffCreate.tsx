@@ -8,6 +8,8 @@ import {
 } from "../config/tariff.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
+import { useCreateTariff } from "../services/tarrif.hooks";
+import { useTaxList } from "../../Tax/services/Tax.hooks";
 
 interface CreateTariffProps {
   onCancel?: () => void;
@@ -24,9 +26,38 @@ export default function CreateTariff({ onCancel }: CreateTariffProps) {
     }
   };
 
-  const handleSubmit = (data: CreateTariffFormValues) => {
-    console.log("Form Submitted:", data);
-    handleCancel();
+  const { mutateAsync: createTariff, isPending } = useCreateTariff();
+  const { data: taxData } = useTaxList({ limit: 50, page: 1 });
+
+  const dynamicSections = tariffCreateFormSections.map(section => ({
+    ...section,
+    fields: section.fields.map(field => {
+      if (field.name === "taxType") {
+        return {
+          ...field,
+          options: taxData?.data?.data?.map(tax => ({
+            label: tax.taxName,
+            value: tax.id
+          })) || []
+        };
+      }
+      return field;
+    })
+  }));
+
+  const handleSubmit = async (data: CreateTariffFormValues) => {
+    try {
+      await createTariff({
+        tariffName: data.name,
+        ratePerUnit: Number(data.valuePerKwh),
+        serviceFees: Number(data.serviceFee),
+        currency: "INR",
+        taxId: data.taxType,
+      });
+      handleCancel();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -49,8 +80,8 @@ export default function CreateTariff({ onCancel }: CreateTariffProps) {
           <DynamicForm
             schema={createTariffSchema}
             onSubmit={handleSubmit}
-            sections={tariffCreateFormSections}
-            submitLabel="Create Tariff"
+            sections={dynamicSections}
+            submitLabel={isPending ? "Creating..." : "Create Tariff"}
             cancelLabel="Cancel"
             onCancel={handleCancel}
           />

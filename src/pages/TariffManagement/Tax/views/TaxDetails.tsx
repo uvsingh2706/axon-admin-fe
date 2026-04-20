@@ -6,7 +6,8 @@ import { Pathname } from "@/utils/pathname";
 import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
-import { mockTaxDetailsById } from "../mocks/tax.mock";
+import { useTaxById, useDeleteTax } from "../services/Tax.hooks";
+
 import { Can, MODULE } from "@/rbac";
 
 export default function TaxDetails() {
@@ -14,7 +15,13 @@ export default function TaxDetails() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const tax = id ? mockTaxDetailsById[id] : null;
+  const { data: taxRes, isLoading } = useTaxById(id || "");
+  const tax = taxRes?.data;
+  const { mutateAsync: deleteTax } = useDeleteTax();
+
+  if (isLoading) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading...</div>;
+  }
 
   if (!tax) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Tax not found.</div>;
@@ -24,8 +31,14 @@ export default function TaxDetails() {
     navigate(`${Pathname.TARIFF_MANAGEMENT}/tax/${id}/edit`);
   };
 
-  const handleDelete = () => {
-    console.log("Delete tax:", id);
+  const handleDelete = async () => {
+    if (!id) return;
+    try {
+      await deleteTax({ id });
+      navigate(Pathname.TARIFF_MANAGEMENT);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -80,7 +93,7 @@ export default function TaxDetails() {
           </div>
           <div className="flex flex-col gap-1">
             <span className="subtitle-3-regular text-text-500">Percentage Value</span>
-            <span className="subtitle-2-semibold text-text-950">{tax.percentageValue}</span>
+            <span className="subtitle-2-semibold text-text-950">{tax.value}%</span>
           </div>
         </div>
       </PageWrapper>

@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/axios";
 import { ApiEndpoints } from "@/utils/apiEndpoints";
-import type { TariffListParams, TariffListResponse, TariffDetailResponse } from "./tarrif.types";
+import type { TariffListParams, TariffListResponse, TariffDetailResponse, CreateTariffRequest } from "./tarrif.types";
 
 export const tariffApi = {
     getTariffList: async (params: TariffListParams): Promise<TariffListResponse> => {
@@ -9,6 +9,10 @@ export const tariffApi = {
     },
     getTariffById: async (id: string): Promise<TariffDetailResponse> => {
         const response = await apiClient.get<TariffDetailResponse>(`${ApiEndpoints.TARIFF_LIST}/${id}`);
+        return response.data;
+    },
+    createTariff: async (data: CreateTariffRequest): Promise<void> => {
+        const response = await apiClient.post(ApiEndpoints.TARIFF_LIST, data);
         return response.data;
     },
 };
