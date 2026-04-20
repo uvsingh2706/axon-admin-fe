@@ -10,6 +10,7 @@ import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { useCreateTariff } from "../services/tarrif.hooks";
 import { useTaxList } from "../../Tax/services/Tax.hooks";
+import { toast } from "sonner";
 
 interface CreateTariffProps {
   onCancel?: () => void;
@@ -54,8 +55,10 @@ export default function CreateTariff({ onCancel }: CreateTariffProps) {
         currency: "INR",
         taxId: data.taxType,
       });
+      toast.success("Tariff Created", { description: "The tariff has been successfully created." });
       handleCancel();
     } catch (error) {
+      toast.error("Failed to Create", { description: "There was an error creating the tariff." });
       console.log(error);
     }
   };

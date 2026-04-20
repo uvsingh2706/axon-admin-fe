@@ -40,10 +40,10 @@ export default function TariffDetail() {
     const parsed = parseFloat(value);
     return `${symbol} ${isNaN(parsed) ? value : parsed.toFixed(2)}`;
   };
-  
+
 
   const tarrifData = [
-    { 
+    {
       id: ' tariffName',
       label: "Tariff Name",
       value: tariff.tariffName,
@@ -62,7 +62,7 @@ export default function TariffDetail() {
       id: 'tax',
       label: "Tax",
       value: tariff.tax
-        ? `${tariff.tax.taxName} (${tariff.tax.type})`
+        ? tariff.tax.taxName
         : "NA",
     },
   ]
@@ -113,13 +113,13 @@ export default function TariffDetail() {
         }
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          
-            {tarrifData.map((item) => (
-              <div key={item.id} className="flex flex-col gap-1">
-                <span className="subtitle-3-regular text-text-500">{item.label}</span>
-                <span className="subtitle-2-semibold text-text-950 capitalize">{item.value}</span>
-              </div>
-            ))}
+
+          {tarrifData.map((item) => (
+            <div key={item.id} className="flex flex-col gap-1">
+              <span className="subtitle-3-regular text-text-500">{item.label}</span>
+              <span className="subtitle-2-semibold text-text-950 capitalize">{item.value}</span>
+            </div>
+          ))}
         </div>
       </PageWrapper>
     </div>
