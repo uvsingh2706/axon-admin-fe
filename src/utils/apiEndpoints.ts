@@ -15,7 +15,13 @@ export const ApiEndpoints = {
 
 
     //oem
-    OEM_LIST: '/oem',
+    OEM: '/oem',
+
+    //model
+    MODEL: '/charger-model',
+
+    //connector
+    CONNECTOR: '/connector-meta',
 
     //fleet
     FLEET_LIST: '/fleet',

@@ -4,11 +4,21 @@ import PageWrapper from "@/component/PageWrapper"
 import { CreateConnectorSchema, CreateConnectorSections, type CreateConnectorFormValues } from "../config/connector.form"
 import { useNavigate } from "react-router-dom"
 import { Pathname } from "@/utils/pathname"
+import { useCreateConnector } from "../services/connector.hook"
 
 const ConnectorCreate = () => {
   const navigate = useNavigate();
 
+  const { mutate: createConnector } = useCreateConnector();
+
   const handleSubmit = (data: CreateConnectorFormValues) => {
+    const payload = {
+      name: data.connectorName,
+      standard: data.connectorStandard,
+      io_type: data.ioType,
+      output_kw: Number(data.connectorOutput),
+    };
+    createConnector(payload);
     console.log("Submit Connector Form Data:", data);
     navigate(-1);
   };

@@ -15,4 +15,12 @@ export const tariffApi = {
         const response = await apiClient.post(ApiEndpoints.TARIFF_LIST, data);
         return response.data;
     },
+    deleteTariff: async (id: string): Promise<void> => {
+        const response = await apiClient.delete(`${ApiEndpoints.TARIFF_LIST}/${id}`);
+        return response.data;
+    },
+    updateTariff: async (id: string, data: CreateTariffRequest): Promise<void> => {
+        const response = await apiClient.put(`${ApiEndpoints.TARIFF_LIST}/${id}`, data);
+        return response.data;
+    }
 };

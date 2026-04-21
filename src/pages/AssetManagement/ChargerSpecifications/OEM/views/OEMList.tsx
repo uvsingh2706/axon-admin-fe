@@ -1,19 +1,25 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { DataTable } from '@/component/data-table'
-import { useOemColumns } from '../config/oem.table'
-import { mockOemData } from '../mocks/oem.mock'
+import { useOemColumns, type OEMRowData } from '../config/oem.table'
 import { useOEMList } from '../services/oem.hooks'
+import AddOemModal from './AddOemModal';
 
-const OEMList = () => {
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set(["1"]))
-    const [page, setPage] = useState(1);
+interface OEMListProps {
+  search?: string;
+}
+
+const OEMList = ({ search = "" }: OEMListProps) => {
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set([]))
+  const [editId, setEditId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
-  const {data:oemList, isLoading} = useOEMList({page, limit});
-    
-  console.log(oemList, 'ajkdsk')
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
 
-
+  const effectiveSearch = search.trim().length >= 2 ? search : undefined;
+  const { data: oemList, isLoading } = useOEMList({ page, limit, search: effectiveSearch });
 
   const toggleExpand = useCallback((id: string) => {
     setExpandedIds(prev => {
@@ -28,20 +34,67 @@ const OEMList = () => {
   }, []);
   
   const handleEdit = (id: string) => {
-    console.log("Edit OEM", id);
+    setEditId(id);
   }
 
-  const columns = useOemColumns(expandedIds, toggleExpand);
+  console.log(oemList, 'oemList')
+
+  const columns = useOemColumns(expandedIds, toggleExpand, handleEdit);
 
   const displayedData = useMemo(() => {
-    return mockOemData.filter(row => 
-      row.isParent || (row.parentId && expandedIds.has(row.parentId))
-    );
-  }, [expandedIds]);
+    if (!oemList?.data?.oems) return [];
+    
+    const rows: OEMRowData[] = [];
+    oemList.data.oems.forEach(oem => {
+      rows.push({
+        ...oem,
+        isParent: true,
+        displayName: oem.oemName,
+      });
+
+      if (expandedIds.has(oem.id)) {
+        oem.chargerModels.forEach(model => {
+          rows.push({
+            ...model,
+            id: model.id,
+            parentId: oem.id,
+            isParent: false,
+            displayName: model.chargerModelName,
+            chargerModelType: model.chargerModelType,
+            updatedAt: model.updatedAt,
+            updatedByName: model.updatedByName,
+          } as OEMRowData);
+        });
+      }
+    });
+    return rows;
+  }, [oemList, expandedIds]);
 
   return (
     <div className="w-full">
-        <DataTable columns={columns} data={displayedData} />
+        <DataTable 
+          data={displayedData} 
+          columns={columns} 
+          isLoading={isLoading}
+          search={search}
+          isServerSide={true}
+          totalItems={oemList?.data?.totalCount || 0}
+          pagination={{
+            pageIndex: page - 1,
+            pageSize: limit,
+          }}
+          pageCount={Math.ceil(oemList?.data?.totalCount / limit) || 0}
+          onPaginationChange={(updater) => {
+            const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;
+            setPage(next.pageIndex + 1);
+            setLimit(next.pageSize);
+          }}
+        />
+        <AddOemModal 
+          open={!!editId} 
+          onOpenChange={(open) => !open && setEditId(null)} 
+          editId={editId} 
+        />
     </div>
   )
 }

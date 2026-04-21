@@ -6,7 +6,7 @@ import { Pathname } from "@/utils/pathname";
 import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
-import { useTariffById } from "../services/tarrif.hooks";
+import { useDeleteTariff, useTariffById } from "../services/tarrif.hooks";
 import { format } from "date-fns";
 import { Can, MODULE } from "@/rbac";
 
@@ -14,6 +14,7 @@ export default function TariffDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const deleteTariff = useDeleteTariff();
 
   const { data: tariffResponse, isLoading } = useTariffById(id ?? "");
   const tariff = tariffResponse?.data;
@@ -27,12 +28,16 @@ export default function TariffDetail() {
   }
 
   const handleEdit = () => {
+    if (!id) return;
     navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}/edit`, { state: { tariff } });
   };
 
   const handleDelete = () => {
+    if (!id) return;
     console.log("Delete tariff:", id);
-    // TODO: integrate delete API
+    deleteTariff.mutate(id);
+    setIsModalOpen(false);
+    navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif`);
   };
 
   const formatCurrency = (value: string) => {

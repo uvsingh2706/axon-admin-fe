@@ -16,10 +16,11 @@ export const useOEMList = (params: OEMListParams) => {
     })
 }
 
-export const useOEMById = (id: string) => {
+export const useOEMById = (id: string, enabled = true) => {
     return useQuery({
         queryKey: [...oemKeys.all, 'oem-by-id', id],
         queryFn: () => oemApi.getOEMById(id),
+        enabled: enabled && !!id,
     })
 }
 
@@ -35,6 +36,35 @@ export const useCreateOEM = () => {
             console.log(error);
             toast.error(error?.response?.data?.message || "Failed to create OEM");
         }
+    })
+}
+
+export const useUpdateOEM = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({id, data}: {id: string, data: CreateOEMRequest}) => oemApi.updateOEMById(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: oemKeys.all });
+            toast.success("OEM updated successfully");
+        },
+        onError: (error: any) => {
+            console.log(error);
+            toast.error(error?.response?.data?.message || "Failed to update OEM");
+        }   
+    })
+}
+export const useDeleteOEM = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id: string) => oemApi.deleteOEMById(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: oemKeys.all });
+            toast.success("OEM deleted successfully");
+        },
+        onError: (error: any) => {
+            console.log(error);
+            toast.error(error?.response?.data?.message || "Failed to delete OEM");
+        }   
     })
 }
     
