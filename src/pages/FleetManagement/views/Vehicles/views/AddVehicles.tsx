@@ -15,9 +15,9 @@ export default function AddVehicles() {
   const navigate = useNavigate();
   const fleet = getFleetById(id);
 
-  // if (!fleet || !id) {
-  //   return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
-  // }
+  if (!fleet || !id) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
+  }
 
   const handleCancel = () => {
     navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles`);
@@ -33,7 +33,7 @@ export default function AddVehicles() {
       <Breadcrumb
         items={[
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-          { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+          { label: fleet?.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           { label: "Vehicles", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           { label: "Add Vehicle" },
         ]}

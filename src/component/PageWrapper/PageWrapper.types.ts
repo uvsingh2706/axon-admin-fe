@@ -27,7 +27,7 @@ export interface PageWrapperProps {
   headerActions?: ReactNode;
   isSearchRight?: boolean;
   searchClassName?: string;
-  isChargerSpecifications: boolean,
+  isChargerSpecifications?: boolean,
   actionRbac?: {
     modules: ModuleKey[];
     action?: RbacAction;

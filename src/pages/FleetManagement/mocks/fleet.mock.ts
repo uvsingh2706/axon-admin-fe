@@ -87,7 +87,7 @@ export const getFleetEditDefaultValues = (id?: string): EditFleetFormValues | nu
   if (!fleet) return null;
 
   return {
-    organisationName: fleet.organisationName,
+    name: fleet.organisationName,
     logo: fleet.logo,
     vehicleType: fleet.vehicleType,
     flatRate: fleet.flatRate,

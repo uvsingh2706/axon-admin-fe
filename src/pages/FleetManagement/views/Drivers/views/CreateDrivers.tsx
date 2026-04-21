@@ -15,9 +15,9 @@ export default function CreateDrivers() {
   const navigate = useNavigate();
   const fleet = getFleetById(id);
 
-  // if (!fleet || !id) {
-  //   return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
-  // }
+  if (!fleet || !id) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
+  }
 
   const handleCancel = () => {
     navigate(`${Pathname.FLEET_MANAGEMENT}/${id}`);
@@ -33,7 +33,7 @@ export default function CreateDrivers() {
       <Breadcrumb
         items={[
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-          { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+          { label: fleet?.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           { label: "Drivers", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           { label: "Add Driver" },
         ]}
@@ -50,7 +50,7 @@ export default function CreateDrivers() {
           <DynamicForm<CreateDriverFormValues>
             schema={createDriverSchema}
             sections={driverCreateFormSections}
-            defaultValues={{ organisationFleet: fleet.organisationName }}
+            // defaultValues={{ ' ' }}
             onSubmit={handleSubmit}
             submitLabel="Add Driver"
             cancelLabel="Cancel"
