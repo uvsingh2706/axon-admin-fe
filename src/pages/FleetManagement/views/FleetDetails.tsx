@@ -80,13 +80,13 @@ export default function FleetDetails() {
     );
   }
 
-  // if (!fleet) {
-  //   return (
-  //     <div className="p-8 text-center text-text-500 subtitle-2-medium">
-  //       Fleet not found.
-  //     </div>
-  //   );
-  // }
+  if (!fleet) {
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        Fleet not found.
+      </div>
+    );
+  }
 
   const fleetStats = mockFleetStatsById[fleet.id] ?? {
     availableBalance: "₹0",

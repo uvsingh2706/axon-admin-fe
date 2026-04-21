@@ -10,7 +10,7 @@ export const createDriverSchema = z.object({
   driverId: z.string().trim().or(z.literal("")).optional(),
   licenseNumber: z.string().min(1, "License number is required"),
   licenseExpiryDate: z.string().min(1, "License expiry date is required"),
-  // organisationFleet: z.string().min(1, "Organisation / fleet is required"),
+  organisationFleet: z.string().optional(),
   vehicleId: z.string().min(1, "Vehicle is required"),
 });
 

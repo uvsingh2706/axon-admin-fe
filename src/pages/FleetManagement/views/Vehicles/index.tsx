@@ -51,9 +51,9 @@ export default function Vehicles({ fleetId, embedded = false }: VehiclesProps) {
   const canViewVehicles = useCan(MODULE.FLEET_MANAGEMENT, "view");
   const canCreateVehicles = useCan(MODULE.FLEET_MANAGEMENT, "create");
 
-  // if (!fleet || !id) {
-  //   return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
-  // }
+  if (!fleet || !id) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
+  }
   if (!canViewVehicles) {
     if (embedded) return null;
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">You do not have permission to view vehicles.</div>;
