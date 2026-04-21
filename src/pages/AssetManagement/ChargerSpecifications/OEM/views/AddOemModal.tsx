@@ -7,20 +7,39 @@ import {
   AlertDialogTitle,
 } from "@/component/ui/alert-dialog";
 import { Input } from "@/component/ui/input";
-import { useState } from "react";
-import { useCreateOEM } from "../services/oem.hooks";
+import { useState, useEffect } from "react";
+import { useCreateOEM, useUpdateOEM, useOEMById } from "../services/oem.hooks";
+import { Loader2 } from "lucide-react";
 
 type AddOemModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  editId?: string | null;
 };
 
 export default function AddOemModal({
   open,
   onOpenChange,
+  editId,
 }: AddOemModalProps) {
   const [oemName, setOemName] = useState("");
-  const { mutateAsync: createOEM } = useCreateOEM();
+  const { mutateAsync: createOEM, isPending: isCreating } = useCreateOEM();
+  const { mutateAsync: updateOEM, isPending: isUpdating } = useUpdateOEM();
+  const { data: oemRes, isLoading: isFetching } = useOEMById(editId || "", !!editId);
+
+  const isSaving = isCreating || isUpdating;
+
+  useEffect(() => {
+    if (editId && oemRes?.data && 'oemName' in oemRes.data) {
+      setOemName((oemRes.data as any).oemName || "");
+    }
+  }, [oemRes, editId]);
+
+  useEffect(() => {
+    if (!open) {
+      setOemName("");
+    }
+  }, [open]);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -28,14 +47,25 @@ export default function AddOemModal({
   };
 
   const handleSave = () => {
-    createOEM(
-      { oem_name: oemName },
-      {
-        onSuccess: () => {
-          handleClose();
-        },
-      }
-    );
+    if (editId) {
+      updateOEM(
+        { id: editId, data: { oem_name: oemName } },
+        {
+          onSuccess: () => {
+            handleClose();
+          },
+        }
+      );
+    } else {
+      createOEM(
+        { oem_name: oemName },
+        {
+          onSuccess: () => {
+            handleClose();
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -45,20 +75,26 @@ export default function AddOemModal({
         <div className="px-8 pt-8 pb-4">
           <AlertDialogHeader className="items-start text-left w-full h-auto mx-0 gap-1 border-0">
             <AlertDialogTitle className="text-2xl font-medium text-black-c1">
-              OEM Name
+              {editId ? "Edit OEM" : "Add OEM"}
             </AlertDialogTitle>
           </AlertDialogHeader>
         </div>
 
         {/* Body */}
         <div className="px-8 pb-8 pt-2">
-          <Input 
-            label="OEM Name" 
-            required 
-            placeholder="e.g. Axon Energies" 
-            value={oemName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOemName(e.target.value)}
-          />
+          {isFetching ? (
+            <div className="flex justify-center p-4">
+              <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+            </div>
+          ) : (
+            <Input 
+              label="OEM Name" 
+              required 
+              placeholder="e.g. Axon Energies" 
+              value={oemName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOemName(e.target.value)}
+            />
+          )}
         </div>
 
         {/* Footer */}
@@ -68,6 +104,7 @@ export default function AddOemModal({
             variant="secondary" 
             onClick={handleClose} 
             className="flex-1 rounded-[10px] py-6 text-[16px] font-medium"
+            disabled={isSaving}
           >
             Cancel
           </Button>
@@ -75,7 +112,7 @@ export default function AddOemModal({
             type="button" 
             variant="primary" 
             onClick={handleSave} 
-            disabled={!oemName.trim()}
+            disabled={!oemName.trim() || isFetching || isSaving}
             className="flex-1 rounded-[10px] py-6 text-[16px] font-medium"
           >
             Save Changes

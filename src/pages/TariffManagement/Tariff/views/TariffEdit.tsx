@@ -11,13 +11,14 @@ import {
 import PageWrapper from "@/component/PageWrapper";
 import { tariffApi } from "../services/tarrif.api";
 import { useQuery } from "@tanstack/react-query";
-import { tariffKeys } from "../services/tarrif.hooks";
+import { tariffKeys, useUpdateTariff } from "../services/tarrif.hooks";
 import { useTaxList } from "../../Tax/services/tax.hooks";
 
 export default function TariffEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const updateTariff = useUpdateTariff();
   
   const stateTariff = location.state?.tariff;
 
@@ -29,7 +30,7 @@ export default function TariffEdit() {
 
   const tariff = stateTariff || tariffResponse?.data;
    const { data: taxData } = useTaxList({ limit: 50, page: 1 });
-  console.log(tariff, 'tariiiifdata');
+
 
   const [form, setForm] = useState<EditTariffFormValues>({
     name: "",
@@ -74,8 +75,22 @@ export default function TariffEdit() {
   }));
 
   const handleSubmit = (data: EditTariffFormValues) => {
-    console.log("Update tariff:", id, data);
-    navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}`);
+    if (!id) return;
+    
+    updateTariff.mutate({
+      id,
+      data: {
+        tariffName: data.name,
+        ratePerUnit: Number(data.value),
+        serviceFees: Number(data.serviceFee),
+        taxId: data.tax,
+        currency: tariff?.currency || "INR",
+      },
+    }, {
+      onSuccess: () => {
+        navigate(`${Pathname.TARIFF_MANAGEMENT}/tarrif/${id}`);
+      }
+    });
   };
 
   const handleCancel = () => {

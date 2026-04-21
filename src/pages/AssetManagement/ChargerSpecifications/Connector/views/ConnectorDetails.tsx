@@ -1,23 +1,26 @@
 import Breadcrumb from "@/component/Breadcrumb";
 import PageWrapper from "@/component/PageWrapper";
 import { Pathname } from "@/utils/pathname";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { EditIcon } from "@/assets/icons";
 import { Button } from "@/component/ui/button";
+import { useConnectorById } from "../services/connector.hook";
 
 const ConnectorDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const connectorData = location.state?.connectorData;
+  // const connectorData = location.state?.connectorData;
+  const { id } = useParams();
+  const { data: connectorResponse } = useConnectorById(id);
+  const connector = connectorResponse?.data;
 
-  const data = connectorData || {
-    id: "1",
-    connectorName: "Type - 1 Connector",
-    model: "Terra 54 CJG",
-    ioType: "AC",
-    connectorStandard: "Type_2",
-    connectorOutput: "23 A",
-    updatedAt: "May 18, 2023 1:27:08 PM",
+  const data = {
+    id: connector?.id ?? id,
+    connectorName: connector?.name ?? "",
+    ioType: connector?.ioType === 'ac' ? 'AC' : 'DC',
+    connectorStandard: connector?.standard ?? "",
+    connectorOutput: connector?.outputKw ?? "",
+    updatedAt: connector?.updatedAt ?? "",
     updatedBy: "admin",
   };
 

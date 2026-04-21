@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Wrapper from "@/component/Wrapper";
 import DebouncedInput from "@/component/debounce-input";
 import { Button } from "@/component/ui/button";
@@ -13,9 +13,25 @@ import ConnectorList from "./Connector/views/ConnectorList";
 import { Pathname } from "@/utils/pathname";
 
 export default function ChargergerSpecificatoins() {
-  const [activeTab, setActiveTab] = useState("oem");
-  const [localSearch, setLocalSearch] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTab = searchParams.get("tab") || "oem";
+  
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [search, setSearch] = useState("");
   const [isAddOemModalOpen, setAddOemModalOpen] = useState(false);
+
+  useEffect(() => {
+    const tabFromUrl = searchParams.get("tab");
+    if (tabFromUrl && tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (newTab: string) => {
+    setActiveTab(newTab);
+    setSearch(""); // Reset search when switching tabs
+    setSearchParams({ tab: newTab });
+  };
 
   const searchPlaceholder =
     activeTab === "oem"
@@ -33,8 +49,8 @@ export default function ChargergerSpecificatoins() {
 
   const searchNode = (
     <DebouncedInput
-      value={localSearch}
-      onChange={setLocalSearch}
+      value={search}
+      onChange={setSearch}
       placeholder={searchPlaceholder}
     />
   );
@@ -62,21 +78,21 @@ export default function ChargergerSpecificatoins() {
       <Wrapper
         tabs={CHARGER_SPEC_TABS}
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         searchNode={searchNode}
         actionsRight={actionsRight}
         className="border-text-100" // Usually the wrapper in nested tabs fits inside its parent.
       >
         <TabsContent value="oem">
-          <OEMList />
+          <OEMList search={search} />
         </TabsContent>
 
         <TabsContent value="model">
-          <ModelList/>
+          <ModelList search={search}/>
         </TabsContent>
 
         <TabsContent value="connector">
-        <ConnectorList/>
+        <ConnectorList search={search} />
         </TabsContent>
       </Wrapper>
 

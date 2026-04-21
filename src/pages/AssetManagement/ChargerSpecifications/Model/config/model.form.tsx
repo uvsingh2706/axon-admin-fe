@@ -18,7 +18,10 @@ export const CreateModelSchema = z.object({
 
 export type CreateModelFormValues = z.infer<typeof CreateModelSchema>;
 
-export const CreateModelSections: SectionConfig<CreateModelFormValues>[] = [
+export const getCreateModelSections = (
+  oemOptions: { label: string; value: string }[],
+  connectorOptions: { label: string; value: string }[]
+): SectionConfig<CreateModelFormValues>[] => [
   {
     gridCols: 2,
     fields: [
@@ -27,11 +30,8 @@ export const CreateModelSections: SectionConfig<CreateModelFormValues>[] = [
         label: "OEM",
         type: "select",
         required: true,
-        placeholder: "OEM 1",
-        options: [
-          { label: "OEM 1", value: "OEM 1" },
-          { label: "Axon Energies", value: "Axon Energies" },
-        ],
+        placeholder: "Select OEM",
+        options: oemOptions,
       },
       {
         name: "modelName",
@@ -56,6 +56,7 @@ export const CreateModelSections: SectionConfig<CreateModelFormValues>[] = [
         options: [
           { label: "AC", value: "AC" },
           { label: "DC", value: "DC" },
+          { label: "HYBRID", value: "HYBRID" },
         ],
       },
       {
@@ -65,8 +66,8 @@ export const CreateModelSections: SectionConfig<CreateModelFormValues>[] = [
         required: true,
         placeholder: "AC",
         options: [
-          { label: "AC", value: "AC" },
-          { label: "DC", value: "DC" },
+          { label: "AC", value: "ac" },
+          { label: "DC", value: "dc" },
         ],
       },
       {
@@ -170,10 +171,9 @@ export const CreateModelSections: SectionConfig<CreateModelFormValues>[] = [
                         <SelectValue placeholder="Select Connector" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="type-1">Type - 1 Connector</SelectItem>
-                        <SelectItem value="type-2">Type - 2 Connector</SelectItem>
-                        <SelectItem value="type-5">Type - 5 Connector</SelectItem>
-                        <SelectItem value="type-6">Type - 6 Connector</SelectItem>
+                        {connectorOptions.map(opt => (
+                           <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>

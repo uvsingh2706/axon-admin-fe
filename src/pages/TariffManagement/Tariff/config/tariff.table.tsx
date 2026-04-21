@@ -3,6 +3,7 @@ import type { TariffDTO } from "../services/tarrif.types";
 import { format } from "date-fns";
 import EditIcon from "@/assets/icons/EditIcon";
 import DeleteIcon from "@/assets/icons/DeleteIcon";
+import { Can, MODULE } from "@/rbac";
 
 
 export const getTariffTableColumns = ({
@@ -73,24 +74,28 @@ export const getTariffTableColumns = ({
       header: "Actions",
       cell: ({ row }) => (
         <div className="flex items-center gap-4" onClick={(e) => e.stopPropagation()}>
-          <button
-            className="text-secondary-600 hover:opacity-80 transition-opacity"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(row.original.id);
-            }}
-          >
-            <EditIcon className="w-4 h-4 cursor-pointer" />
-          </button>
-          <button
-            className="text-red-500 hover:opacity-80 transition-opacity"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(row.original.id);
-            }}
-          >
-            <DeleteIcon className="w-4 h-4 cursor-pointer" />
-          </button>
+          <Can module={MODULE.TARIFF} action="update">
+            <button
+              className="text-secondary-600 hover:opacity-80 transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(row.original.id);
+              }}
+            >
+              <EditIcon className="w-4 h-4 cursor-pointer" />
+            </button>
+          </Can>
+          <Can module={MODULE.TARIFF} action="delete">
+            <button
+              className="text-red-500 hover:opacity-80 transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(row.original.id);
+              }}
+            >
+              <DeleteIcon className="w-4 h-4 cursor-pointer" />
+            </button>
+          </Can>
         </div>
       ),
     },

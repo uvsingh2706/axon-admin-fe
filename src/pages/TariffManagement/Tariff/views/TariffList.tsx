@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DataTable } from "@/component/data-table";
 import { getTariffTableColumns } from "../config/tariff.table";
-import { useTariffList } from "../services/tarrif.hooks";
+import { useTariffList, useDeleteTariff } from "../services/tarrif.hooks";
 import { Modal } from "@/component/Modal";
 import { useNavigate } from "react-router-dom";
 import { Pathname } from "@/utils/pathname";
@@ -13,6 +13,7 @@ export default function TariffList({ search }: { search: string }) {
   const [limit, setLimit] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const deleteTariff = useDeleteTariff();
 
   const { data: tariffList, isLoading } = useTariffList({ page, limit, search });
 
@@ -27,10 +28,12 @@ export default function TariffList({ search }: { search: string }) {
 
   const handleConfirmDelete = () => {
     if (deleteId) {
-      console.log("Delete tariff", deleteId);
-      // await deleteTariff({ id: deleteId });
-      setIsModalOpen(false);
-      setDeleteId(null);
+      deleteTariff.mutate(deleteId, {
+        onSuccess: () => {
+          setIsModalOpen(false);
+          setDeleteId(null);
+        },
+      });
     }
   };
 

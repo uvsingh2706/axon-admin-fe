@@ -28,8 +28,8 @@ export const CreateConnectorSections: SectionConfig<CreateConnectorFormValues>[]
         required: true,
         placeholder: "Model 12",
         options: [
-          { label: "AC", value: "AC" },
-          { label: "DC", value: "DC" },
+          { label: "AC", value: "ac" },
+          { label: "DC", value: "dc" },
         ],
       },
       {
@@ -38,12 +38,13 @@ export const CreateConnectorSections: SectionConfig<CreateConnectorFormValues>[]
         type: "select",
         required: true,
         placeholder: "Connector type 1",
-        options: [
-          { label: "Type_1", value: "Type_1" },
-          { label: "Type_2", value: "Type_2" },
-          { label: "CCS", value: "CCS" },
-          { label: "CHAdeMO", value: "CHAdeMO" },
-        ],
+options: [
+  { label: "CCS DC", value: "CCS_DC" },
+  { label: "CHAdeMO DC", value: "CHAdeMO_DC" },
+  { label: "GBT DC", value: "GBT_DC" },
+  { label: "IEC60309 AC", value: "IEC60309_AC" },
+  { label: "Type 2 AC", value: "TYPE_2_AC" },
+]
       },
       {
         name: "connectorOutput",

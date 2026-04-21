@@ -5,22 +5,36 @@ export type OEMListParams = {
 };
 export interface OEMDTO {
     id: string;
-    name: string;
-    description: string;
     createdAt: string;
     updatedAt: string;
+    deletedAt: string | null;
+    oemName: string;
+    isActive: boolean;
+    updatedBy: string | null;
+    updatedByName: string | null;
+    chargerModels: {
+        id: string;
+        chargerModelName: string;
+        chargerModelType: string;
+        currentType: string;
+        phase: string;
+        outputMax: string;
+        chargerOutputPower: string;
+        updatedByName: string | null;
+        updatedAt: string;
+    }[];
 }
 
 export interface OEMListResponse {
-      data: {
+    data: {
         oems: OEMDTO[];
-        count: number;
+        totalCount: number;
         page: number;
         limit: number;
-      };
+    };
 }
 
 export interface CreateOEMRequest {
     oem_name: string;
 }
-    
+

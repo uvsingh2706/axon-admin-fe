@@ -4,6 +4,7 @@ import PageWrapper from "@/component/PageWrapper"
 import { CreateConnectorSchema, CreateConnectorSections, type CreateConnectorFormValues } from "../config/connector.form"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Pathname } from "@/utils/pathname"
+import { useUpdateConnectorById } from "../services/connector.hook"
 
 const ConnectorEdit = () => {
   const navigate = useNavigate();
@@ -12,14 +13,23 @@ const ConnectorEdit = () => {
 
   const defaultValues = connectorData ? {
     connectorName: connectorData.connectorName,
-    ioType: connectorData.ioType,
+    ioType: connectorData.ioType === 'ac' ? 'ac' : 'dc',
     connectorStandard: connectorData.connectorStandard,
     connectorOutput: connectorData.connectorOutput?.replace(' A', ''),
   } : undefined;
 
+  const { mutateAsync: updateConnector } = useUpdateConnectorById();
+
   const handleSubmit = (data: CreateConnectorFormValues) => {
-    console.log("Submit Edited Connector Data:", data);
-    navigate(-1);
+    const payload = {
+      name: data.connectorName,
+      standard: data.connectorStandard,
+      io_type: data.ioType,
+      output_kw: Number(data.connectorOutput),
+    };
+    console.log("Submit Edited Connector Data:", payload);
+    updateConnector({ id: connectorData.id, data: payload });
+    navigate(`${Pathname.ASSET_MANAGEMENT}/charger-specifications/connector`);
   };
 
   return (
