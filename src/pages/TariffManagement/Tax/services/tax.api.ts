@@ -6,7 +6,7 @@ import type {
     TaxDetailResponse,
     CreateTaxRequest,
     UpdateTaxRequest
-} from "./dummy.types";
+} from "./tax.types";
 
 export const taxApi = {
     getTaxList: async (params: TaxListParams): Promise<TaxListResponse> => {

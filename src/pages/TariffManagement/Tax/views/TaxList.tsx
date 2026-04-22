@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/component/data-table";
 import { getTaxTableColumns } from "../config/tax.table";
-import { useTaxList, useDeleteTax } from "../services/dummy.hooks";
+import { useTaxList, useDeleteTax } from "../services/tax.hooks";
 import { Modal } from "@/component/Modal";
 import { Pathname } from "@/utils/pathname";
 import { toast } from "sonner";
@@ -30,11 +30,11 @@ export default function TaxList({ search }: { search: string }) {
     if (deleteId) {
       try {
         await deleteTax({ id: deleteId });
-        toast.success("Tax Deleted", { description: "The tax has been removed." });
+        // toast.success("Tax Deleted", { description: "The tax has been removed." });
         setIsModalOpen(false);
         setDeleteId(null);
       } catch (error) {
-        toast.error("Deletion Failed", { description: "An error occurred while deleting the tax." });
+        // toast.error("Deletion Failed", { description: "An error occurred while deleting the tax." });
         console.log("Failed to delete tax", error);
       }
     }

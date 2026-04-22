@@ -32,9 +32,11 @@ export const useCreateTariff = () => {
         mutationFn: (data: CreateTariffRequest) => tariffApi.createTariff(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: tariffKeys.all });
+            toast.success("Tariff created successfully");
         },
-        onError(error) {
+        onError(error: any) {
             console.log(error);
+            toast.error(error?.response?.data?.message || "Failed to create tariff");
         },
     });
 };

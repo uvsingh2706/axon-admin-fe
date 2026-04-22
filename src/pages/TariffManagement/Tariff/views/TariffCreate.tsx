@@ -9,8 +9,9 @@ import {
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { useCreateTariff } from "../services/tarrif.hooks";
-import { useTaxList } from "../../Tax/services/dummy.hooks";
+// import { useTaxList } from "../services/tax.hooks";
 import { toast } from "sonner";
+import { useTaxList } from "../../Tax/services/tax.hooks";
 
 interface CreateTariffProps {
   onCancel?: () => void;

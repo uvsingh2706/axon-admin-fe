@@ -90,7 +90,7 @@ export const getFleetEditDefaultValues = (id?: string): EditFleetFormValues | nu
     name: fleet.organisationName,
     logo: fleet.logo,
     vehicleType: fleet.vehicleType,
-    flatRate: fleet.flatRate,
+    // flatRate: fleet.flatRate,
     email: fleet.email,
     contact: fleet.contact,
     totalDrivers: fleet.totalDrivers,

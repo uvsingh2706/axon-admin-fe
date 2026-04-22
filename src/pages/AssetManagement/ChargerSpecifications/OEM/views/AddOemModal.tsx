@@ -8,7 +8,7 @@ import {
 } from "@/component/ui/alert-dialog";
 import { Input } from "@/component/ui/input";
 import { useState, useEffect } from "react";
-import { useCreateOEM, useUpdateOEM, useOEMById } from "../services/oem.hooks";
+import { useCreateOEM, useUpdateOEM, useOEMById, useOEMList } from "../services/oem.hooks";
 import { Loader2 } from "lucide-react";
 
 type AddOemModalProps = {
@@ -25,6 +25,7 @@ export default function AddOemModal({
   const [oemName, setOemName] = useState("");
   const { mutateAsync: createOEM, isPending: isCreating } = useCreateOEM();
   const { mutateAsync: updateOEM, isPending: isUpdating } = useUpdateOEM();
+  // const {data: getOEMList} = useOEMList();
   const { data: oemRes, isLoading: isFetching } = useOEMById(editId || "", !!editId);
 
   const isSaving = isCreating || isUpdating;
@@ -44,6 +45,7 @@ export default function AddOemModal({
   const handleClose = () => {
     onOpenChange(false);
     setOemName("");
+
   };
 
   const handleSave = () => {
