@@ -63,7 +63,7 @@ export default function PointDetails() {
   const { data: pointResponse, isLoading } = useChargingPointById(id || "", !statePoint && !!id);
   const point = statePoint || pointResponse?.data;
   const { mutateAsync: deletePoint, isPending: isDeleting } = useDeleteChargingPoint();
-
+  console.log(point, 'pointsss');
   const handleEdit = () => {
     navigate(`${Pathname.ASSET_MANAGEMENT}/charging-points/${id}/edit`, { state: { point } });
   };
@@ -88,13 +88,13 @@ export default function PointDetails() {
     );
   }
 
-  if (!point) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <span className="subtitle-2-medium text-text-500">Charging point not found.</span>
-      </div>
-    );
-  }
+  // if (!point) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-[400px]">
+  //       <span className="subtitle-2-medium text-text-500">Charging point not found.</span>
+  //     </div>
+  //   );
+  // }
 
   const pointDetailFields = getPointDetailFields(point);
 

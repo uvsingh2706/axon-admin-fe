@@ -3,43 +3,70 @@ import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
 import {
   createPointSchema,
-  pointCreateFormSections,
+  getPointFormSections,
   type CreatePointFormValues,
 } from "../config/point.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { useStationList } from "../../ChargingStations/services/stations.hooks";
+import { useModelList } from "../../ChargerSpecifications/Model/services/model.hooks";
+import { useOEMList } from "../../ChargerSpecifications/OEM/services/oem.hooks";
+import { useTariffList } from "@/pages/TariffManagement/Tariff/services/tarrif.hooks";
+import { useCreateChargingPoint } from "../services/chargingpoints.hooks";
 
 export default function PointCreate() {
   const navigate = useNavigate();
+  const { data: stationData } = useStationList({ limit: 50, page: 1 });
+  const { data: oemData } = useOEMList({ limit: 50, page: 1 });
+  const { data: modelData } = useModelList({ limit: 50, page: 1 });
+  const { data: tariffData } = useTariffList({ limit: 50, page: 1 });
+  const createPoint = useCreateChargingPoint();
+
+  const stationOptions = stationData?.data?.data?.map((station: any) => ({
+    label: station.name,
+    value: station.name,
+  })) || [];
+
+  const oemOptions = oemData?.data?.oems?.map((oem: any) => ({
+    label: oem.oemName,
+    value: oem.oemName,
+  })) || [];
+
+  const modelOptions = modelData?.data?.chargerModels?.map((model: any) => ({
+    label: model.chargerModelName,
+    value: model.chargerModelName,
+  })) || [];
+
+  const tariffOptions = tariffData?.data?.tariffs?.map((tariff: any) => ({
+    label: tariff.tariffName,
+    value: tariff.tariffName,
+  })) || [];
 
   const handleBack = () => {
     navigate(Pathname.ASSET_MANAGEMENT);
   };
 
   const handleSubmit = (data: CreatePointFormValues) => {
-    console.log("Form Submitted:", data);
-    handleBack();
-  };
+     console.log(data, 'datahere');
+    let payload = {
+      chargingPointName: data.name,
+      chargingPointId: data.id,
+      chargingLocation: data.station,
+      oemName: data.oem,
+      modelName: data.model,
+      tariffName: data.tariff,
+      commissionedOn: data.commissionOn,
+      configurationUrl: data.configurationUrl || "",
+      connectionType: data.connectionType,
+      isPublished: data.isPublic,
+    }
 
-  const { data: stationData } = useStationList({ limit: 50, page: 1 });
-
-  const dynamicSections = pointCreateFormSections.map((section) => ({
-    ...section,
-    fields: section.fields.map((field) => {
-      if (field.name === "station") {
-        return {
-          ...field,
-          options:
-            stationData?.data?.data?.map((station: any) => ({
-              label: station.name,
-              value: station.id,
-            })) || [],
-        };
+    createPoint.mutate(payload, {
+      onSuccess: () => {
+        handleBack();
       }
-      return field;
-    }),
-  }));
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -63,11 +90,15 @@ export default function PointCreate() {
           <DynamicForm
             schema={createPointSchema}
             onSubmit={handleSubmit}
-            sections={dynamicSections}
+            sections={getPointFormSections({
+              stationOptions,
+              oemOptions,
+              modelOptions,
+              tariffOptions,
+            })}
             submitLabel="Save"
             cancelLabel="Cancel"
             onCancel={handleBack}
-          // defaultValues={{ isPublic: true }}
           />
         </div>
       </PageWrapper>

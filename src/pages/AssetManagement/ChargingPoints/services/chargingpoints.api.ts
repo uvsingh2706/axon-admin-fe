@@ -3,7 +3,8 @@ import { ApiEndpoints } from "@/utils/apiEndpoints";
 import type {
     ChargingPointListParams,
     ChargingPointListResponse,
-    ChargingPointDetailResponse
+    ChargingPointDetailResponse,
+    CreateChargingPointRequest
 } from "./chargingpoints.type";
 
 export const chargingPointApi = {
@@ -17,5 +18,13 @@ export const chargingPointApi = {
     },
     deleteChargingPoint: async ({ id }: { id: string }): Promise<void> => {
         await apiClient.delete(`${ApiEndpoints.CHARGING_POINTS_LIST}/${id}`);
+    },
+    createChargingPoint: async (data: CreateChargingPointRequest): Promise<void> => {
+        const response = await apiClient.post(ApiEndpoints.CHARGING_POINTS_LIST, data);
+        return response.data;
+    },
+    updateChargingPoint: async ({ id, data }: { id: string, data: CreateChargingPointRequest }): Promise<void> => {
+        const response = await apiClient.put(`${ApiEndpoints.CHARGING_POINTS_LIST}/${id}`, data);
+        return response.data;
     },
 };

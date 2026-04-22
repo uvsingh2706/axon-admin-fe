@@ -48,6 +48,7 @@ export interface ModelDTO {
     isActive: boolean;
     connectorMetaModels: ConnectorMetaModel[];
     updatedBy?: string;
+    updatedByName?: string;
 }
 
 export interface ModelListResponse {

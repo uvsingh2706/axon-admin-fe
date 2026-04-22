@@ -8,7 +8,7 @@ import {
 } from "../config/tax.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
-import { useCreateTax } from "../services/tax.hooks";
+import { useCreateTax } from "../services/dummy.hooks";
 import { toast } from "sonner";
 
 export default function TaxCreate() {
@@ -27,7 +27,7 @@ export default function TaxCreate() {
         type: data.type.toLowerCase(),
         value: Number(data.percentageValue),
       });
-      
+
       toast.success("Tax Created", { description: "The tax has been successfully created." });
       handleCancel();
     } catch (error) {

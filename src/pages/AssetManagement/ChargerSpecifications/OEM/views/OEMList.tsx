@@ -83,7 +83,7 @@ const OEMList = ({ search = "" }: OEMListProps) => {
             pageIndex: page - 1,
             pageSize: limit,
           }}
-          pageCount={Math.ceil(oemList?.data?.totalCount / limit) || 0}
+          pageCount={Math.ceil((oemList?.data?.totalCount ?? 0) / limit)}
           onPaginationChange={(updater) => {
             const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;
             setPage(next.pageIndex + 1);

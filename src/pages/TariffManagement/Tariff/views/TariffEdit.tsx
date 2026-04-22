@@ -12,14 +12,14 @@ import PageWrapper from "@/component/PageWrapper";
 import { tariffApi } from "../services/tarrif.api";
 import { useQuery } from "@tanstack/react-query";
 import { tariffKeys, useUpdateTariff } from "../services/tarrif.hooks";
-import { useTaxList } from "../../Tax/services/tax.hooks";
+import { useTaxList } from "../../Tax/services/dummy.hooks";
 
 export default function TariffEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const updateTariff = useUpdateTariff();
-  
+
   const stateTariff = location.state?.tariff;
 
   const { data: tariffResponse, isLoading } = useQuery({
@@ -29,7 +29,7 @@ export default function TariffEdit() {
   });
 
   const tariff = stateTariff || tariffResponse?.data;
-   const { data: taxData } = useTaxList({ limit: 50, page: 1 });
+  const { data: taxData } = useTaxList({ limit: 50, page: 1 });
 
 
   const [form, setForm] = useState<EditTariffFormValues>({
@@ -64,7 +64,7 @@ export default function TariffEdit() {
       if (field.name === "tax") {
         return {
           ...field,
-          options: taxData?.data?.data?.map((tax:any) => ({
+          options: taxData?.data?.data?.map((tax: any) => ({
             label: tax.taxName,
             value: tax.id
           })) || []
@@ -76,7 +76,7 @@ export default function TariffEdit() {
 
   const handleSubmit = (data: EditTariffFormValues) => {
     if (!id) return;
-    
+
     updateTariff.mutate({
       id,
       data: {
