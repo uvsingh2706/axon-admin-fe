@@ -8,10 +8,11 @@ import {
 } from "../config/point.form";
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
+import { useStationList } from "../../ChargingStations/services/stations.hooks";
 
 export default function PointCreate() {
   const navigate = useNavigate();
-  
+
   const handleBack = () => {
     navigate(Pathname.ASSET_MANAGEMENT);
   };
@@ -20,6 +21,25 @@ export default function PointCreate() {
     console.log("Form Submitted:", data);
     handleBack();
   };
+
+  const { data: stationData } = useStationList({ limit: 50, page: 1 });
+
+  const dynamicSections = pointCreateFormSections.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => {
+      if (field.name === "station") {
+        return {
+          ...field,
+          options:
+            stationData?.data?.data?.map((station: any) => ({
+              label: station.name,
+              value: station.id,
+            })) || [],
+        };
+      }
+      return field;
+    }),
+  }));
 
   return (
     <div className="flex flex-col gap-4">
@@ -32,6 +52,7 @@ export default function PointCreate() {
       />
 
       <PageWrapper
+        isChargerSpecifications={false}
         title="Add Charging Point"
         showSearch={false}
         showFilter={false}
@@ -42,11 +63,11 @@ export default function PointCreate() {
           <DynamicForm
             schema={createPointSchema}
             onSubmit={handleSubmit}
-            sections={pointCreateFormSections}
+            sections={dynamicSections}
             submitLabel="Save"
             cancelLabel="Cancel"
             onCancel={handleBack}
-            // defaultValues={{ isPublic: true }}
+          // defaultValues={{ isPublic: true }}
           />
         </div>
       </PageWrapper>

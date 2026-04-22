@@ -66,13 +66,13 @@ export default function DriverImageUploadField({
   return (
     <div
       className={cn(
-        "flex items-center gap-4 rounded-lg bg-white px-4",
+        "flex items-center gap-4 rounded-lg",
         error ? "border-danger" : "border-text-200"
       )}
     >
-      <Avatar size="lg" className="bg-muted">
+      <Avatar key={previewSrc ? "has-img" : "no-img"} size="lg" className="bg-muted">
         {previewSrc ? <AvatarImage src={previewSrc} alt="Uploaded image" /> : null}
-        <AvatarFallback className="bg-text-100 text-text-400">
+        <AvatarFallback className="bg-text-100 text-text-400 flex items-center justify-center">
           <AvatarIcon />
         </AvatarFallback>
       </Avatar>
@@ -91,7 +91,7 @@ export default function DriverImageUploadField({
 
 
               <button onClick={handleDelete} className="cursor-pointer flex items-center gap-1">
-               <DeleteIcon className="w-5 h-5 text-gray-c3" />
+               <DeleteIcon className="w-4 h-4 text-gray-c3" />
                Remove
                </button>
             <Button

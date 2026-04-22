@@ -1,11 +1,6 @@
-export type ChargingStationData = {
-  id: string;
-  stationName: string;
-  address: string;
-  supportPerson: string;
-  updatedAt: string;
-  updatedBy: string;
-};
+import type { StationDTO } from "../services/stations.types";
+
+export type ChargingStationData = StationDTO;
 
 export type CreateStationFormValues = {
   stationName: string;

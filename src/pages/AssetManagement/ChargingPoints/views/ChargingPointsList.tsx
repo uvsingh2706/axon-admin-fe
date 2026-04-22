@@ -1,94 +1,81 @@
 import { DataTable } from "@/component/data-table"
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pathname } from "@/utils/pathname";
-import { chargingPointColumns } from "../config/point.table";
-import { mockChargingPoints } from "../mocks/point.mock";
+import { getChargingPointColumns } from "../config/point.table";
+import { useChargingPointList, useDeleteChargingPoint } from "../services/chargingpoints.hooks";
+import { Modal } from "@/component/Modal";
+import { toast } from "sonner";
 import type { ChargingPointListProps } from "../types/ChargingPoints.types";
 
 function ChargingPointList({ search }: ChargingPointListProps) {
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-  const columns = chargingPointColumns.map((column) => {
-    if ((column as any).accessorKey === "chargingPointName") {
-      return {
-        ...column,
-        cell: ({ row }: any) => (
-          <span
-            className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline"
-          >
-            {row.original.chargingPointName}
-          </span>
-        ),
-      };
+  const { data: listResponse, isLoading } = useChargingPointList({ page, limit });
+  const points = listResponse?.data?.data || [];
+  const totalItems = listResponse?.data?.total || 0;
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [pointToDelete, setPointToDelete] = useState<string | null>(null);
+  const { mutateAsync: deletePoint, isPending: isDeleting } = useDeleteChargingPoint();
+
+  const handleEdit = (id: string) => {
+    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-points/${id}/edit`);
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setPointToDelete(id);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!pointToDelete || isDeleting) return;
+    try {
+      await deletePoint({ id: pointToDelete });
+      toast.success("Success", { description: "Charging point deleted successfully" });
+      setDeleteModalOpen(false);
+      setPointToDelete(null);
+    } catch (error) {
+      toast.error("Error", { description: "Failed to delete charging point" });
     }
-    if ((column as any).accessorKey === "station") {
-      return {
-        ...column,
-        cell: ({ row }: any) => (
-          <span className="font-sans font-medium text-[14px] leading-none">
-            {row.original.station}
-          </span>
-        ),
-      };
-    }
-    if ((column as any).accessorKey === "tariff") {
-      return {
-        ...column,
-        cell: ({ row }: any) => (
-          <span className="font-sans font-medium text-[14px] leading-none text-secondary-600 underline">
-            {row.original.tariff}
-          </span>
-        ),
-      };
-    }
-    if ((column as any).accessorKey === "status") {
-      return {
-        ...column,
-        cell: ({ row }: any) => {
-          const status = row.original.status;
-          const styles: Record<string, string> = {
-            Available: "bg-green-100 text-green-700",
-            Unavailable: "bg-gray-100 text-gray-700",
-            Charging: "bg-blue-100 text-blue-700",
-            Offline: "bg-red-100 text-red-700",
-          };
-          return (
-            <span className={`text-[12px] px-2 py-1 rounded-[4px] font-medium ${styles[status]}`}>
-              {status}
-            </span>
-          );
-        },
-      };
-    }
-    if ((column as any).accessorKey === "publishedStatus") {
-      return {
-        ...column,
-        cell: ({ row }: any) => {
-          const status = row.original.publishedStatus;
-          const styles: Record<string, string> = {
-            Yes: "bg-green-100 text-green-700",
-            No: "bg-gray-100 text-gray-700",
-          };
-          return (
-            <span className={`text-[12px] px-2 py-1 rounded-[4px] font-medium ${styles[status]}`}>
-              {status}
-            </span>
-          );
-        },
-      };
-    }
-    return column;
-  });
+  };
+
+  const columns = useMemo(
+    () => getChargingPointColumns({ onEdit: handleEdit, onDelete: handleDeleteClick }),
+    []
+  );
 
   return (
-    <DataTable
-      columns={columns}
-      data={mockChargingPoints}
-      search={search}
-      isLink={true}
-      link={(row: any) => `${Pathname.ASSET_MANAGEMENT}/charging-points/${row.id}`}
-    />
+    <>
+      <DataTable
+        columns={columns}
+        data={points}
+        search={search}
+        isLoading={isLoading}
+        isLink={true}
+        link={(row: any) => `${Pathname.ASSET_MANAGEMENT}/charging-points/${row.id}`}
+        pagination={{
+          pageIndex: page - 1,
+          pageSize: limit,
+        }}
+        isServerSide={true}
+        totalItems={totalItems}
+        pageCount={Math.ceil(totalItems / limit) || 1}
+        onPaginationChange={(updater) => {
+          const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;
+          setPage(next.pageIndex + 1);
+          setLimit(next.pageSize);
+        }}
+      />
+      <Modal
+        open={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
+        onConfirm={handleConfirmDelete}
+        description="Are you sure you want to delete this Charging Point?"
+      />
+    </>
   );
 }
 

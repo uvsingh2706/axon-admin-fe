@@ -1,19 +1,70 @@
 import type { ExtendedColumnDef } from "@/component/data-table";
-import type { ChargingStationData } from "../types/ChargingStations.types";
+import type { StationDTO } from "../services/stations.types";
+import EditIcon from "@/assets/icons/EditIcon";
+import DeleteIcon from "@/assets/icons/DeleteIcon";
+import { Can, MODULE } from "@/rbac";
+import { format } from "date-fns";
 
-export const chargingStationColumns: ExtendedColumnDef<ChargingStationData, unknown>[] = [
+export const getStationTableColumns = ({ onEdit, onDelete }: { onEdit: (id: string) => void; onDelete: (id: string) => void; }): ExtendedColumnDef<StationDTO, unknown>[] => [
   {
-    accessorKey: "stationName",
+    accessorKey: "name",
     header: "Station Name",
     enableSorting: true,
-    cell: ({ row }) => (
-      <span className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline cursor-pointer hover:text-opacity-80">
-        {row.original.stationName}
-      </span>
-    ),
   },
-  { accessorKey: "address", header: "Address", enableSorting: true },
-  { accessorKey: "supportPerson", header: "Support Person", enableSorting: true },
-  { accessorKey: "updatedAt", header: "Updated At", enableSorting: true },
-  { accessorKey: "updatedBy", header: "Updated By", enableSorting: true },
+  {
+    id: "address",
+    header: "Address",
+    enableSorting: false,
+    cell: ({ row }) => <span>{row.original.firstStreet}{row.original.secondStreet ? `, ${row.original.secondStreet}` : ""}</span>
+  },
+  { accessorKey: "supportPersonName", header: "Support Person", enableSorting: true },
+  {
+    accessorKey: "tax",
+    header: "Tax",
+    enableSorting: true,
+    cell: ({ row }) => <span>{row.original.tax ?? "NA"}</span>
+  },
+  {
+    accessorKey: "valuePerKwh",
+    header: "Value (Per kWh)",
+    enableSorting: true,
+    cell: ({ row }) => <span>{row.original.valuePerKwh ?? "NA"}</span>
+  },
+  {
+    accessorKey: "updatedAt",
+    header: "Updated At",
+    enableSorting: true,
+    cell: ({ row }) => <span>{row.original.updatedAt ? format(new Date(row.original.updatedAt), "yyyy-MM-dd HH:mm:ss") : "NA"}</span>
+  },
+  {
+    id: "actions",
+    header: "Action",
+    enableSorting: false,
+    cell: ({ row }) => (
+      <div className="flex items-center gap-4" onClick={(e) => e.stopPropagation()}>
+        <Can module={MODULE.CHARGING_STATION} action="update">
+          <button
+            className="text-secondary-600 hover:opacity-80 transition-opacity"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(row.original.id);
+            }}
+          >
+            <EditIcon className="w-4 h-4 cursor-pointer" />
+          </button>
+        </Can>
+        <Can module={MODULE.CHARGING_STATION} action="delete">
+          <button
+            className="text-red-500 hover:opacity-80 transition-opacity"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(row.original.id);
+            }}
+          >
+            <DeleteIcon className="w-4 h-4 cursor-pointer" />
+          </button>
+        </Can>
+      </div>
+    )
+  },
 ];
