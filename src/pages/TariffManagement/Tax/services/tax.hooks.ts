@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { taxApi } from "./dummy.api";
-import type { TaxListParams, CreateTaxRequest, UpdateTaxRequest } from "./dummy.types";
+import { taxApi } from "./tax.api";
+import type { TaxListParams, CreateTaxRequest, UpdateTaxRequest } from "./tax.types";
 
 export const taxKeys = {
     all: ["tax"] as const,

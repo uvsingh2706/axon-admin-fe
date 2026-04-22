@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/component/data-table";
 import { getTaxTableColumns } from "../config/tax.table";
-import { useTaxList, useDeleteTax } from "../services/dummy.hooks";
+import { useTaxList, useDeleteTax } from "../services/tax.hooks";
 import { Modal } from "@/component/Modal";
 import { Pathname } from "@/utils/pathname";
 import { toast } from "sonner";
