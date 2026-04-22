@@ -6,7 +6,7 @@ import { Pathname } from "@/utils/pathname";
 import PageWrapper from "@/component/PageWrapper";
 import { Modal } from "@/component/Modal";
 import { useState } from "react";
-import { useTaxById, useDeleteTax } from "../services/dummy.hooks";
+import { useTaxById, useDeleteTax } from "../services/tax.hooks";
 import { toast } from "sonner";
 
 import { Can, MODULE } from "@/rbac";
@@ -36,10 +36,10 @@ export default function TaxDetails() {
     if (!id) return;
     try {
       await deleteTax({ id });
-      toast.success("Tax Deleted", { description: "The tax has been removed." });
+      // toast.success("Tax Deleted", { description: "The tax has been removed." });
       navigate(Pathname.TARIFF_MANAGEMENT);
     } catch (error) {
-      toast.error("Failed to Delete", { description: "An error occurred while deleting the tax." });
+      // toast.error("Failed to Delete", { description: "An error occurred while deleting the tax." });
       console.log(error);
     }
   };

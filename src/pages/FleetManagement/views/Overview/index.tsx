@@ -92,9 +92,9 @@ export default function FleetOverview({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12 w-full">
-                <DetailField label="Vehicle Type" value={fleet.vehicle_type || "null"} />
-                <DetailField label="Email" value={fleet.email || "null"} isCopyable />
-                <DetailField label="Contact" value={fleet.contact_number || "null"} />
+                <DetailField label="Vehicle Type" value={fleet.vehicle_type || "NA"} />
+                <DetailField label="Email" value={fleet.email || "NA"} isCopyable />
+                <DetailField label="Contact" value={fleet.contact_number || "NA"} />
 
               </div>
             </div>

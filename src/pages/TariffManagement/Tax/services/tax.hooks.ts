@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { taxApi } from "./dummy.api";
-import type { TaxListParams, CreateTaxRequest, UpdateTaxRequest } from "./dummy.types";
+import { taxApi } from "./tax.api";
+import type { TaxListParams, CreateTaxRequest, UpdateTaxRequest } from "./tax.types";
+import { toast } from "sonner";
 
 export const taxKeys = {
     all: ["tax"] as const,
@@ -49,8 +50,13 @@ export const useDeleteTax = () => {
     return useMutation({
         mutationFn: ({ id }: { id: string }) =>
             taxApi.deleteTax({ id }),
+            
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: taxKeys.all });
+            toast.success("Tax Deleted Successfully");
         },
+        onError: (error: any) => {
+            toast.error(error?.message);
+        }
     });
 };

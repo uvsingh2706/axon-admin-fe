@@ -99,7 +99,7 @@ export default function VehiclesDetails() {
           <DetailField label="Registration Number" value={vehicle.registrationNumber || "NA"} />
           <DetailField label="Connector Type" value={vehicle.connectorType || "NA"} />
           <DetailField label="Vehicle ID" value={vehicle.id || "NA"} />
-          <DetailField label="Battery Pack" value={vehicle.batteryPack || "NA"} />
+          <DetailField label="Battery Pack" value={vehicle?.batteryPack ? String(vehicle.batteryPack) : "NA"} />
           <DetailField label="Charging Rate" value={vehicle.chargingRate || "NA"} />
 
 

@@ -9,7 +9,7 @@ import {
   type EditTaxFormValues,
 } from "../config/tax.form";
 import PageWrapper from "@/component/PageWrapper";
-import { useTaxById, useUpdateTax } from "../services/dummy.hooks";
+import { useTaxById, useUpdateTax } from "../services/tax.hooks";
 import { toast } from "sonner";
 
 

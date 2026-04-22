@@ -12,8 +12,8 @@ function ChargingStationList({ search }: ChargingStationListProps) {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-
-  const { data: listResponse, isLoading } = useStationList({ page, limit });
+  const effectiveSearch = search.trim().length >= 2 ? search : undefined;
+  const { data: listResponse, isLoading } = useStationList({ page, limit, search: effectiveSearch });
   const stations = listResponse?.data?.data || [];
   const totalItems = listResponse?.data?.total || 0;
 
