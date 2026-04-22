@@ -1,31 +1,83 @@
 import { DataTable } from "@/component/data-table"
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Pathname } from "@/utils/pathname";
-import { chargingStationColumns } from "../config/station.table";
-import { mockChargingStations } from "../mocks/station.mock";
+import { getStationTableColumns } from "../config/station.table";
+import { useStationList, useDeleteStation } from "../services/stations.hooks";
+import { Modal } from "@/component/Modal";
+import { toast } from "sonner";
 import type { ChargingStationListProps } from "../types/ChargingStations.types";
 
 function ChargingStationList({ search }: ChargingStationListProps) {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-  const columns = chargingStationColumns.map((column) =>
-    (column as any)?.accessorKey === "stationName"
-      ? {
-          ...column,
-          cell: ({ row }: any) => (
-            <span
-              onClick={() => navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${row.original.id}`)}
-              className="font-sans font-semibold text-[14px] leading-none text-secondary-600 underline cursor-pointer hover:text-opacity-80"
-            >
-              {row.original.stationName}
-            </span>
-          ),
-        }
-      : column
+  const { data: listResponse, isLoading } = useStationList({ page, limit });
+  const stations = listResponse?.data?.data || [];
+  const totalItems = listResponse?.data?.total || 0;
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [stationToDelete, setStationToDelete] = useState<string | null>(null);
+  const { mutateAsync: deleteStation } = useDeleteStation();
+
+  const handleEdit = (id: string) => {
+    const station = stations.find((s) => s.id === id);
+    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${id}/edit`, { state: { station } });
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setStationToDelete(id);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!stationToDelete) return;
+    try {
+      await deleteStation({ id: stationToDelete });
+      toast.success("Success", { description: "Station deleted successfully" });
+      setDeleteModalOpen(false);
+      setStationToDelete(null);
+    } catch (error) {
+      toast.error("Error", { description: "Failed to delete station" });
+    }
+  };
+
+  const columns = useMemo(
+    () => getStationTableColumns({ onEdit: handleEdit, onDelete: handleDeleteClick }),
+    []
   );
 
-  return <DataTable columns={columns} data={mockChargingStations} search={search} />;
+  return (
+    <>
+      <DataTable
+        columns={columns}
+        data={stations}
+        search={search}
+        isLoading={isLoading}
+        isLink
+        link={(row) => "charging-stations/" + row.id}
+        pagination={{
+          pageIndex: page - 1,
+          pageSize: limit,
+        }}
+        isServerSide={true}
+        totalItems={totalItems}
+        pageCount={Math.ceil(totalItems / limit) || 1}
+        onPaginationChange={(updater) => {
+          const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;
+          setPage(next.pageIndex + 1);
+          setLimit(next.pageSize);
+        }}
+      />
+      <Modal
+        open={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
+        onConfirm={handleConfirmDelete}
+        description="Are you sure you want to delete this Charging Station?"
+      />
+    </>
+  );
 }
 
 export default ChargingStationList;

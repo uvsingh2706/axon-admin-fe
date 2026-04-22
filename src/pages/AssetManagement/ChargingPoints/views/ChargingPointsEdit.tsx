@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Breadcrumb from "@/component/Breadcrumb";
 import PageWrapper from "@/component/PageWrapper";
 import { DynamicForm } from "@/component/form/DynamicForm";
@@ -9,41 +9,50 @@ import {
   pointEditFormSections,
   type EditPointFormValues,
 } from "../config/point.form";
-import { mockPointEditById } from "../mocks/point.mock";
+import { useStationList } from "../../ChargingStations/services/stations.hooks";
+import { useChargingPointById } from "../services/chargingpoints.hooks";
 
 export default function PointEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const pointId = id && mockPointEditById[id] ? id : "CP-001";
-  const point = mockPointEditById[pointId];
+  const statePoint = location.state?.point;
+
+  const { data: pointResponse, isLoading } = useChargingPointById(
+    id || "",
+    !statePoint && !!id
+  );
+
+  const point = statePoint || pointResponse?.data;
+  const { data: stationData } = useStationList({ limit: 50, page: 1 });
 
   const [formValues, setFormValues] = useState<EditPointFormValues | null>(null);
 
   useEffect(() => {
     if (point) {
       setFormValues({
-        name: point.pointName,
-        id: point.pointId,
-        configurationUrl: point.configurationUrl,
-        station: point.station,
-        oem: point.oem,
-        model: point.model,
-        commissionOn: point.commissionOn,
-        tariff: point.tariff,
+        name: point.chargingPointName,
+        id: point.chargingPointId,
+        configurationUrl: point.configurationUrl || "",
+        station: point.chargingStationId,
+        oem: point.oemId,
+        model: point.chargerModelId,
+        commissionOn: point.commissionedOn ? new Date(point.commissionedOn).toISOString().split('T')[0] : "",
+        tariff: point.tariffId,
         connectionType: point.connectionType,
-        isPublic: point.isPublic,
+        isPublic: point.isPublished,
       });
     }
   }, [point]);
 
   const handleSubmit = (data: EditPointFormValues) => {
-    console.log("Update point:", pointId, data);
-    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-points/${pointId}`);
+    console.log("Update point:", id, data);
+    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-points/${id}`);
   };
 
   const handleCancel = () => {
-    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-points/${pointId}`);
+    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-points/${id}`);
   };
 
   if (!point || !formValues) {
@@ -54,18 +63,36 @@ export default function PointEdit() {
     );
   }
 
+  const dynamicSections = pointEditFormSections.map((section) => ({
+    ...section,
+    fields: section.fields.map((field) => {
+      if (field.name === "station") {
+        return {
+          ...field,
+          options:
+            stationData?.data?.data?.map((station: any) => ({
+              label: station.name,
+              value: station.id,
+            })) || [],
+        };
+      }
+      return field;
+    }),
+  }));
+
   return (
     <div className="flex flex-col gap-4">
       <Breadcrumb
         items={[
           { label: "Asset Management", path: Pathname.ASSET_MANAGEMENT },
           { label: "Charging Points", path: Pathname.ASSET_MANAGEMENT },
-          { label: point.pointName, path: `${Pathname.ASSET_MANAGEMENT}/charging-points/${pointId}` },
+          { label: point.chargingPointName, path: `${Pathname.ASSET_MANAGEMENT}/charging-points/${id}` },
           { label: "Edit" },
         ]}
       />
 
       <PageWrapper
+        isChargerSpecifications={false}
         title="Edit Charging Point"
         showSearch={false}
         showFilter={false}
@@ -77,7 +104,7 @@ export default function PointEdit() {
             schema={editPointSchema}
             defaultValues={formValues}
             onSubmit={handleSubmit}
-            sections={pointEditFormSections}
+            sections={dynamicSections}
             submitLabel="Save Changes"
             cancelLabel="Cancel"
             onCancel={handleCancel}

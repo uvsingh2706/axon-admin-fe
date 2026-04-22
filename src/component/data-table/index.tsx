@@ -328,11 +328,11 @@ export function DataTable<TData extends RowData, TValue = unknown>({
         <div className="flex items-center justify-between py-2 w-full flex-col sm:flex-row gap-4">
           <p className="text-sm text-[#475467]">
             Showing{" "}
-            <strong className="font-semibold text-[#101828]">
+            <strong className="font-semibold text-black-c1">
               {startRow} – {endRow}
             </strong>{" "}
             of{" "}
-            <strong className="font-semibold text-[#101828]">
+            <strong className="font-semibold text-black-c1">
               {totalRecords}
             </strong>{" "}
             results
@@ -400,7 +400,7 @@ function PageButton({
         "h-8 w-8 flex items-center justify-center rounded-md text-sm font-medium",
         "transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
         active
-          ? " text-[#101828] border border-[#D3D3D4]"
+          ? " text-black-c1 border border-[#D3D3D4]"
           : "text-[#475467] hover:bg-[#F9FAFB] cursor-pointer"
       )}
     >

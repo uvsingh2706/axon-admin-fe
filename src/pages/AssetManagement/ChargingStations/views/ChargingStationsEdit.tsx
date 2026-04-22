@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Breadcrumb from "@/component/Breadcrumb";
 import PageWrapper from "@/component/PageWrapper";
 import { DynamicForm } from "@/component/form/DynamicForm";
@@ -9,52 +9,90 @@ import {
   stationEditFormSections,
   type EditStationFormValues,
 } from "../config/station.form";
-import { mockStationEditById } from "../mocks/station.mock";
+import { useStationById, useUpdateStation } from "../services/stations.hooks";
+import { toast } from "sonner";
 
 export default function StationEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const stateStation = location.state?.station;
 
-  // For demonstration, default to "CS-001" if ID is not found
-  const stationId = id && mockStationEditById[id] ? id : "CS-001";
-  const station = mockStationEditById[stationId];
+  const { data: stationRes, isLoading } = useStationById(id || "", !stateStation && !!id);
+  const station = stateStation || stationRes?.data;
+  const { mutateAsync: updateStation, isPending: isUpdating } = useUpdateStation();
 
   const [formValues, setFormValues] = useState<EditStationFormValues | null>(null);
 
   useEffect(() => {
     if (station) {
       setFormValues({
-        stationName: station.stationName,
-        stationImage: station.stationImage,
-        addressLine1: station.addressLine1,
-        addressLine2: station.addressLine2,
-        pincode: station.pincode,
+        stationName: station.name,
+        stationImage: undefined,
+        addressLine1: station.firstStreet,
+        addressLine2: station.secondStreet || "",
+        pincode: station.pinCode?.toString(),
         city: station.city,
         state: station.state,
-        latitude: station.latitude,
-        longitude: station.longitude,
-        commissionOn: station.commissionOn,
+        latitude: station.latitude?.toString() || "",
+        longitude: station.longitude?.toString() || "",
+        commissionOn: station.commissionedOn,
         supportPersonName: station.supportPersonName,
-        contactNumber: station.contactNumber,
-        emailId: station.emailId,
-        solar: station.solar,
+        contactNumber: station.supportPersonNumber,
+        emailId: station.supportPersonEmail,
+        supportImage: undefined,
+        solar: station.solarPanel,
         bess: station.bess,
         nonSolarGeneration: station.nonSolarGeneration,
-        totalChargingCapacity: station.totalChargingCapacity,
-        totalOnSiteLoad: station.totalOnSiteLoad,
+        totalChargingCapacity: station.chargingCapacity,
+        totalOnSiteLoad: station.totalLoad,
       });
     }
   }, [station]);
 
-  const handleSubmit = (data: EditStationFormValues) => {
-    console.log("Update station:", stationId, data);
-    // TODO: API call to update station
-    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${stationId}`);
+  const handleSubmit = async (data: EditStationFormValues) => {
+    if (!id || isUpdating) return;
+    try {
+      await updateStation({
+        id,
+        data: {
+          name: data.stationName,
+          // image: data.stationImage,
+          firstStreet: data.addressLine1,
+          secondStreet: data.addressLine2 || "",
+          city: data.city,
+          state: data.state,
+          pinCode: Number(data.pincode),
+          latitude: Number(data.latitude),
+          longitude: Number(data.longitude),
+          commissionedOn: data.commissionOn,
+          // supportPersonImage: data.supportImage,
+          supportPersonName: data.supportPersonName,
+          supportPersonNumber: Number(data.contactNumber),
+          supportPersonEmail: data.emailId,
+          solarPanel: data.solar,
+          bess: data.bess,
+          nonSolarGeneration: data.nonSolarGeneration,
+          chargingCapacity: data.totalChargingCapacity,
+          totalLoad: data.totalOnSiteLoad,
+          isActive: true,
+        },
+      });
+      toast.success("Station Updated", { description: "The charging station has been updated successfully." });
+      navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${id}`);
+    } catch (error) {
+      toast.error("Failed to Update", { description: "An error occurred while updating the station." });
+      console.error(error);
+    }
   };
 
   const handleCancel = () => {
-    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${stationId}`);
+    navigate(`${Pathname.ASSET_MANAGEMENT}/charging-stations/${id}`);
   };
+
+  if (isLoading) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading...</div>;
+  }
 
   if (!station || !formValues) {
     return (
@@ -70,26 +108,27 @@ export default function StationEdit() {
       <Breadcrumb
         items={[
           { label: "Asset Management", path: Pathname.ASSET_MANAGEMENT },
-          { label: "Charging Stations", path: Pathname.ASSET_MANAGEMENT },
-          { label: station.stationName, path: `${Pathname.ASSET_MANAGEMENT}/charging-stations/${stationId}` },
+          { label: "Charging Stations", path: `${Pathname.ASSET_MANAGEMENT}/charging-stations` },
+          { label: station.name, path: `${Pathname.ASSET_MANAGEMENT}/charging-stations/${id}` },
           { label: "Edit" },
         ]}
       />
 
       <PageWrapper
         title="Edit Charging Station"
+        isChargerSpecifications={false}
         showSearch={false}
         showFilter={false}
         titleClassName="heading-3-semibold"
         className="w-full"
       >
         <div className="mt-2">
-          <DynamicForm<any>
+          <DynamicForm<EditStationFormValues>
             schema={editStationSchema}
             defaultValues={formValues}
             onSubmit={handleSubmit}
             sections={stationEditFormSections}
-            submitLabel="Save Changes"
+            submitLabel={isUpdating ? "Saving..." : "Save Changes"}
             cancelLabel="Cancel"
             onCancel={handleCancel}
           />

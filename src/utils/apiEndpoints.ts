@@ -13,6 +13,12 @@ export const ApiEndpoints = {
     //tax
     TAX_LIST: '/tax',
 
+    //charging stations
+    CHARGING_STATIONS_LIST: '/charging-station',
+
+    //charging points
+    CHARGING_POINTS_LIST: '/charging-point',
+
 
     //oem
     OEM: '/oem',
