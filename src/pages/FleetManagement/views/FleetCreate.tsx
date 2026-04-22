@@ -36,7 +36,7 @@ export default function FleetCreate() {
       email: data.email,
       contact: data.contact,
       vehicleType: data.vehicleType,
-      flatRate: data.flatRate,
+      // flatRate: data.flatRate,
       // Sending logo as a string (using the file name or a default if no file)
       logo: logo instanceof File ? logo.name : (typeof logo === "string" ? logo : ""),
     };

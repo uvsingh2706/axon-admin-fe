@@ -8,8 +8,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { DataTable } from "@/component/data-table";
 import type { ExtendedColumnDef } from "@/component/data-table";
-import { getFleetById } from "../../../mocks/fleet.mock";
-import { getDriverById, getDriverDetailsById } from "../mocks/driver.mock";
+import { useFleetById } from "../../../services/Fleet.hooks";
+import { useDriverById } from "../services/driver.hooks";
 import type { ChargingHistoryRow } from "../types/driver.type";
 import CarIcon from "@/assets/icons/CarIcon";
 import CopyIcon from "@/assets/icons/CopyIcon";
@@ -106,40 +106,50 @@ export default function DriverDetails() {
     const canEditDriver = useCan(MODULE.VEHICLE_MANAGEMENT, "update");
     const canDeleteDriver = useCan(MODULE.VEHICLE_MANAGEMENT, "delete");
 
-    const fleet = getFleetById(id);
-    const driver = id && driverId ? getDriverById(id, driverId) : undefined;
-    const details = driverId ? getDriverDetailsById(driverId) : undefined;
+    const { data: fleetDetail, isLoading: isFleetLoading } = useFleetById(id ?? "");
+    const { data: driverDetail, isLoading: isDriverLoading } = useDriverById(driverId ?? "");
 
-    if (!fleet || !driver || !id || !driverId) {
+    const fleet = fleetDetail?.data;
+    const driver = (driverDetail?.data as any)?.data;
+
+    if (isFleetLoading || isDriverLoading) {
+        return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading driver details...</div>;
+    }
+
+    if (!fleet || !driver) {
         return <div className="p-8 text-center text-text-500 subtitle-2-medium">Driver not found.</div>;
     }
 
-    const d = details ?? {
-        ...driver,
-        organisationName: fleet.organisationName,
-        personalEmailId: driver.email,
-        licenseNumber: "-",
-        licenseExpiryDate: "-",
+    const d = {
+        name: driver.name || "N/A",
+        contact: driver.mobileNumber || "N/A",
+        personalEmailId: driver.email || "N/A",
+        gender: driver.gender || "N/A",
+        driverId: driver.id,
+        organisationName: driver.fleet?.name || fleet.name,
+        licenseNumber: driver.drivingLicense || "-",
+        licenseExpiryDate: driver.drivingLicenseExpiry || "-",
+        avatarUrl: null,
         vehicleInfo: {
-            vehicleName: driver.assignedVehicle,
+            vehicleName: driver.vehicle?.registrationNumber || "Not Assigned",
             model: "-",
             connectorType: "-",
-            registrationNumber: "-",
+            registrationNumber: driver.vehicle?.registrationNumber || "-",
         },
         chargingHistory: [],
     };
 
-    const chargingColumns: ExtendedColumnDef<ChargingHistoryRow, unknown>[] = useMemo(
-        () => [
-            { accessorKey: "stationName", header: "Station Name" },
-            { accessorKey: "chargingPointName", header: "Charging Point Name" },
-            { accessorKey: "dateTime", header: "Date & Time" },
-            { accessorKey: "durationHours", header: "Duration (hrs)" },
-            { accessorKey: "energyConsumptionKwh", header: "Energy Consumption (kWh)" },
-            { accessorKey: "amount", header: "Amount" },
-        ],
-        []
-    );
+    // const chargingColumns: ExtendedColumnDef<ChargingHistoryRow, unknown>[] = useMemo(
+    //     () => [
+    //         { accessorKey: "stationName", header: "Station Name" },
+    //         { accessorKey: "chargingPointName", header: "Charging Point Name" },
+    //         { accessorKey: "dateTime", header: "Date & Time" },
+    //         { accessorKey: "durationHours", header: "Duration (hrs)" },
+    //         { accessorKey: "energyConsumptionKwh", header: "Energy Consumption (kWh)" },
+    //         { accessorKey: "amount", header: "Amount" },
+    //     ],
+    //     []
+    // );
 
     const headerFields = [
         { label: "Phone number", value: d.contact },
@@ -163,7 +173,8 @@ export default function DriverDetails() {
             <Breadcrumb
                 items={[
                     { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-                    { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+                    { label: fleet.name || fleet.name, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+                    { label: "Drivers", path: `${Pathname.FLEET_MANAGEMENT}/${id}/drivers` },
                     { label: d.name },
                 ]}
             />
@@ -265,13 +276,13 @@ export default function DriverDetails() {
                     </CardSection>
 
                     {/* Charging history */}
-                    <CardSection title="Charging History">
+                    {/* <CardSection title="Charging History">
                         <DataTable
                             columns={chargingColumns}
                             data={d.chargingHistory}
                         // emptyMessage="No charging history found."
                         />
-                    </CardSection>
+                    </CardSection> */}
                 </div>
             </PageWrapper>
         </div>

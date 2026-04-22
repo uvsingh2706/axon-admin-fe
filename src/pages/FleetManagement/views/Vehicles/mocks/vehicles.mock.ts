@@ -60,15 +60,23 @@ export const modelOptions = [
   { label: "ZS EV", value: "ZS EV" },
 ];
 
+export const vehicleTypeOptions = [
+  { label: "2 Wheeler", value: "E2W" },
+  { label: "4 Wheeler", value: "E4W" },
+  { label: "BUS", value: "BUS" },
+];
+
 export const connectorTypeOptions = [
-  { label: "CCS2", value: "CCS2" },
-  { label: "Type 2", value: "Type 2" },
-  { label: "CHAdeMO", value: "CHAdeMO" },
+  { label: "ccs_dc", value: "CCS_DC" },
+  { label: "chademo_dc", value: "CHAdeMO_DC" },
+  { label: "gbt_dc", value: "GBT_DC" },
+  { label: "iec60309_ac", value: "IEC60309_AC" },
+  { label: "type_2_ac", value: "TYPE_2_AC" },
 ];
 export const chargingRateOptions = [
-  { label: "CCS2", value: "CCS2" },
-  { label: "Type 2", value: "Type 2" },
-  { label: "CHAdeMO", value: "CHAdeMO" },
+  { label: "level_1", value: "level_1" },
+  { label: "level_2", value: "level_2" },
+
 ];
 
 export const getVehiclesByFleetId = (fleetId?: string) =>

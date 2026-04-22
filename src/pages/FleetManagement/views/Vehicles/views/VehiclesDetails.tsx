@@ -6,10 +6,10 @@ import { Modal } from "@/component/Modal";
 import { Pathname } from "@/utils/pathname";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import { getFleetById } from "../../../mocks/fleet.mock";
-import { getVehicleById } from "../mocks/vehicles.mock";
 import { useCan } from "@/rbac";
 import { MODULE } from "@/rbac/modules";
+import { useFleetById } from "../../../services/Fleet.hooks";
+import { useVehicleById, useDeleteVehicle } from "../services/Vehicle.hooks";
 
 export default function VehiclesDetails() {
   const { id, vehicleId } = useParams<{ id: string; vehicleId: string }>();
@@ -18,16 +18,27 @@ export default function VehiclesDetails() {
   const canEditVehicle = useCan(MODULE.VEHICLE_MANAGEMENT, "update");
   const canDeleteVehicle = useCan(MODULE.VEHICLE_MANAGEMENT, "delete");
 
-  const fleet = getFleetById(id);
-  const vehicle = getVehicleById(id, vehicleId);
+  const { data: fleetDetail, isLoading: isFleetLoading } = useFleetById(id ?? "");
+  const { data: vehicleDetail, isLoading: isVehicleLoading } = useVehicleById(vehicleId ?? "");
+  const deleteMutation = useDeleteVehicle();
 
-  if (!fleet || !vehicle || !id || !vehicleId) {
+  const fleet = fleetDetail?.data;
+  const vehicle = vehicleDetail?.data;
+
+  if (isFleetLoading || isVehicleLoading) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading vehicle details...</div>;
+  }
+
+  if (!fleet || !vehicle) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Vehicle not found.</div>;
   }
 
   const handleDelete = () => {
-    console.log("Delete vehicle:", vehicleId);
-    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles`);
+    deleteMutation.mutate(vehicleId ?? "", {
+      onSuccess: () => {
+        navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles`);
+      },
+    });
   };
 
   return (
@@ -35,14 +46,14 @@ export default function VehiclesDetails() {
       <Breadcrumb
         items={[
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-          { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
-          { label: "Vehicles", path: `${Pathname.FLEET_MANAGEMENT}/${id}`},
-          { label: vehicle.vehicleName },
+          { label: fleet.name || fleet.name, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+          { label: "Vehicles", path: `${Pathname.FLEET_MANAGEMENT}/${id}/vehicles` },
+          { label: vehicle.registrationNumber || "Vehicle Details" },
         ]}
       />
 
       <PageWrapper
-        title={vehicle.vehicleName}
+        title={vehicle.registrationNumber || "Vehicle Details"}
         showSearch={false}
         showFilter={false}
         titleClassName="heading-3-semibold"
@@ -83,11 +94,15 @@ export default function VehiclesDetails() {
         }
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-          <DetailField label="Brand" value={vehicle.brand} />
-          <DetailField label="Model" value={vehicle.model} />
-          <DetailField label="Registration Number" value={vehicle.registrationNumber} />
-          <DetailField label="Connector Type" value={vehicle.connectorType} />
-          <DetailField label="Vehicle ID" value={vehicle.vehicleId} />
+          <DetailField label="Brand" value={vehicle.make || "NA"} />
+          <DetailField label="Model" value={vehicle.model || "NA"} />
+          <DetailField label="Registration Number" value={vehicle.registrationNumber || "NA"} />
+          <DetailField label="Connector Type" value={vehicle.connectorType || "NA"} />
+          <DetailField label="Vehicle ID" value={vehicle.id || "NA"} />
+          <DetailField label="Battery Pack" value={vehicle.batteryPack || "NA"} />
+          <DetailField label="Charging Rate" value={vehicle.chargingRate || "NA"} />
+
+
         </div>
       </PageWrapper>
     </div>

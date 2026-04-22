@@ -48,7 +48,7 @@ export const driverCreateFormSections: SectionConfig<CreateDriverFormValues>[] =
       {
         name: "phoneNumber",
         label: "Phone number",
-        type: "phone",
+        type: "text",
         placeholder: "E.g. 98765 43210",
         required: true,
       },

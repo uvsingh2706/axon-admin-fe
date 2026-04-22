@@ -34,4 +34,7 @@ export const ApiEndpoints = {
 
     //vehicle
     VEHICLE_LIST: '/vehicle',
+
+    //driver
+    DRIVER_LIST: '/driver',
 };

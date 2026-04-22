@@ -1,10 +1,11 @@
 import * as z from "zod";
 import type { SectionConfig } from "@/component/form/DynamicForm";
-import { brandOptions, chargingRateOptions, connectorTypeOptions, modelOptions } from "../mocks/vehicles.mock";
+import { brandOptions, chargingRateOptions, connectorTypeOptions, modelOptions, vehicleTypeOptions } from "../mocks/vehicles.mock";
 
 export const createVehicleSchema = z.object({
   brand: z.string().min(1, "Brand is required"),
   model: z.string().min(1, "Model is required"),
+  vehicleType: z.string().min(1, "Vehicle Type is required"),
   registrationNumber: z.string().min(1, "Registration Number is required"),
   connectorType: z.string().min(1, "Connector Type is required"),
   vehicleId: z.string().min(1, "Vehicle ID is required"),
@@ -35,6 +36,14 @@ const vehicleFormSections: SectionConfig<CreateVehicleFormValues>[] = [
         placeholder: "Select model",
         required: true,
         options: modelOptions,
+      },
+      {
+        name: "vehicleType",
+        label: "Vehicle Type",
+        type: "select",
+        placeholder: "Select vehicle type",
+        required: true,
+        options: vehicleTypeOptions,
       },
       {
         name: "registrationNumber",

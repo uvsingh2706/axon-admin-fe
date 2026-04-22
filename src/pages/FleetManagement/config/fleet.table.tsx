@@ -2,9 +2,12 @@ import type { ExtendedColumnDef } from "@/component/data-table";
 // import type { FleetData } from "../types/fleet.type";
 import type { FleetDTO } from "../services/Fleet.types";
 import CopyIcon from "@/assets/icons/CopyIcon";
+import ImagePlaceholderIcon from "@/assets/icons/ImagePlaceholderIcon";
+import { toast } from "sonner";
 
 const handleCopy = (text: string) => {
   navigator.clipboard.writeText(text);
+  toast.success("Copied to clipboard");
 };
 
 export const fleetColumns: ExtendedColumnDef<FleetDTO, unknown>[] = [
@@ -19,7 +22,7 @@ export const fleetColumns: ExtendedColumnDef<FleetDTO, unknown>[] = [
           className="w-10 h-10 rounded-md object-contain"
         />
       ) : (
-        "NA"
+        <ImagePlaceholderIcon className="w-10 h-10" />
       ),
   },
   {
@@ -33,11 +36,11 @@ export const fleetColumns: ExtendedColumnDef<FleetDTO, unknown>[] = [
     header: "Vehicle Type",
     cell: ({ row }) => <span>{row?.original?.vehicle_type || "NA"}</span>,
   },
-  {
-    accessorKey: "flatRate",
-    header: "Flat Rate",
-    cell: ({ row }) => <span>{row?.original?.flatRate || "NA"}</span>,
-  },
+  // {
+  //   accessorKey: "flatRate",
+  //   header: "Flat Rate",
+  //   cell: ({ row }) => <span>{row?.original?.flatRate || "NA"}</span>,
+  // },
   {
     accessorKey: "email",
     header: "Email",
