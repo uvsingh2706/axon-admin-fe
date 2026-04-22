@@ -42,18 +42,30 @@ type VehiclesProps = {
   embedded?: boolean;
 };
 
+import { useFleetById } from "../../services/Fleet.hooks";
+
 export default function Vehicles({ fleetId, embedded = false }: VehiclesProps) {
   const { id: routeFleetId } = useParams<{ id: string }>();
   const id = fleetId ?? routeFleetId;
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const fleet = getFleetById(id);
+
+  // Live API hook for fleet data
+  const { data: fleetDetail, isLoading: isFleetLoading } = useFleetById(id ?? "");
+  const fleet = fleetDetail?.data;
+
   const canViewVehicles = useCan(MODULE.FLEET_MANAGEMENT, "view");
   const canCreateVehicles = useCan(MODULE.FLEET_MANAGEMENT, "create");
 
-  if (!fleet || !id) {
+  if (isFleetLoading) {
+    return <div className="p-8 text-center text-text-500">Loading...</div>;
+  }
+
+  if (!id || !fleet) {
+    if (embedded) return null;
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
   }
+
   if (!canViewVehicles) {
     if (embedded) return null;
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">You do not have permission to view vehicles.</div>;
@@ -73,7 +85,7 @@ export default function Vehicles({ fleetId, embedded = false }: VehiclesProps) {
         <Breadcrumb
           items={[
             { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-            { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+            { label: fleet.name, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           ]}
         />
       )}
@@ -109,10 +121,11 @@ export default function Vehicles({ fleetId, embedded = false }: VehiclesProps) {
         isTable={true}
         isSearchRight={true}
       >
-        <VehiclesList search={search} />
+        <VehiclesList search={search} fleetId={id} />
       </PageWrapper>
     </div>
   );
+
 
   if (embedded) {
     return <TabsContent value="vehicles">{content}</TabsContent>;

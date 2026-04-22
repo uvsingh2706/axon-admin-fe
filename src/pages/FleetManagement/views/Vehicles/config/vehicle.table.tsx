@@ -1,21 +1,21 @@
 import type { ExtendedColumnDef } from "@/component/data-table";
-import type { VehicleData } from "../types/vehicle.type";
 
-export const vehicleTableColumns: ExtendedColumnDef<VehicleData, unknown>[] = [
+export const vehicleTableColumns: ExtendedColumnDef<any, unknown>[] = [
   {
-    accessorKey: "vehicleName",
+    accessorKey: "make",
     header: "Vehicle Name",
     cell: ({ row }) => (
       <span className="font-semibold text-sm text-secondary-600 underline cursor-pointer hover:text-opacity-80">
-        {row.original.vehicleName}
+        {row.original?.make || "N/A"}
       </span>
     ),
   },
-  { accessorKey: "model", header: "Model" },
-  { accessorKey: "vehicleId", header: "Vehicle ID" },
+  { accessorKey: "model", header: "Model", cell: ({ row }) => row.original?.model || "N/A" },
+  { accessorKey: "id", header: "Vehicle ID", cell: ({ row }) => row.original?.vehicleId || row.original?.id || "N/A" },
   {
     accessorKey: "registrationNumber",
     header: "Registration Number",
+    cell: ({ row }) => row.original?.registrationNumber || "N/A",
   },
-  { accessorKey: "connectorType", header: "Connector Type" },
+  { accessorKey: "connectorType", header: "Connector Type", cell: ({ row }) => row.original?.connectorType || "N/A" },
 ];

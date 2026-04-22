@@ -3,7 +3,8 @@ import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
 import { Pathname } from "@/utils/pathname";
 import { useNavigate, useParams } from "react-router-dom";
-import { getFleetById } from "../../../mocks/fleet.mock";
+import { useFleetById } from "../../../services/Fleet.hooks";
+import { useCreateVehicle } from "../services/Vehicle.hooks";
 import {
   createVehicleSchema,
   vehicleCreateFormSections,
@@ -13,31 +14,49 @@ import {
 export default function AddVehicles() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const fleet = getFleetById(id);
 
-  if (!fleet || !id) {
-    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
-  }
+  // Live API hook for fleet data (for breadcrumbs)
+  const { data: fleetDetail, isLoading: isFleetLoading } = useFleetById(id ?? "");
+  const fleet = fleetDetail?.data;
+
+  // Mutation hook for creating vehicles
+  const { mutate: createVehicle, isPending: isAdding } = useCreateVehicle(id ?? "");
 
   const handleCancel = () => {
     navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles`);
   };
 
   const handleSubmit = (data: CreateVehicleFormValues) => {
-    console.log("Create vehicle:", data);
-    handleCancel();
+    let payload = {
+      ...data,
+      make: data.brand
+    }
+    createVehicle(payload, {
+      onSuccess: () => {
+        handleCancel();
+      },
+    });
   };
+
+  if (isFleetLoading) {
+    return <div className="p-8 text-center text-text-500">Loading...</div>;
+  }
+
+  if (!fleet) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Fleet not found.</div>;
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <Breadcrumb
         items={[
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-          { label: fleet?.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
-          { label: "Vehicles", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+          { label: fleet.name, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+          { label: "Vehicles", path: `${Pathname.FLEET_MANAGEMENT}/${id}/vehicles` },
           { label: "Add Vehicle" },
         ]}
       />
+
 
       <PageWrapper
         title="Add Vehicle"

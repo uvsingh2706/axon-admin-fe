@@ -5,7 +5,7 @@ export const createFleetSchema = z.object({
   name: z.string().min(1, "Organisation Name is required"),
   logo: z.any().optional(),
   vehicleType: z.string().min(1, "Vehicle Type is required"),
-  flatRate: z.string().min(1, "Flat Rate is required"),
+  // flatRate: z.string().min(1, "Flat Rate is required"),
   email: z.string().min(1, "Email is required").email("Invalid email"),
   contact: z.string().min(1, "Contact Number is required"),
   totalDrivers: z.string().optional(),
@@ -41,7 +41,7 @@ export const fleetFormSections: SectionConfig<CreateFleetFormValues>[] = [
       },
       { name: "contact", label: "Contact Number", type: "text", placeholder: "E.g. 8713133245", required: true },
       { name: "email", label: "Mail ID", type: "email", placeholder: "E.g. xyz@gmail.com", required: true },
-      { name: "flatRate", label: "Flat Rate", type: "text", placeholder: "E.g. ₹12", required: true },
+      // { name: "flatRate", label: "Flat Rate", type: "text", placeholder: "E.g. ₹12", required: true },
     ],
   },
 ];

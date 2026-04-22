@@ -4,8 +4,8 @@ import PageWrapper from "@/component/PageWrapper";
 import { Pathname } from "@/utils/pathname";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getFleetById } from "../../../mocks/fleet.mock";
-import { getVehicleById } from "../mocks/vehicles.mock";
+import { useFleetById } from "../../../services/Fleet.hooks";
+import { useVehicleById, useUpdateVehicle } from "../services/Vehicle.hooks";
 import {
   editVehicleSchema,
   vehicleEditFormSections,
@@ -15,23 +15,33 @@ import {
 export default function EditVehicles() {
   const { id, vehicleId } = useParams<{ id: string; vehicleId: string }>();
   const navigate = useNavigate();
-  const fleet = getFleetById(id);
-  const vehicle = getVehicleById(id, vehicleId);
+
+  const { data: fleetDetail, isLoading: isFleetLoading } = useFleetById(id ?? "");
+  const { data: vehicleDetail, isLoading: isVehicleLoading } = useVehicleById(vehicleId ?? "");
+  const updateMutation = useUpdateVehicle(vehicleId ?? "");
+
+  const fleet = fleetDetail?.data;
+  const vehicle = vehicleDetail?.data;
   const [form, setForm] = useState<EditVehicleFormValues | null>(null);
 
   useEffect(() => {
     if (vehicle) {
       setForm({
-        brand: vehicle.brand,
-        model: vehicle.model,
-        registrationNumber: vehicle.registrationNumber,
-        connectorType: vehicle.connectorType,
-        vehicleId: vehicle.vehicleId,
-        batteryPack: "",
-        chargingRate: "",
+        brand: vehicle.make || "",
+        model: vehicle.model || "",
+        vehicleType: vehicle.vehicleType || "",
+        registrationNumber: vehicle.registrationNumber || "",
+        connectorType: vehicle.connectorType || "",
+        vehicleId: vehicle.id || "",
+        batteryPack: String(vehicle.batteryPack || ""),
+        chargingRate: vehicle.chargingRate || "",
       });
     }
   }, [vehicle]);
+
+  if (isFleetLoading || isVehicleLoading) {
+    return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading vehicle details...</div>;
+  }
 
   if (!fleet || !vehicle || !id || !vehicleId || !form) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Vehicle not found.</div>;
@@ -42,8 +52,15 @@ export default function EditVehicles() {
   };
 
   const handleSubmit = (data: EditVehicleFormValues) => {
-    console.log("Update vehicle:", vehicleId, data);
-    handleCancel();
+    let payload = {
+      ...data,
+      make: data?.brand
+    }
+    updateMutation.mutate(payload, {
+      onSuccess: () => {
+        navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/vehicles/${vehicleId}`);
+      },
+    });
   };
 
   return (
@@ -51,8 +68,8 @@ export default function EditVehicles() {
       <Breadcrumb
         items={[
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-          { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
-          { label: "Vehicles", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+          { label: fleet.name, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+          { label: "Vehicles", path: `${Pathname.FLEET_MANAGEMENT}/${id}/vehicles` },
           { label: "Edit" },
         ]}
       />
