@@ -103,3 +103,15 @@ export interface ChargingPointDetailResponse {
   message?: string;
   data: ChargingPointData;
 }
+export interface CreateChargingPointRequest {
+  chargingPointName: string;
+  chargingPointId: string;
+  chargingLocation: string;
+  oemName: string;
+  modelName: string;
+  tariffName: string;
+  commissionedOn: string;
+  configurationUrl: string;
+  connectionType: string;
+  isPublished: boolean;
+}

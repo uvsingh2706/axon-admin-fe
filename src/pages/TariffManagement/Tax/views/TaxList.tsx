@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataTable } from "@/component/data-table";
 import { getTaxTableColumns } from "../config/tax.table";
-import { useTaxList, useDeleteTax } from "../services/tax.hooks";
+import { useTaxList, useDeleteTax } from "../services/dummy.hooks";
 import { Modal } from "@/component/Modal";
 import { Pathname } from "@/utils/pathname";
 import { toast } from "sonner";
@@ -58,8 +58,8 @@ export default function TaxList({ search }: { search: string }) {
           pageIndex: page - 1,
           pageSize: limit,
         }}
-      isServerSide={true}
-      totalItems={taxList?.data?.meta?.total || 0}
+        isServerSide={true}
+        totalItems={taxList?.data?.meta?.total || 0}
         pageCount={taxList?.data?.meta?.totalPages || 1}
         onPaginationChange={(updater) => {
           const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;

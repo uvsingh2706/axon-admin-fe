@@ -46,7 +46,7 @@ export const useDeleteTariff = () => {
             queryClient.invalidateQueries({ queryKey: tariffKeys.all });
             toast.success("Tariff deleted successfully");
         },
-        onError(error) {
+        onError(error: any) {
             console.log(error);
             toast.error(error?.response?.data?.message || "Failed to delete tariff");
         },
@@ -60,7 +60,7 @@ export const useUpdateTariff = () => {
             queryClient.invalidateQueries({ queryKey: tariffKeys.all });
             toast.success("Tariff updated successfully");
         },
-        onError(error) {
+        onError(error: any) {
             console.log(error);
             toast.error(error?.response?.data?.message || "Failed to update tariff");
         },

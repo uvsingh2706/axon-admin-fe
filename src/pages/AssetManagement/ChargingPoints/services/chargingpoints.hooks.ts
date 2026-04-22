@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { chargingPointApi } from "./chargingpoints.api";
-import type { ChargingPointListParams } from "./chargingpoints.type";
+import type { ChargingPointListParams, CreateChargingPointRequest } from "./chargingpoints.type";
+import { toast } from "sonner";
 
 export const pointKeys = {
     all: ["point"] as const,
@@ -32,3 +33,33 @@ export const useDeleteChargingPoint = () => {
         },
     });
 };
+export const useCreateChargingPoint = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data: CreateChargingPointRequest) => chargingPointApi.createChargingPoint(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: pointKeys.all });
+            toast.success("Charging point created successfully");
+        },
+        onError: (error: any) => {
+            console.log(error);
+            toast.error(error?.response?.data?.message || "Failed to create charging point");
+        }
+    })
+}
+export const useUpdateChargingPoint = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, data }: { id: string, data: CreateChargingPointRequest }) => 
+            chargingPointApi.updateChargingPoint({ id, data }),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: pointKeys.all });
+            queryClient.invalidateQueries({ queryKey: [...pointKeys.all, "detail", variables.id] });
+            toast.success("Charging point updated successfully");
+        },
+        onError: (error: any) => {
+            console.log(error);
+            toast.error(error?.response?.data?.message || "Failed to update charging point");
+        }
+    })
+}

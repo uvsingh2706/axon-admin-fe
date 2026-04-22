@@ -18,7 +18,17 @@ export type CreatePointFormValues = z.infer<typeof createPointSchema>;
 export const editPointSchema = createPointSchema;
 export type EditPointFormValues = z.infer<typeof editPointSchema>;
 
-const sharedPointSections: SectionConfig<CreatePointFormValues>[] = [
+export const getPointFormSections = ({
+  stationOptions = [],
+  oemOptions = [],
+  modelOptions = [],
+  tariffOptions = [],
+}: {
+  stationOptions?: { label: string; value: string }[];
+  oemOptions?: { label: string; value: string }[];
+  modelOptions?: { label: string; value: string }[];
+  tariffOptions?: { label: string; value: string }[];
+}): SectionConfig<CreatePointFormValues>[] => [
   {
     gridCols: 2,
     fields: [
@@ -31,10 +41,7 @@ const sharedPointSections: SectionConfig<CreatePointFormValues>[] = [
         type: "select",
         placeholder: "Select Station",
         required: true,
-        options: [
-          { label: "Station 1", value: "station-1" },
-          { label: "Station 2", value: "station-2" },
-        ],
+        options: stationOptions,
       },
       {
         name: "oem",
@@ -42,10 +49,7 @@ const sharedPointSections: SectionConfig<CreatePointFormValues>[] = [
         type: "select",
         placeholder: "Select OEM",
         required: true,
-        options: [
-          { label: "EVRE", value: "evre" },
-          { label: "Other", value: "other" },
-        ],
+        options: oemOptions,
       },
       {
         name: "model",
@@ -53,10 +57,7 @@ const sharedPointSections: SectionConfig<CreatePointFormValues>[] = [
         type: "select",
         placeholder: "Select Model",
         required: true,
-        options: [
-          { label: "Model x1", value: "model-x1" },
-          { label: "Model y1", value: "model-y1" },
-        ],
+        options: modelOptions,
       },
       { name: "commissionOn", label: "Commission On", type: "date", placeholder: "Select Date", required: true },
       {
@@ -65,10 +66,7 @@ const sharedPointSections: SectionConfig<CreatePointFormValues>[] = [
         type: "select",
         placeholder: "Select Tariff",
         required: true,
-        options: [
-          { label: "Tariff A", value: "tariff-a" },
-          { label: "Tariff B", value: "tariff-b" },
-        ],
+        options: tariffOptions,
       },
       {
         name: "connectionType",
@@ -77,15 +75,12 @@ const sharedPointSections: SectionConfig<CreatePointFormValues>[] = [
         placeholder: "Select Connection Type",
         required: true,
         options: [
-          { label: "WIFI", value: "wifi" },
-          { label: "LAN", value: "lan" },
-          { label: "SIM", value: "sim" },
+          { label: "LAN", value: "LAN" },
+          { label: "M2M", value: "M2M" },
+          { label: "WIFI", value: "WIFI" },
         ],
       },
       { name: "isPublic", label: "Public", type: "switch", isPublic: true },
     ],
   },
 ];
-
-export const pointCreateFormSections = sharedPointSections;
-export const pointEditFormSections = sharedPointSections;

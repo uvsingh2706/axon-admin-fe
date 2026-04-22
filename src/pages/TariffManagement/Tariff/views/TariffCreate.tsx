@@ -9,7 +9,7 @@ import {
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { useCreateTariff } from "../services/tarrif.hooks";
-import { useTaxList } from "../../Tax/services/tax.hooks";
+import { useTaxList } from "../../Tax/services/dummy.hooks";
 import { toast } from "sonner";
 
 interface CreateTariffProps {
