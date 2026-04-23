@@ -71,57 +71,57 @@ export const assetRoutes: RouteObject[] = [
   {
     path: 'charger-specifications',
     element: (
-      <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
+      // <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
         <ChargergerSpecificatoins/>
-      </Can>
+      // </Can>
     )
   },
   {
     path: 'charger-specifications/model/create',
     element: (
-      <Can module={MODULE.CHARGER_SPECIFICATION} action="create" fallback={<NoAccess />}>
+      // <Can module={MODULE.CHARGER_SPECIFICATION} action="create" fallback={<NoAccess />}>
         <ModelCreate />
-      </Can>
+      // </Can>
     )
   },
   {
     path: 'charger-specifications/model/:id',
     element: (
-      <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
+      // <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
         <ModelDetails />
-      </Can>
+      // </Can>
     )
   },
   {
     path: 'charger-specifications/model/:id/edit',
     element: (
-      <Can module={MODULE.CHARGER_SPECIFICATION} action="update" fallback={<NoAccess />}>
+      // <Can module={MODULE.CHARGER_SPECIFICATION} action="update" fallback={<NoAccess />}>
         <ModelEdit />
-      </Can>
+      // </Can>
     )
   },
   {
     path: 'charger-specifications/connector/create',
     element: (
-      <Can module={MODULE.CHARGER_SPECIFICATION} action="create" fallback={<NoAccess />}>
+      // <Can module={MODULE.CHARGER_SPECIFICATION} action="create" fallback={<NoAccess />}>
         <ConnectorCreate />
-      </Can>
+      // </Can>
     )
   },
   {
     path: 'charger-specifications/connector/:id',
     element: (
-      <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
+      // <Can module={MODULE.CHARGER_SPECIFICATION} action="view" fallback={<NoAccess />}>
         <ConnectorDetails />
-      </Can>
+      // </Can>
     )
   },
   {
     path: 'charger-specifications/connector/:id/edit',
     element: (
-      <Can module={MODULE.CHARGER_SPECIFICATION} action="update" fallback={<NoAccess />}>
+      // <Can module={MODULE.CHARGER_SPECIFICATION} action="update" fallback={<NoAccess />}>
         <ConnectorEdit />
-      </Can>
+      // </Can>
     )
   }
 ];

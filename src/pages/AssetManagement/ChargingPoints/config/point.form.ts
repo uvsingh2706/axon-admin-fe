@@ -23,11 +23,15 @@ export const getPointFormSections = ({
   oemOptions = [],
   modelOptions = [],
   tariffOptions = [],
+  onOemChange,
+  isModelDisabled,
 }: {
   stationOptions?: { label: string; value: string }[];
   oemOptions?: { label: string; value: string }[];
   modelOptions?: { label: string; value: string }[];
   tariffOptions?: { label: string; value: string }[];
+  onOemChange?: (val: string) => void;
+  isModelDisabled?: boolean;
 }): SectionConfig<CreatePointFormValues>[] => [
   {
     gridCols: 2,
@@ -50,6 +54,7 @@ export const getPointFormSections = ({
         placeholder: "Select OEM",
         required: true,
         options: oemOptions,
+        onChange: onOemChange,
       },
       {
         name: "model",
@@ -58,6 +63,7 @@ export const getPointFormSections = ({
         placeholder: "Select Model",
         required: true,
         options: modelOptions,
+        disabled: isModelDisabled,
       },
       { name: "commissionOn", label: "Commission On", type: "date", placeholder: "Select Date", required: true },
       {

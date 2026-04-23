@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { chargingPointApi } from "./chargingpoints.api";
 import type { ChargingPointListParams, CreateChargingPointRequest } from "./chargingpoints.type";
 import { toast } from "sonner";
+import { modelApi } from "../../ChargerSpecifications/Model/services/model.api";
 
 export const pointKeys = {
     all: ["point"] as const,
@@ -33,6 +34,16 @@ export const useDeleteChargingPoint = () => {
         },
     });
 };
+
+export const useModelListByOemId = (oemId: string, enabled = true) => {
+    return useQuery(
+        {
+            queryKey: [...pointKeys.all, "model-list", oemId],
+            queryFn: () => modelApi.getModelByOemId(oemId),
+            enabled: Boolean(oemId) && enabled,
+        }
+    )
+}
 export const useCreateChargingPoint = () => {
     const queryClient = useQueryClient();
     return useMutation({

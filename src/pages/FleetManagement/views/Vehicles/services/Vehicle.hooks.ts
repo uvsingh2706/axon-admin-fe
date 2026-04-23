@@ -27,6 +27,12 @@ export const useVehicleById = (id: string, enabled = true) => {
     enabled: Boolean(id) && enabled,
   });
 };
+export const useVehiclerByFleetId = (fleetId: string) => {
+  return useQuery({
+    queryKey: vehicleKeys.list({ fleetId }),
+    queryFn: () => vehicleApi.getVehicleList({ fleetId }),
+  });
+};
 
 export const useCreateVehicle = (fleetId: string) => {
   const queryClient = useQueryClient();

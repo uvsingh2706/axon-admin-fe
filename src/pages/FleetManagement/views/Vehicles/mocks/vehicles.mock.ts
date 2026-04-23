@@ -61,17 +61,17 @@ export const modelOptions = [
 ];
 
 export const vehicleTypeOptions = [
-  { label: "2 Wheeler", value: "E2W" },
-  { label: "4 Wheeler", value: "E4W" },
+  { label: "E2W", value: "E2W" },
+  { label: "E4W", value: "E4W" },
   { label: "BUS", value: "BUS" },
 ];
 
 export const connectorTypeOptions = [
-  { label: "ccs_dc", value: "CCS_DC" },
-  { label: "chademo_dc", value: "CHAdeMO_DC" },
-  { label: "gbt_dc", value: "GBT_DC" },
-  { label: "iec60309_ac", value: "IEC60309_AC" },
-  { label: "type_2_ac", value: "TYPE_2_AC" },
+  { label: "CCS_DC", value: "CCS_DC" },
+  { label: "CHAdeMO_DC", value: "CHAdeMO_DC" },
+  { label: "GBT_DC", value: "GBT_DC" },
+  { label: "IEC60309_AC", value: "IEC60309_AC" },
+  { label: "TYPE_2_AC", value: "TYPE_2_AC" },
 ];
 export const chargingRateOptions = [
   { label: "level_1", value: "level_1" },

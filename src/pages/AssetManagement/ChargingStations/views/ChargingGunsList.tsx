@@ -90,8 +90,7 @@ const columns: ExtendedColumnDef<ChargingPointData, unknown>[] = [
 export default function ChargePointTable({ stationId }: ChargePointTableProps) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
-  const [search] = useState("");
-
+  const [search] = useState(""); 
   const { data: listResponse, isLoading } = useChargingPointList({
     page,
     limit,

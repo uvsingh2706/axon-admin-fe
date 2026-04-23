@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
@@ -9,17 +10,17 @@ import {
 import Breadcrumb from "@/component/Breadcrumb";
 import { Pathname } from "@/utils/pathname";
 import { useStationList } from "../../ChargingStations/services/stations.hooks";
-import { useModelList } from "../../ChargerSpecifications/Model/services/model.hooks";
-import { useOEMList } from "../../ChargerSpecifications/OEM/services/oem.hooks";
 import { useTariffList } from "@/pages/TariffManagement/Tariff/services/tarrif.hooks";
-import { useCreateChargingPoint } from "../services/chargingpoints.hooks";
+import { useOEMList } from "../../ChargerSpecifications/OEM/services/oem.hooks";
+import { useCreateChargingPoint, useModelListByOemId } from "../services/chargingpoints.hooks";
 
 export default function PointCreate() {
   const navigate = useNavigate();
+  const [selectedOemId, setSelectedOemId] = useState<string>("");
   const { data: stationData } = useStationList({ limit: 50, page: 1 });
   const { data: oemData } = useOEMList({ limit: 50, page: 1 });
-  const { data: modelData } = useModelList({ limit: 50, page: 1 });
   const { data: tariffData } = useTariffList({ limit: 50, page: 1 });
+  const { data: modelResponse } = useModelListByOemId(selectedOemId, !!selectedOemId);
   const createPoint = useCreateChargingPoint();
 
   const stationOptions = stationData?.data?.data?.map((station: any) => ({
@@ -30,9 +31,19 @@ export default function PointCreate() {
   const oemOptions = oemData?.data?.oems?.map((oem: any) => ({
     label: oem.oemName,
     value: oem.oemName,
+    id: oem.id,
   })) || [];
 
-  const modelOptions = modelData?.data?.chargerModels?.map((model: any) => ({
+  const handleOemChange = (oemName: string) => {
+    const oem = oemData?.data?.oems?.find((o: any) => o.oemName === oemName);
+    if (oem) {
+      setSelectedOemId(oem.id);
+    } else {
+      setSelectedOemId("");
+    }
+  };
+
+  const modelOptions = modelResponse?.data?.chargerModels?.map((model: any) => ({
     label: model.chargerModelName,
     value: model.chargerModelName,
   })) || [];
@@ -95,6 +106,8 @@ export default function PointCreate() {
               oemOptions,
               modelOptions,
               tariffOptions,
+              onOemChange: handleOemChange,
+              isModelDisabled: !selectedOemId,
             })}
             submitLabel="Save"
             cancelLabel="Cancel"

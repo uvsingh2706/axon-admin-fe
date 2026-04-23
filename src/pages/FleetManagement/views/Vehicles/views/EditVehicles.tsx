@@ -32,7 +32,7 @@ export default function EditVehicles() {
         vehicleType: vehicle.vehicleType || "",
         registrationNumber: vehicle.registrationNumber || "",
         connectorType: vehicle.connectorType || "",
-        vehicleId: vehicle.id || "",
+        // vehicleId: vehicle.id || "",
         batteryPack: String(vehicle.batteryPack || ""),
         chargingRate: vehicle.chargingRate || "",
       });
@@ -43,7 +43,7 @@ export default function EditVehicles() {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Loading vehicle details...</div>;
   }
 
-  if (!fleet || !vehicle || !id || !vehicleId || !form) {
+  if (!fleet || !vehicle || !id || !form) {
     return <div className="p-8 text-center text-text-500 subtitle-2-medium">Vehicle not found.</div>;
   }
 
