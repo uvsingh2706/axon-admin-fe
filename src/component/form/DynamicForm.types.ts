@@ -27,6 +27,8 @@ export interface FieldConfig<T extends FieldValues> {
   colSpan?: number;
   className?: string;
   isPublic?: boolean;
+  onChange?: (value: string) => void;
+  emptyMessage?: string;
   customComponent?: (props: {
     field: any;
     fieldState: any;

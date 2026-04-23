@@ -105,8 +105,11 @@ export function DynamicForm<T extends FieldValues>({
                   )}
                   <Select
                     value={field.value || ""}
-                    onValueChange={field.onChange}
-                    disabled={field.disabled}
+                    onValueChange={(val) => {
+                      field.onChange(val);
+                      fieldConfig.onChange?.(val);
+                    }}
+                    disabled={fieldConfig.disabled || field.disabled}
                   >
                     <SelectTrigger
                       className={cn(
@@ -117,11 +120,18 @@ export function DynamicForm<T extends FieldValues>({
                       <SelectValue placeholder={fieldConfig.placeholder} />
                     </SelectTrigger>
                     <SelectContent>
-                      {fieldConfig.options?.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </SelectItem>
-                      ))}
+                      {fieldConfig.options && fieldConfig.options.length > 0 ? (
+                        fieldConfig.options.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <div className="px-3 py-2 text-sm text-muted-foreground">
+                          {fieldConfig.emptyMessage ?? "No options found"}
+                        </div>
+                      )}
+
                     </SelectContent>
                   </Select>
                   <ErrorMessage message={errorMsg} />

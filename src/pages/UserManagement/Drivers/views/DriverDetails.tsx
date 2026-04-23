@@ -5,27 +5,26 @@ import DeleteIcon from "@/assets/icons/DeleteIcon";
 import { Modal } from "@/component/Modal";
 import { Pathname } from "@/utils/pathname";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/component/ui/avatar";
 import { DataTable } from "@/component/data-table";
-import type { ExtendedColumnDef } from "@/component/data-table";
-import type { ChargingHistoryRow, DriverStatCard } from "@/pages/FleetManagement/views/Drivers/types/driver.type";
 import type { ReactNode } from "react";
-import { mockDriverList } from "../mocks/driver.mock";
+import type { ChargingHistoryRow, DriverStatCard } from "@/pages/FleetManagement/views/Drivers/types/driver.type";
+import { useDriverById, useDeleteDriver } from "../services/drivers.hooks";
+import { driverTransactionsHistoryColumns } from "../config/driver.table";
 import { cn } from "@/lib/utils";
 import MoneyIcon from "@/assets/icons/MoneyIcon";
-import { Bolt, DownloadIcon } from "@/assets/icons";
-import Eye from "@/assets/icons/Eye";
-import UpDownIcon from "@/assets/icons/UpDownIcon";
+import { Bolt } from "@/assets/icons";
 import { Can, MODULE } from "@/rbac";
 
-function initials(name: string) {
+function initials(name: string | null) {
+  if (!name) return "NA";
   return name
     .split(" ")
     .filter(Boolean)
     .slice(0, 2)
     .map((p) => p[0]?.toUpperCase())
-    .join("");
+    .join("") || "NA";
 }
 
 
@@ -94,10 +93,19 @@ export default function DriverDetails() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const driver = useMemo(
-    () => mockDriverList.find((d) => d.id === driverId),
-    [driverId]
-  );
+  const { data: driverRes, isLoading } = useDriverById(driverId || "");
+  const { mutateAsync: deleteDriver } = useDeleteDriver();
+
+  const driver = driverRes?.data?.data;
+
+
+  if (isLoading) {
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        Loading...
+      </div>
+    );
+  }
 
   if (!driver || !driverId) {
     return (
@@ -107,123 +115,25 @@ export default function DriverDetails() {
     );
   }
 
-  // Match Fleet Management UI's data contract (fallbacks until backend integration)
   const d = {
-    name: driver.name,
-    avatarUrl: driver.avatarUrl,
-    contact: driver.driverPhone,
-    personalEmailId: driver.email,
-    gender: "-",
-    driverId: driverId,
-    organisationName: driver.organisationName,
-    licenseNumber: "-",
-    licenseExpiryDate: "-",
+    name: driver.name || "Unknown",
+    avatarUrl: driver.profilePicture,
+    contact: driver.mobileNumber || "NA",
+    personalEmailId: driver.email || "NA",
+    gender: driver.gender || "NA",
+    driverId: driver.id || "NA",
+    organisationName: "NA",
+    licenseNumber: driver.drivingLicense || "NA",
+    licenseExpiryDate: driver.drivingLicenseExpiry || "NA",
     vehicleInfo: {
-      vehicleName: driver.assignedVehicle,
-      model: "-",
-      connectorType: "-",
-      registrationNumber: "-",
-      vehicleId: "-",
+      vehicleName: driver.vehicle?.make || "NA",
+      model: driver.vehicle?.model || "NA",
+      connectorType: driver.vehicle?.connectorType || "NA",
+      registrationNumber: driver.vehicle?.registrationNumber || "NA",
+      vehicleId: driver.vehicle?.id || "NA",
     },
     chargingHistory: [] as ChargingHistoryRow[],
   };
-
-  const chargingColumns: ExtendedColumnDef<ChargingHistoryRow, unknown>[] = useMemo(
-    () => [
-      //   { accessorKey: "stationName", header: "Station Name" },
-      // { accessorKey: "chargingPointName", header: "Charging Point Name" },
-      // { accessorKey: "dateTime", header: "Date & Time" },
-      // { accessorKey: "durationHours", header: "Duration (hrs)" },
-      // { accessorKey: "energyConsumptionKwh", header: "Energy Consumption (kWh)" },
-      // { accessorKey: "amount", header: "Amount" },
-      {
-        accessorKey: "invoiceId",
-        header: () => <div className="flex items-center gap-1 cursor-pointer">Invoice ID <UpDownIcon className="w-3 h-3" /></div>,
-        cell: ({ row }) => row.original.invoiceId || "-",
-      },
-      {
-        accessorKey: "stationName",
-        header: () => <div className="flex items-center gap-1 cursor-pointer">Station Name <UpDownIcon className="w-3 h-3" /></div>,
-      },
-      {
-        accessorKey: "chargingPointName",
-        header: () => <div className="flex items-center gap-1 cursor-pointer">Charging Point Name <UpDownIcon className="w-3 h-3" /></div>,
-      },
-      {
-        accessorKey: "vehicleMake",
-        header: () => <div className="flex items-center gap-1 cursor-pointer">Vehicle make <UpDownIcon className="w-3 h-3" /></div>,
-        cell: ({ row }) => row.original.vehicleMake || "-",
-      },
-      {
-        accessorKey: "dateTime",
-        header: () => <div className="flex items-center gap-1 cursor-pointer">Date & Time <UpDownIcon className="w-3 h-3" /></div>,
-      },
-      {
-        accessorKey: "connectorId",
-        header: "Connector ID",
-        cell: ({ row }) => row.original.connectorId || "-",
-      },
-      {
-        accessorKey: "ocppTxnId",
-        header: "OCPP Txn ID",
-        cell: ({ row }) => row.original.ocppTxnId || "-",
-      },
-      {
-        accessorKey: "energyConsumptionKwh",
-        header: "Energy Consumption (kWh)",
-        cell: ({ row }) => `${row.original.energyConsumptionKwh} kWH`,
-      },
-      {
-        accessorKey: "durationHours",
-        header: "Duration (hrs)",
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-      },
-      {
-        accessorKey: "cpStop",
-        header: "CP Stop",
-        cell: ({ row }) => row.original.cpStop || "-",
-      },
-      {
-        accessorKey: "closedBy",
-        header: () => <div className="flex items-center gap-1 cursor-pointer">Closed By <UpDownIcon className="w-3 h-3" /></div>,
-        cell: ({ row }) => row.original.closedBy || "-",
-      },
-      {
-        accessorKey: "status",
-        header: () => <div className="flex items-center gap-1 cursor-pointer">Status <UpDownIcon className="w-3 h-3" /></div>,
-        cell: ({ row }) => {
-          const status = row.original.status;
-          const styles =
-            status === "Success"
-              ? "bg-green-c1 text-success"
-              : status === "Failed"
-                ? "bg-pink-c2 text-error"
-                : "bg-gray-c2 text-gray-c3";
-
-          if (!status) return <span>-</span>;
-          return (
-            <span className={`flex items-center justify-center subtitle-3-5-medium w-16 h-6 gap-2 rounded px-2 py-1 ${styles}`}>
-              {status}
-            </span>
-          );
-        },
-      },
-      {
-        accessorKey: "id",
-        header: "Action",
-        cell: () => (
-          <div className="flex items-center gap-3 text-secondary-500">
-            <Eye className="w-4 h-4 cursor-pointer" />
-            <DownloadIcon className="w-4 h-4 cursor-pointer" />
-          </div>
-        ),
-      },
-    ],
-    []
-  );
 
   const headerFields = [
     { label: "Phone number", value: d.contact },
@@ -238,9 +148,15 @@ export default function DriverDetails() {
     { label: "License expiry date", value: d.licenseExpiryDate },
   ];
 
-  const handleDelete = () => {
-    console.log("Delete driver:", driverId);
-    navigate(Pathname.USER_MANAGEMENT);
+  const handleDelete = async () => {
+    try {
+      if (!driverId) return;
+      await deleteDriver(driverId);
+      //navigate(Pathname.USER_MANAGEMENT);
+      navigate(`${Pathname.USER_MANAGEMENT}/driver`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -266,7 +182,9 @@ export default function DriverDetails() {
             <Can module={MODULE.B2B} action="update">
               <button
                 onClick={() =>
-                  navigate(`${Pathname.USER_MANAGEMENT}/drivers/${driverId}/edit`)
+                  navigate(`${Pathname.USER_MANAGEMENT}/drivers/${driverId}/edit`, {
+                    state: { driver },
+                  })
                 }
                 className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
                 aria-label="Edit driver"
@@ -359,13 +277,10 @@ export default function DriverDetails() {
           <div className="subtitle-2-semibold text-text-950">Transactions History</div>
 
 
-          <DataTable columns={chargingColumns} data={d.chargingHistory} />
+          <DataTable columns={driverTransactionsHistoryColumns} data={d.chargingHistory} />
 
         </div>
       </PageWrapper>
     </div>
   );
 }
-
-
-

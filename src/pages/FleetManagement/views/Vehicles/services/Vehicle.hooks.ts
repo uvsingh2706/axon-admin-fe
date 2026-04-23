@@ -11,12 +11,14 @@ export const vehicleKeys = {
   detail: (id: string) => [...vehicleKeys.details(), id] as const,
 };
 
-export const useVehicleList = (params: VehicleListParams) => {
+export const useVehicleList = (params: VehicleListParams, enabled = true) => {
   return useQuery({
     queryKey: vehicleKeys.list(params),
     queryFn: () => vehicleApi.getVehicleList(params),
+    enabled,
   });
 };
+
 
 export const useVehicleById = (id: string, enabled = true) => {
   return useQuery({
