@@ -6,7 +6,7 @@ export interface User {
   id: string;
   name?: string;
   email?: string;
-  role: string;
+  role?: string;
   profilePicture?: string | null;
   mobileNumber?: string;
   address?: string | null;
@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ token: null, user: null, isAuthenticated: false }),
     }),
     {
-      name: "axon-admin-auth",
+      name: "t_x7a91_meta",
       storage: createJSONStorage(() => localStorage),
       // Only persist token and user — isAuthenticated is derived on hydration
       partialize: (state) => ({

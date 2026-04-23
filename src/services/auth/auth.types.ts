@@ -8,7 +8,7 @@ export interface LoginResponse {
   message: string;
   accessToken: string;
   userId: string;
-  role: string;
+  // role: string;
 }
 
 export interface ProfileResource {
@@ -34,18 +34,18 @@ export interface ProfileRole {
 }
 
 export interface AuthProfile {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  name: string;
-  profilePicture: string | null;
-  mobileNumber: string;
-  email: string;
-  address: string | null;
-  accountDisable: boolean;
-  role: ProfileRole;
-  fleetId: string | null;
+  id?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
+  name?: string;
+  profilePicture?: string | null;
+  mobileNumber?: string;
+  email?: string;
+  address?: string | null;
+  accountDisable?: boolean;
+  role?: ProfileRole;
+  fleetId?: string | null;
 }
 
 export interface ProfileResponse {

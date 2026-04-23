@@ -25,9 +25,11 @@ export function useCan(module: ModuleKey, action: RbacAction = "view"): boolean 
   const rbacRole = useRbacStore((s) => s.role);
   const permissions = useRbacStore((s) => s.permissions);
 
+  console.log(authRole, rbacRole, permissions, 'helllo');
+
   return useMemo(() => {
     const role = (rbacRole ?? authRole) as string | null;
-    if (role === Role.SUPER_ADMIN) return true;
+    // if (role === Role.SUPER_ADMIN) return true;
     return getPermissionFromAliases(permissions, module, action);
   }, [action, authRole, module, permissions, rbacRole]);
 }
@@ -39,7 +41,7 @@ export function useCanAny(modules: ModuleKey[], action: RbacAction = "view"): bo
 
   return useMemo(() => {
     const role = (rbacRole ?? authRole) as string | null;
-    if (role === Role.SUPER_ADMIN) return true;
+    // if (role === Role.SUPER_ADMIN) return true;
     return modules.some((module) => getPermissionFromAliases(permissions, module, action));
   }, [action, authRole, modules, permissions, rbacRole]);
 }

@@ -22,7 +22,7 @@ export function hasCan(
 
   if (!permissions) return false;
 
-  if (role === Role.SUPER_ADMIN) return true;
+  // if (role === Role.SUPER_ADMIN) return true;
 
   for (const alias of normalizeKeyAliases(module)) {
     if (permissions?.[alias]?.[action] === true) return true;

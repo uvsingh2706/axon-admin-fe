@@ -20,7 +20,7 @@ export const useRbacStore = create<RbacStore>()(
       },
     }),
     {
-      name: "axon-admin-rbac",
+      name: "r0l3_x7a91_meta",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         isLoaded: state.isLoaded,

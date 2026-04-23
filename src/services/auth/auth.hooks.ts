@@ -26,26 +26,25 @@ export const useLogin = () => {
       // Set minimal auth first so profile call can use bearer token interceptor.
       setAuth(token, {
         id: response?.userId,
-        role: response?.role,
       });
 
       try {
-        const profile = await authApi.getProfile(response?.userId);
+        const profile = await authApi.getProfile();
 
         setAuth(token, {
-          id: profile.id,
-          role: profile.role?.name ?? response?.role,
+          id: profile.id!,
+          // role: profile.role?.name,
           name: profile.name,
           email: profile.email,
           profilePicture: profile.profilePicture,
-          mobileNumber: profile.mobileNumber,
-          address: profile.address,
-          accountDisable: profile.accountDisable,
-          fleetId: profile.fleetId,
+          // mobileNumber: profile.mobileNumber,
+          // address: profile.address,
+          // accountDisable: profile.accountDisable,
+          // fleetId: profile.fleetId,
         });
 
         setPermissionsFromBackend({
-          role: profile.role?.name ?? response?.role,
+          role: (profile.role?.name as any) ?? null,
           backendPermissions: profile.role?.permissions ?? [],
         });
       } catch (error) {
