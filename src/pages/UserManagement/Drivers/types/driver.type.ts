@@ -11,5 +11,6 @@ export interface DriverData {
   assignedVehicle: string;
   driverPhone: string;
   email: string;
+  updatedBy: string;
 }
 

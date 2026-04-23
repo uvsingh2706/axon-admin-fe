@@ -27,6 +27,7 @@ export const mockDriverList: DriverData[] = [
     assignedVehicle: firstVehicleByFleetId.get("1") ?? "—",
     driverPhone: "8721937813",
     email: "aarav.sharma@example.com",
+    updatedBy: "Admin",
   },
   {
     id: "d_2",
@@ -38,6 +39,8 @@ export const mockDriverList: DriverData[] = [
     assignedVehicle: firstVehicleByFleetId.get("2") ?? "—",
     driverPhone: "8721937813",
     email: "ananya.patel@example.com",
+    updatedBy: "Admin",
+
   },
   {
     id: "d_3",
@@ -51,6 +54,7 @@ export const mockDriverList: DriverData[] = [
     assignedVehicle: firstVehicleByFleetId.get("1") ?? "—",
     driverPhone: "8721937813",
     email: "rohan.v@example.com",
+    updatedBy: "Admin",
   },
 ];
 
