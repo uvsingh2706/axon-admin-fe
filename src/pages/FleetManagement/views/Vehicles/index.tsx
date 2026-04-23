@@ -54,8 +54,8 @@ export default function Vehicles({ fleetId, embedded = false }: VehiclesProps) {
   const { data: fleetDetail, isLoading: isFleetLoading } = useFleetById(id ?? "");
   const fleet = fleetDetail?.data;
 
-  const canViewVehicles = useCan(MODULE.FLEET_MANAGEMENT, "view");
-  const canCreateVehicles = useCan(MODULE.FLEET_MANAGEMENT, "create");
+  const canViewVehicles = useCan(MODULE.VEHICLE_MANAGEMENT, "view");
+  const canCreateVehicles = useCan(MODULE.VEHICLE_MANAGEMENT, "create");
 
   if (isFleetLoading) {
     return <div className="p-8 text-center text-text-500">Loading...</div>;

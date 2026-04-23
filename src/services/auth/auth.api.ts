@@ -8,10 +8,8 @@ export const authApi = {
     return data;
   },
 
-  getProfile: async (userId?: string): Promise<AuthProfile> => {
-    const { data } = await apiClient.get<ProfileResponse>(ApiEndpoints.PROFILE, {
-      params: userId ? { id: userId } : undefined,
-    });
+  getProfile: async (): Promise<AuthProfile> => {
+    const { data } = await apiClient.get<ProfileResponse>(ApiEndpoints.PROFILE);
     return data.data;
   },
 
