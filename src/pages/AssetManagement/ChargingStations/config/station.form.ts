@@ -1,5 +1,6 @@
   import * as z from "zod";
   import type { SectionConfig } from "@/component/form/DynamicForm";
+  import { STATE_OPTIONS } from "../../constant";
 
   export const createStationSchema = z.object({
     stationName: z.string().min(1, "Name is required"),
@@ -48,14 +49,14 @@
         {
           name: "city",
           label: "City",
-          type: "select",
+          type: "text",
           placeholder: "Enter City",
           required: true,
-          options: [
-            { label: "New Delhi", value: "new-delhi" },
-            { label: "Mumbai", value: "mumbai" },
-            { label: "Bangalore", value: "bangalore" },
-          ],
+          // options: [
+          //   { label: "New Delhi", value: "new-delhi" },
+          //   { label: "Mumbai", value: "mumbai" },
+          //   { label: "Bangalore", value: "bangalore" },
+          // ],
         },
         {
           name: "state",
@@ -63,11 +64,7 @@
           type: "select",
           placeholder: "Enter State",
           required: true,
-          options: [
-            { label: "Delhi", value: "delhi" },
-            { label: "Maharashtra", value: "maharashtra" },
-            { label: "Karnataka", value: "karnataka" },
-          ],
+          options: STATE_OPTIONS
         },
         { name: "addressLine2", label: "Address Line 2", type: "text", placeholder: "Enter Address Line 2" },
       ],

@@ -28,4 +28,5 @@ export const stationApi = {
     deleteStation: async ({ id }: { id: string }): Promise<void> => {
         await apiClient.delete(`${ApiEndpoints.CHARGING_STATIONS_LIST}/${id}`);
     },
+    
 };

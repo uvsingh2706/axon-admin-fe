@@ -10,7 +10,7 @@ import {
   driverCreateFormSections,
   type CreateDriverFormValues,
 } from "../config/driver.form";
-import { useVehicleList } from "../../Vehicles/services/Vehicle.hooks";
+import { useVehicleList, useVehiclerByFleetId } from "../../Vehicles/services/Vehicle.hooks";
 import type { VehicleDTO } from "../../Vehicles/services/Vehicle.types";
 
 export default function CreateDrivers() {
@@ -25,7 +25,7 @@ export default function CreateDrivers() {
   const { mutate: createDriver, isPending: isAdding } = useCreateDriver(id ?? "");
 
   // Fetch vehicles for the dropdown
-  const { data: vehicleData } = useVehicleList({ limit: 50 });
+  const { data: vehicleData } = useVehiclerByFleetId(id ?? "");
   const vehicles = vehicleData?.data?.vehicles || [];
 
   // Map vehicles to options for the dropdown (Vehicle Name only, deduplicated)

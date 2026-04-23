@@ -20,5 +20,9 @@ export const modelApi = {
         const response = await apiClient.get(`${ApiEndpoints.MODEL}/${id}`);
         return response.data;
     },
+    getModelByOemId: async (oemId: string): Promise<ModelListResponse> => {
+        const response = await apiClient.get(`${ApiEndpoints.MODEL}/${oemId}`);
+        return response.data;
+    },
 
 }

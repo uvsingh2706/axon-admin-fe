@@ -34,14 +34,14 @@ export interface ProfileRole {
 }
 
 export interface AuthProfile {
-  id?: string;
+  id: string;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;
-  name?: string;
+  name: string;
   profilePicture?: string | null;
   mobileNumber?: string;
-  email?: string;
+  email: string;
   address?: string | null;
   accountDisable?: boolean;
   role?: ProfileRole;
