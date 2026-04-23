@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { DataTable, type ExtendedColumnDef } from "@/component/data-table";
-import { useChargingPointList } from "../../ChargingPoints/services/chargingpoints.hooks";
+import { useChargingPointlistbyID } from "../services/stations.hooks";
 import type { ChargingPointData } from "../../ChargingPoints/services/chargingpoints.type";
 import { format } from "date-fns";
+import connectorsImg from "@/assets/images/connectors.png"
 
 interface ChargePointTableProps {
   stationId: string;
@@ -15,18 +16,17 @@ const columns: ExtendedColumnDef<ChargingPointData, unknown>[] = [
     enableSorting: true,
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 overflow-hidden rounded-xl bg-slate-100 flex items-center justify-center">
+        <div className="w-10 h-10 overflow-hidden rounded-xl flex items-center justify-center">
           <img
-            src="https://cdn.globalso.com/beihaipower/GBT-Connector-1-2.jpg"
+            src={connectorsImg}
             alt={row.original.chargingPointName}
             className="w-full h-full object-cover"
           />
         </div>
         <div className="flex flex-col">
-          <span className="font-semibold text-sm text-foreground font-sans underline cursor-pointer">
+          <span className="font-semibold text-sm text-foreground cursor-pointer">
             {row.original.chargingPointName}
           </span>
-          <span className="text-xs text-muted-foreground">{row.original.id}</span>
         </div>
       </div>
     ),
@@ -35,13 +35,13 @@ const columns: ExtendedColumnDef<ChargingPointData, unknown>[] = [
     accessorKey: "oemId",
     header: "OEM",
     enableSorting: true,
-    cell: ({ row }) => <span className="text-sm font-medium">{row.original.oemId || "NA"}</span>,
+    cell: ({ row }) => <span className="text-sm font-medium">{row.original.oem?.oemName || "NA"}</span>,
   },
   {
     accessorKey: "chargerModelId",
     header: "Model",
     enableSorting: true,
-    cell: ({ row }) => <span className="text-sm font-medium">{row.original.chargerModelId || "NA"}</span>,
+    cell: ({ row }) => <span className="text-sm font-medium">{row.original.chargerModel?.chargerModelName || "NA"}</span>,
   },
   {
     accessorKey: "status",
@@ -90,15 +90,12 @@ const columns: ExtendedColumnDef<ChargingPointData, unknown>[] = [
 export default function ChargePointTable({ stationId }: ChargePointTableProps) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
-  const [search] = useState(""); 
-  const { data: listResponse, isLoading } = useChargingPointList({
-    page,
-    limit,
-    chargingStationId: stationId,
-  });
+  const [search] = useState("");
 
-  const points = listResponse?.data?.data || [];
-  const totalItems = listResponse?.data?.total || 0;
+  const { data: listResponse, isLoading } = useChargingPointlistbyID(stationId);
+
+  const points = listResponse?.data?.chargingPoints || [];
+  const totalItems = listResponse?.data?.totalChargingPoints || points.length;
 
   return (
     <DataTable

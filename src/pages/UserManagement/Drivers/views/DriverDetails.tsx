@@ -122,7 +122,8 @@ export default function DriverDetails() {
     personalEmailId: driver.email || "NA",
     gender: driver.gender || "NA",
     driverId: driver.id || "NA",
-    organisationName: "NA",
+    organisationName: driver.fleetName || "NA",
+    fleetContact: driver.fleet?.contact_number || "NA",
     licenseNumber: driver.drivingLicense || "NA",
     licenseExpiryDate: driver.drivingLicenseExpiry || "NA",
     vehicleInfo: {

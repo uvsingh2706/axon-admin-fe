@@ -22,6 +22,8 @@ export default function DriverEdit() {
   const { data: driverRes, isLoading } = useDriverById(id ?? "", !stateDriver);
   const driver = stateDriver ?? driverRes?.data?.data;
 
+  console.log(driver)
+
   const [selectedFleetId, setSelectedFleetId] = useState("");
 
   const { data: fleetList } = useFleetList({ page: 1, limit: 100 });
@@ -61,16 +63,16 @@ export default function DriverEdit() {
       image: driver.profilePicture ?? undefined,
       personalEmailId: driver.email ?? "",
       phoneNumber: driver.mobileNumber ?? "",
-      gender: driver.gender ?? "",
+      gender: driver.gender.charAt(0).toUpperCase() + driver.gender.slice(1).toLowerCase() ?? "",
       driverId: driver.id ?? "",
       licenseNumber: driver.drivingLicense ?? "",
       licenseExpiryDate: driver.drivingLicenseExpiry ?? "",
-      organisationFleet: driver.fleet?.id ?? "",
+      organisationFleet: driver.fleetId ?? "",
       vehicleId: driver.vehicle?.id ?? "",
     });
 
-    if (driver.fleet?.id) {
-      setSelectedFleetId(driver.fleet.id);
+    if (driver.fleetId) {
+      setSelectedFleetId(driver.fleetId);
     }
   }, [driver]);
 
@@ -86,7 +88,8 @@ export default function DriverEdit() {
       gender: data.gender,
       drivingLicense: data.licenseNumber,
       drivingLicenseExpiry: data.licenseExpiryDate,
-      vehicleId: data.vehicleId ?? "",
+      fleetId: data.organisationFleet,
+      vehicleId: data.vehicleId,
     };
 
     try {
@@ -110,6 +113,7 @@ export default function DriverEdit() {
       <Breadcrumb
         items={[
           { label: "User Management", path: Pathname.USER_MANAGEMENT },
+          { label: "Drivers", path: `${Pathname.USER_MANAGEMENT}/drivers` },
           { label: "Driver Details", path: `${Pathname.USER_MANAGEMENT}/drivers/${id}` },
           { label: "Edit Driver" },
         ]}

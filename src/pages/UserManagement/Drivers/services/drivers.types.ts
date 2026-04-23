@@ -15,7 +15,7 @@ export interface DriverFleetDTO {
   deletedBy: string | null;
   name: string;
   logo: string | null;
-  contact_number: string;
+  contact_number: string | null;
   email: string;
   vehicle_type: string;
 }
@@ -70,6 +70,9 @@ export interface DriverListItemDTO {
   drivingLicense: string;
   drivingLicenseExpiry: string;
   driverStatus: string;
+  updatedBy: {
+    name: string;
+  }
 }
 
 export interface DriverListResponse {
@@ -104,7 +107,9 @@ export interface DriverDetailDTO {
   drivingLicense: string;
   drivingLicenseExpiry: string;
   status: string;
+  fleetName: string | null;
   vehicle: DriverVehicleDTO | null;
+  fleet: DriverFleetDTO | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -116,7 +121,7 @@ export interface CreateDriverRequest {
   gender: string;
   drivingLicense: string;
   drivingLicenseExpiry: string;
-  vehicleId: string;
+  vehicleId?: string;
 }
 
 export interface DriverEditRequest {
