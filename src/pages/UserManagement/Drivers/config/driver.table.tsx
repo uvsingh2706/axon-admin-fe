@@ -2,7 +2,7 @@ import type { ExtendedColumnDef } from "@/component/data-table";
 import type { DriverListItemDTO } from "../services/drivers.types";
 import type { ChargingHistoryRow } from "@/pages/FleetManagement/views/Drivers/types/driver.type";
 import { Avatar, AvatarFallback, AvatarImage } from "@/component/ui/avatar";
-// import { ImagePlaceholderIcon } from "@/assets/icons";
+import { ImagePlaceholderIcon } from "@/assets/icons";
 import { DownloadIcon } from "@/assets/icons";
 
 function initials(name: string | null) {
@@ -41,15 +41,15 @@ export const driverTableColumns: ExtendedColumnDef<DriverListItemDTO, unknown>[]
       const fleetName = d.fleet.name || "Unknown";
       return (
         <div className="flex items-center gap-3 min-w-[220px]">
-          <Avatar size="sm" className="w-6 h-6 rounded bg-secondary-00 border">
-            {d.fleet.logo ? <AvatarImage src={d.fleet.logo} alt={fleetName} className="object-contain bg-white" /> : null}
-            <AvatarFallback className="text-[10px] rounded">{initials(fleetName)}</AvatarFallback>
-          </Avatar>
-
-          {/* <ImagePlaceholderIcon className="w-6 h-6 rounded size-md">
-            {d.fleet.logo ? <AvatarImage src={d.fleet.logo} alt={fleetName} className="object-contain bg-white" /> : null}
-            <AvatarFallback className="text-[10px] rounded">{initials(fleetName)}</AvatarFallback>
-          </ImagePlaceholderIcon> */}
+          {d.fleet.logo ? (
+            <img
+              src={d.fleet.logo}
+              alt={fleetName}
+              className="w-8 h-8 rounded object-contain bg-white"
+            />
+          ) : (
+            <ImagePlaceholderIcon className="w-8 h-8 rounded" />
+          )}
 
           <span className="text-text-950">{fleetName}</span>
         </div>
@@ -64,7 +64,7 @@ export const driverTableColumns: ExtendedColumnDef<DriverListItemDTO, unknown>[]
   {
     accessorKey: "assignedVehicle",
     header: "Assigned Vehicle",
-    cell: ({ row }) => <span>{row.original.vehicle?.model || "NA"}</span>
+    cell: ({ row }) => <span>{row.original.vehicle?.make || "NA"}</span>
   },
   {
     accessorKey: "driverPhone",
@@ -80,7 +80,7 @@ export const driverTableColumns: ExtendedColumnDef<DriverListItemDTO, unknown>[]
     accessorKey: "updatedBy",
     header: "Updated By",
     enableSorting: true,
-    cell: ({ }) => <span>{"NA"}</span>
+    cell: ({ row }) => <span>{row.original.updatedBy?.name || "NA"}</span>
   },
 ];
 
@@ -137,12 +137,12 @@ export const driverTransactionsHistoryColumns: ExtendedColumnDef<ChargingHistory
   },
   {
     accessorKey: "closedBy",
-    header:"Closed By",
+    header: "Closed By",
     enableSorting: true,
   },
   {
     accessorKey: "status",
-    header:"Status",
+    header: "Status",
     enableSorting: true,
     cell: ({ row }) => {
       const status = row.original.status;

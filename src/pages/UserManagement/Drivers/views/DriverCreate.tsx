@@ -43,7 +43,7 @@ export default function DriverCreate() {
       gender: data.gender,
       drivingLicense: data.licenseNumber,
       drivingLicenseExpiry: data.licenseExpiryDate,
-      vehicleId: data.vehicleId ?? "",
+      vehicleId: data.vehicleId
 
     };
     await createDriver({ fleetId: data.organisationFleet, data: payload });

@@ -60,3 +60,11 @@ export const useDeleteStation = () => {
         },
     });
 };
+
+export const useChargingPointlistbyID = (id: string) => {
+    return useQuery({
+        queryKey: [...stationKeys.all, "charging-points", id],
+        queryFn: () => stationApi.getchargingPointbyStationID(id),
+        enabled: !!id,
+    });
+};
