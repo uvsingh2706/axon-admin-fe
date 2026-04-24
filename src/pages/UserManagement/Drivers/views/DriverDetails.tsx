@@ -154,7 +154,7 @@ export default function DriverDetails() {
       if (!driverId) return;
       await deleteDriver(driverId);
       //navigate(Pathname.USER_MANAGEMENT);
-      navigate(`${Pathname.USER_MANAGEMENT}/driver`);
+      navigate(`${Pathname.USER_MANAGEMENT}`);
     } catch (error) {
       console.error(error);
     }

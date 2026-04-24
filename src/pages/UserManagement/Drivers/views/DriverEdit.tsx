@@ -63,7 +63,7 @@ export default function DriverEdit() {
       image: driver.profilePicture ?? undefined,
       personalEmailId: driver.email ?? "",
       phoneNumber: driver.mobileNumber ?? "",
-      gender: driver.gender.charAt(0).toUpperCase() + driver.gender.slice(1).toLowerCase(),
+      gender: driver.gender.charAt(0).toUpperCase() + driver.gender.slice(1).toLowerCase() ?? "",
       driverId: driver.id ?? "",
       licenseNumber: driver.drivingLicense ?? "",
       licenseExpiryDate: driver.drivingLicenseExpiry ?? "",
