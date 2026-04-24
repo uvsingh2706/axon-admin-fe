@@ -1,7 +1,14 @@
 import AppRoutes from './router/AppRoutes'
+import { LocalStorageGuard }  from './rbac'
+import { Toaster } from './component/ui/sonner'
 
 function App() {
-  return <AppRoutes />
+  return (
+    <LocalStorageGuard>
+      <AppRoutes />
+      <Toaster />
+    </LocalStorageGuard>
+  )
 }
 
-export default App
+export default App;
