@@ -36,3 +36,31 @@ export interface FleetDetailResponse {
   message: string;
   data: FleetDTO;
 }
+
+export interface CreateFleetRequest {
+  name: string;
+  email?: string;
+  contact_number?: string;
+  logo?: string;
+  vehicle_type?: string;
+  flatRate?: string;
+}
+
+export interface DeleteFleetResponse {
+  status: number;
+  message: string;
+}
+
+export interface UpdateFleetRequest extends Partial<CreateFleetRequest> {}
+
+export interface CreateFleetResponse {
+  status: number;
+  message: string;
+  data: FleetDTO;
+}
+
+export interface UpdateFleetResponse {
+  status: number;
+  message: string;
+  data: FleetDTO;
+}

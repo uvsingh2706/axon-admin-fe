@@ -37,10 +37,10 @@ export const driverTableColumns: ExtendedColumnDef<DriverDTO, unknown>[] = [
   },
   { accessorKey: "id", header: "Driver ID", enableSorting: false },
   {
-    accessorKey: "vehicle.registrationNumber",
+    accessorKey: "vehicle.make",
     header: "Assigned Vehicle",
     enableSorting: false,
-    cell: ({ row }) => row.original.vehicle?.registrationNumber || "-",
+    cell: ({ row }) => row.original.vehicle?.make || "-",
   },
   {
     accessorKey: "customer.email",

@@ -36,7 +36,7 @@ export const fleetFormSections: SectionConfig<CreateFleetFormValues>[] = [
         options: [
           { label: "E2W", value: "E2W" },
           { label: "E4W", value: "E4W" },
-          { label: "Bus", value: "Bus" },
+          { label: "BUS", value: "BUS" },
         ],
       },
       { name: "contact", label: "Contact Number", type: "text", placeholder: "E.g. 8713133245", required: true },

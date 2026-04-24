@@ -9,7 +9,7 @@ import { useMemo, useState } from "react";
 import { DataTable } from "@/component/data-table";
 import type { ExtendedColumnDef } from "@/component/data-table";
 import { useFleetById } from "../../../services/Fleet.hooks";
-import { useDriverById } from "../services/driver.hooks";
+import { useDriverById, useDeleteDriver } from "../services/driver.hooks";
 import type { ChargingHistoryRow } from "../types/driver.type";
 import CarIcon from "@/assets/icons/CarIcon";
 import CopyIcon from "@/assets/icons/CopyIcon";
@@ -109,6 +109,9 @@ export default function DriverDetails() {
     const { data: fleetDetail, isLoading: isFleetLoading } = useFleetById(id ?? "");
     const { data: driverDetail, isLoading: isDriverLoading } = useDriverById(driverId ?? "");
 
+
+    const { mutate: deleteDriver, isPending } = useDeleteDriver();
+
     const fleet = fleetDetail?.data;
     const driver = (driverDetail?.data as any)?.data;
 
@@ -119,6 +122,10 @@ export default function DriverDetails() {
     if (!fleet || !driver) {
         return <div className="p-8 text-center text-text-500 subtitle-2-medium">Driver not found.</div>;
     }
+
+    const handleEdit = () => {
+        navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}/edit`, { state: { driverData: driver } });
+    };
 
     const d = {
         name: driver.name || "N/A",
@@ -165,7 +172,13 @@ export default function DriverDetails() {
     ];
 
     const handleDelete = () => {
-        console.log("Delete driver:", driverId);
+        if (!driverId) return;
+        deleteDriver(driverId, {
+            onSuccess: () => {
+                setIsModalOpen(false);
+                navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers`);
+            }
+        });
     };
 
     return (
@@ -189,9 +202,7 @@ export default function DriverDetails() {
                     <div className="flex items-center gap-3">
                         {canEditDriver && (
                             <button
-                                onClick={() =>
-                                    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}/edit`)
-                                }
+                                onClick={() => handleEdit()}
                                 className="p-2 rounded-lg hover:bg-secondary-50 transition-colors cursor-pointer"
                                 aria-label="Edit driver"
                             >

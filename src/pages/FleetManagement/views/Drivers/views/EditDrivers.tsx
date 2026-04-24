@@ -1,30 +1,89 @@
-import { useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Breadcrumb from "@/component/Breadcrumb";
 import { DynamicForm } from "@/component/form/DynamicForm";
 import PageWrapper from "@/component/PageWrapper";
 import { Pathname } from "@/utils/pathname";
-import { getFleetById } from "../../../mocks/fleet.mock";
+import { useFleetById } from "../../../services/Fleet.hooks";
+import { useDriverById, useEditDriver } from "../services/driver.hooks";
 import {
   editDriverSchema,
-  driverCreateFormSections,
+  getDriverFormSections,
   type EditDriverFormValues,
 } from "../config/driver.form";
-import { getDriverById, getDriverEditDefaultValues } from "../mocks/driver.mock";
+import { useVehicleList } from "../../Vehicles/services/Vehicle.hooks";
+import type { VehicleDTO } from "../../Vehicles/services/Vehicle.types";
 
 export default function EditDrivers() {
   const { id, driverId } = useParams<{ id: string; driverId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const fleet = getFleetById(id);
-  const driver = id && driverId ? getDriverById(id, driverId) : undefined;
-  const defaults = id && driverId ? getDriverEditDefaultValues(id, driverId) : null;
+  
+  const stateDriver = location.state?.driverData ?? null;
 
-  // Keep ALL sections including image-upload — identical to CreateDrivers
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const formSections = useMemo(() => driverCreateFormSections, []);
+ 
+  const { data: driverApiData, isLoading: isLoadingDriver } = useDriverById(
+    driverId || "",
+    !stateDriver 
+  );
 
-  if (!fleet || !driver || !id || !driverId || !defaults) {
+  const driver = stateDriver ?? (driverApiData?.data as any)?.data ?? null;
+
+  const { data: fleetData, isLoading: isLoadingFleet } = useFleetById(id || "");
+  const { mutate: editDriver, isPending } = useEditDriver();
+
+  const fleet = fleetData?.data;
+
+  
+  const { data: vehicleData } = useVehicleList({ fleetId: id, limit: 100 });
+  const vehicles = vehicleData?.data?.vehicles || [];
+
+  
+  const vehicleOptions = useMemo(() => {
+    return vehicles.map((v: VehicleDTO) => ({
+      label: `${v.make} ${v.model} (${v.registrationNumber})`,
+      value: v.id,
+    }));
+  }, [vehicles]);
+
+  
+  const updatedSections = useMemo(() => {
+    return getDriverFormSections(vehicleOptions);
+  }, [vehicleOptions]);
+
+  console.log(driverApiData)
+  console.log(fleet)
+
+  const [form, setForm] = useState<EditDriverFormValues | null>(null);
+
+  useEffect(() => {
+    if (driver) {
+
+      setForm({
+        driverName: driver.name || "",
+        email: driver.email || "",
+        mobileNumber: driver.mobileNumber || "",
+        gender: driver.gender ? driver.gender.toLowerCase() : "",
+        driverId: driver.id || "",
+        drivingLicense: driver.drivingLicense || "",
+        drivingLicenseExpiry: driver.drivingLicenseExpiry || "",
+        organisationFleet: driver.fleet?.name || fleet?.name || "",
+        vehicleId: driver.vehicle?.id || "",
+        image: undefined,
+      });
+    }
+  }, [driver, fleet]);
+
+  if (isLoadingFleet || isLoadingDriver) {
+    return (
+      <div className="p-8 text-center text-text-500 subtitle-2-medium">
+        Loading driver details...
+      </div>
+    );
+  }
+
+  if (!fleet || !driver || !id || !driverId || !form) {
     return (
       <div className="p-8 text-center text-text-500 subtitle-2-medium">
         Driver not found.
@@ -33,8 +92,14 @@ export default function EditDrivers() {
   }
 
   const handleSubmit = (data: EditDriverFormValues) => {
-    console.log("Edit driver submitted:", data);
-    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}`);
+    editDriver(
+      { driverId, data },
+      {
+        onSuccess: () => {
+          navigate(`${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}`);
+        },
+      }
+    );
   };
 
   const handleCancel = () => {
@@ -46,10 +111,10 @@ export default function EditDrivers() {
       <Breadcrumb
         items={[
           { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-          { label: fleet.organisationName, path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+          { label: fleet.name || "Fleet", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           { label: "Drivers", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           {
-            label: driver.name,
+            label: driver.name || "Driver",
             path: `${Pathname.FLEET_MANAGEMENT}/${id}/drivers/${driverId}`,
           },
           { label: "Edit Driver" },
@@ -66,11 +131,11 @@ export default function EditDrivers() {
         <div className="mt-2">
           <DynamicForm<EditDriverFormValues>
             schema={editDriverSchema}
-            defaultValues={defaults as EditDriverFormValues}
-            sections={formSections}
+            defaultValues={form}
+            sections={updatedSections}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
-            submitLabel="Save Changes"
+            submitLabel={isPending ? "Saving..." : "Save Changes"}
             cancelLabel="Cancel"
           />
         </div>
@@ -78,3 +143,4 @@ export default function EditDrivers() {
     </div>
   );
 }
+

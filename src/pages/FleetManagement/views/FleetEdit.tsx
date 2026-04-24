@@ -10,23 +10,23 @@ import {
   fleetFormSections,
   type EditFleetFormValues,
 } from "../config/fleet.form";
-import { useFleetById } from "../services/Fleet.hooks";
+import { useFleetById, useUpdateFleet } from "../services/Fleet.hooks";
 import type {
-  FleetEditSubmitPayload,
   FleetFormLogoValue,
 } from "../types/fleet.type";
 
 export default function FleetEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
-  // Use live API hook for fetching (prevents blank page/crash)
+
   const { data: fleetDetail, isLoading } = useFleetById(id ?? "");
   const fleet = fleetDetail?.data;
-  
+
   const [logo, setLogo] = useState<FleetFormLogoValue>(null);
 
-  // Pre-fill form values when fleet data arrives
+  // Mutation hook for updating fleet
+  const { mutate: updateFleet, isPending: isUpdating } = useUpdateFleet();
+
   const formValues = useMemo(() => {
     if (!fleet) return null;
     return {
@@ -52,15 +52,23 @@ export default function FleetEdit() {
     []
   );
 
-  const handleSubmit = (data: EditFleetFormValues) => {
-    // Note: Update endpoint not yet available in backend
-    const payload = { ...data, logo: logo instanceof File ? logo.name : logo };
-    console.log("Form update (Mock - Endpoint not ready):", payload);
+  const handleCancel = () => {
     navigate(`${Pathname.FLEET_MANAGEMENT}/${id}`);
   };
 
-  const handleCancel = () => {
-    navigate(`${Pathname.FLEET_MANAGEMENT}/${id}`);
+  const handleSubmit = (data: EditFleetFormValues) => {
+    if (!id) return;
+
+    const payload = {
+      name: data.name,
+      email: data.email,
+      contact_number: data.contact,
+      vehicle_type: data.vehicleType,
+
+      logo: logo instanceof File ? logo.name : (typeof logo === "string" ? logo : ""),
+    };
+
+    updateFleet({ id, data: payload });
   };
 
   if (isLoading) {
@@ -137,7 +145,7 @@ export default function FleetEdit() {
             sections={formSectionsWithoutLogo}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
-            submitLabel="Save Changes"
+            submitLabel={isUpdating ? "Saving..." : "Save Changes"}
             cancelLabel="Cancel"
           />
 

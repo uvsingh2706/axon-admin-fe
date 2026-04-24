@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import type { FleetDTO } from "../../services/Fleet.types";
 import type { FleetStatCard } from "../../types/fleet.type";
 import { Can, MODULE } from "@/rbac";
+import { toast } from "sonner";
 
 type FleetOverviewProps = {
   fleet: FleetDTO;
@@ -140,7 +141,10 @@ function DetailField({ label, value, isCopyable }: DetailFieldProps) {
           <button
             className="text-text-400 hover:text-secondary-600 transition-colors cursor-pointer"
             title="Copy"
-            onClick={() => navigator.clipboard.writeText(value)}
+            onClick={() => {
+              navigator.clipboard.writeText(value);
+              toast.success(`${label} copied to clipboard`);
+            }}
           >
             <CopyIcon className="w-3.5 h-3.5" />
           </button>

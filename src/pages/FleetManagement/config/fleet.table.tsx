@@ -3,6 +3,7 @@ import type { ExtendedColumnDef } from "@/component/data-table";
 import type { FleetDTO } from "../services/Fleet.types";
 import CopyIcon from "@/assets/icons/CopyIcon";
 import ImagePlaceholderIcon from "@/assets/icons/ImagePlaceholderIcon";
+import EditIcon from "@/assets/icons/EditIcon";
 import { toast } from "sonner";
 
 const handleCopy = (text: string) => {
@@ -79,5 +80,17 @@ export const fleetColumns: ExtendedColumnDef<FleetDTO, unknown>[] = [
     accessorKey: "totalVehicles",
     header: "Total Vehicles",
     cell: ({ row }) => <span>{row?.original.totalVehicles || "NA"}</span>,
+  },
+  {
+    accessorKey: "actions",
+    header: "Actions",
+    cell: () => {
+     
+      return (
+        <div className="flex items-center gap-2">
+           <EditIcon className="w-5 h-5 text-text-400" />
+        </div>
+      );
+    },
   },
 ];

@@ -108,7 +108,7 @@ export default function Drivers({ fleetId, embedded = false }: DriversProps) {
         <Breadcrumb
           items={[
             { label: "Fleet Management", path: Pathname.FLEET_MANAGEMENT },
-            { label: fleet?.organisationName || "Fleet", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
+            { label: fleet?.name || "Fleet", path: `${Pathname.FLEET_MANAGEMENT}/${id}` },
           ]}
         />
       )}

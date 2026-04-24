@@ -7,6 +7,7 @@ import type { ExtendedColumnDef } from "@/component/data-table";
 import { useFleetList } from "../services/Fleet.hooks";
 import { useMemo, useState } from "react";
 import type { FleetDTO } from "../services/Fleet.types";
+import EditIcon from "@/assets/icons/EditIcon";
 
 export default function FleetManagementList({ search }: FleetManagementListProps) {
   const navigate = useNavigate();
@@ -33,6 +34,26 @@ export default function FleetManagementList({ search }: FleetManagementListProps
             ),
         };
       }
+
+      if ("accessorKey" in column && column.accessorKey === "actions") {
+        return {
+          ...column,
+          cell: ({ row }) => (
+            <div className="flex items-center gap-2">
+              <button
+                className="p-1.5 rounded-md hover:bg-secondary-50 transition-colors cursor-pointer group"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`${Pathname.FLEET_MANAGEMENT}/${row.original.id}/edit`);
+                }}
+              >
+                <EditIcon className="w-5 h-5 text-text-400 group-hover:text-text-700" />
+              </button>
+            </div>
+          ),
+        };
+      }
+
       return column;
     });
   }, [navigate]);
