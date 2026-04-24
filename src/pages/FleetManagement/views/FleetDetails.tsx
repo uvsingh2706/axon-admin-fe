@@ -8,7 +8,7 @@ import Bolt from "@/assets/icons/Bolt";
 import CarIcon from "@/assets/icons/CarIcon";
 import User from "@/assets/icons/User";
 import { Tabs, TabsList, TabsTrigger } from "@/component/ui/tabs";
-import { useFleetById } from "../services/Fleet.hooks";
+import { useFleetById, useDeleteFleet } from "../services/Fleet.hooks";
 import { mockFleetStatsById } from "../mocks/fleet.mock";
 import { FLEET_MANAGEMENT_TABS } from "../constant";
 import FleetOverview from "./Overview";
@@ -25,6 +25,7 @@ export default function FleetDetails() {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("overview");
   const { data: fleetDetail, isLoading, isError, error } = useFleetById(id ?? "");
+  const { mutate: deleteFleet } = useDeleteFleet();
   const fleet = fleetDetail?.data || ((fleetDetail as any)?.id ? (fleetDetail as unknown as FleetDTO) : null);
 
   const canViewFleet = useCan(MODULE.FLEET_MANAGEMENT, "view");
@@ -151,8 +152,13 @@ export default function FleetDetails() {
               statCardsData={statCardsData}
               onEdit={canUpdateFleet ? () => navigate(`${Pathname.FLEET_MANAGEMENT}/${fleet.id}/edit`) : undefined}
               onDelete={canDeleteFleet ? () => {
-                console.log("Delete fleet:", id);
-                navigate(Pathname.FLEET_MANAGEMENT);
+                if (id) {
+                  deleteFleet(id, {
+                    onSuccess: () => {
+                      navigate(Pathname.FLEET_MANAGEMENT);
+                    }
+                  });
+                }
               } : undefined}
             />
 

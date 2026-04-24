@@ -4,12 +4,12 @@ import type { SectionConfig } from "@/component/form/DynamicForm";
 export const createDriverSchema = z.object({
   driverName: z.string().min(1, "Driver Name is required"),
   image: z.any().optional(),
-  personalEmailId: z.string().email("Invalid email"),
-  phoneNumber: z.string().min(8, "Phone number is required"),
+  email: z.string().email("Invalid email"),
+  mobileNumber: z.string().min(8, "Phone number is required"),
   gender: z.string().min(1, "Gender is required"),
-  // driverId: z.string().trim().or(z.literal("")).optional(),
-  licenseNumber: z.string().min(1, "License number is required"),
-  licenseExpiryDate: z.string().min(1, "License expiry date is required"),
+  driverId: z.string().trim().or(z.literal("")).optional(),
+  drivingLicense: z.string().min(1, "License number is required"),
+  drivingLicenseExpiry: z.string().min(1, "License expiry date is required"),
   organisationFleet: z.string().optional(),
   vehicleId: z.string().min(1, "Vehicle is required"),
 });
@@ -39,14 +39,14 @@ export const driverCreateFormSections: SectionConfig<CreateDriverFormValues>[] =
         type: "image-upload",
       },
       {
-        name: "personalEmailId",
+        name: "email",
         label: "Personal Email ID",
         type: "email",
         placeholder: "E.g. rahul@company.com",
         required: true,
       },
       {
-        name: "phoneNumber",
+        name: "mobileNumber",
         label: "Phone number",
         type: "text",
         placeholder: "E.g. 98765 43210",
@@ -59,9 +59,9 @@ export const driverCreateFormSections: SectionConfig<CreateDriverFormValues>[] =
         placeholder: "Select gender",
         required: true,
         options: [
-          { label: "Male", value: "Male" },
-          { label: "Female", value: "Female" },
-          { label: "Other", value: "Other" },
+          { label: "Male", value: "male" },
+          { label: "Female", value: "female" },
+          { label: "Other", value: "other" },
         ],
       }
       // {
@@ -78,14 +78,14 @@ export const driverCreateFormSections: SectionConfig<CreateDriverFormValues>[] =
     gridCols: 2,
     fields: [
       {
-        name: "licenseNumber",
+        name: "drivingLicense",
         label: "License number",
         type: "text",
         placeholder: "E.g. KA-01-20190012345",
         required: true,
       },
       {
-        name: "licenseExpiryDate",
+        name: "drivingLicenseExpiry",
         label: "License expiry date",
         type: "date",
         placeholder: "dd/mm/yy",
@@ -124,3 +124,19 @@ export const driverCreateFormSections: SectionConfig<CreateDriverFormValues>[] =
     ],
   },
 ];
+
+export const getDriverFormSections = (vehicleOptions: { label: string; value: string }[]) => {
+  return driverCreateFormSections.map((section) => {
+    if (section.title === "Assign Vehicle") {
+      return {
+        ...section,
+        fields: section.fields.map((field) =>
+          field.name === "vehicleId"
+            ? { ...field, options: vehicleOptions }
+            : field
+        ),
+      };
+    }
+    return section;
+  });
+};

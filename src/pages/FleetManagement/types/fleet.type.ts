@@ -3,11 +3,11 @@ import type { CreateFleetFormValues, EditFleetFormValues } from "../config/fleet
 export type FleetData = {
   id: string;
   logo: string;
-  organisationName: string;
-  vehicleType: string;
+  name: string;
+  vehicle_type: string;
   flatRate: string;
   email: string;
-  contact: string;
+  contact_number: string;
   totalDrivers: string;
   totalVehicles: string;
 };

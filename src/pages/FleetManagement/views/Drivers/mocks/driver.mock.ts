@@ -167,7 +167,7 @@ export function getDriverEditDefaultValues(fleetId: string, driverId: string) {
     driverId: source.driverId,
     licenseNumber: details?.licenseNumber ?? "",
     licenseExpiryDate: details?.licenseExpiryDate ?? "",
-    organisationFleet: details?.organisationName ?? "",
+    organisationFleet: details?.name ?? "",
     vehicleId: "veh_001",
     image: source.avatarUrl ?? "",
   };

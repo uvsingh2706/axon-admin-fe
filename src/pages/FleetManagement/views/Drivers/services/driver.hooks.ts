@@ -40,6 +40,46 @@ export const useCreateDriver = (fleetId: string) => {
     });
 };
 
+export const useEditDriver = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ driverId, data }: { driverId: string; data: any }) =>
+            driverApi.editDriver(driverId, data),
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: driverKeys.all });
+            queryClient.invalidateQueries({ queryKey: driverKeys.detail(variables.driverId) });
+            toast.success("Driver updated successfully!");
+        },
+        onError: (error: any) => {
+            toast.error(
+                error?.response?.data?.message ||
+                error?.message ||
+                "Failed to update driver"
+            );
+        },
+    });
+};
+
+export const useDeleteDriver = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (driverId: string) => driverApi.deleteDriver(driverId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: driverKeys.all });
+            toast.success("Driver deleted successfully!");
+        },
+        onError: (error: any) => {
+            toast.error(
+                error?.response?.data?.message ||
+                error?.message ||
+                "Failed to delete driver"
+            );
+        },
+    });
+};
+
 export const useDriverList = (params: DriverListParams) => {
     return useQuery({
         queryKey: driverKeys.list(params),
