@@ -88,14 +88,11 @@ const columns: ExtendedColumnDef<ChargingPointData, unknown>[] = [
 ];
 
 export default function ChargePointTable({ stationId }: ChargePointTableProps) {
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
   const [search] = useState("");
 
   const { data: listResponse, isLoading } = useChargingPointlistbyID(stationId);
 
   const points = listResponse?.data?.chargingPoints || [];
-  const totalItems = listResponse?.data?.totalChargingPoints || points.length;
 
   return (
     <DataTable
@@ -103,18 +100,7 @@ export default function ChargePointTable({ stationId }: ChargePointTableProps) {
       data={points}
       search={search}
       isLoading={isLoading}
-      isServerSide={true}
-      totalItems={totalItems}
-      pageCount={Math.ceil(totalItems / limit) || 1}
-      pagination={{
-        pageIndex: page - 1,
-        pageSize: limit,
-      }}
-      onPaginationChange={(updater) => {
-        const next = typeof updater === "function" ? updater({ pageIndex: page - 1, pageSize: limit }) : updater;
-        setPage(next.pageIndex + 1);
-        setLimit(next.pageSize);
-      }}
+      defaultPageSize={20}
       disablePagination={false}
     />
   );

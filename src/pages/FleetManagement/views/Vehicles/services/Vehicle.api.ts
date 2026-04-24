@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/axios";
 import { ApiEndpoints } from "@/utils/apiEndpoints";
 import type { CreateVehicleResponse, VehicleDetailResponse, VehicleListParams, VehicleListResponse, UpdateVehicleResponse, DeleteVehicleResponse } from "./Vehicle.types";
+import { useQuery } from "@tanstack/react-query";
 
 export const vehicleApi = {
   getVehicleList: async (params: VehicleListParams): Promise<VehicleListResponse> => {

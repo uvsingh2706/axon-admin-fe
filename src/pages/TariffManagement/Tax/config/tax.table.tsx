@@ -18,12 +18,17 @@ export const getTaxTableColumns = ({
       enableSorting: true,
       cell: ({ row }) => (
         <span className="font-semibold text-sm text-secondary-600 underline cursor-pointer hover:text-opacity-80">
-          {row.original.taxName}
+          {row.original.taxName || "NA"}
         </span>
       ),
     },
 
-    { accessorKey: "type", header: "Type", enableSorting: true },
+    {
+      accessorKey: "type",
+      header: "Type",
+      enableSorting: true,
+      cell: ({ row }) => <span>{row.original.type || "NA"}</span>
+    },
 
     {
       accessorKey: "createdAt",
@@ -33,7 +38,7 @@ export const getTaxTableColumns = ({
         try {
           return format(new Date(row.original.createdAt), "MMM dd, yyyy h:mm:ss a");
         } catch (e) {
-          return row.original.createdAt;
+          return row.original.createdAt || "NA";
         }
       }
     },
@@ -45,7 +50,7 @@ export const getTaxTableColumns = ({
         try {
           return format(new Date(row.original.updatedAt), "MMM dd, yyyy h:mm:ss a");
         } catch (e) {
-          return row.original.updatedAt;
+          return row.original.updatedAt || "NA";
         }
       }
     },
@@ -55,7 +60,7 @@ export const getTaxTableColumns = ({
       accessorKey: "updatedBy",
       header: "Updated By",
       enableSorting: true,
-      cell: ({ row }) => <span>{row.original.updatedBy}</span>
+      cell: ({ row }) => <span>{row.original.updatedBy || "NA"}</span>
     },
 
     {
