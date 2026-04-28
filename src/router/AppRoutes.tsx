@@ -52,6 +52,10 @@ export default function AppRoutes() {
         path={Pathname.FORGOT_PASSWORD}
         element={<ForgetPassword />}
       />
+      <Route
+        path={Pathname.RESET_PASSWORD}
+        element={<ForgetPassword />}
+      />
       <Route path={Pathname.COMPONENTS} element={<ComponentsShowcase />} />
 
       {/* Protected admin shell — all module routes live inside */}

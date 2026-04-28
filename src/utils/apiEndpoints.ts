@@ -6,6 +6,14 @@ export const ApiEndpoints = {
     LOGOUT: '/auth/logout',
 
 
+    //forget-pass
+    FORGET_PASS: '/admin-user/forgot-password',
+    RESET_PASS: '/admin-user/reset-password',
+    
+
+    
+
+
 
     //tariff
     TARIFF_LIST: '/tariff',

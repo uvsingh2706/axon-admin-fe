@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 import { Pathname } from "../../utils/pathname";
 
@@ -12,35 +13,37 @@ import StepEnterEmail from "./components/StepEnterEmail";
 import StepEmailSent from "./components/StepEmailSent";
 import StepChangePassword from "./components/StepChangePassword";
 import StepSuccess from "./components/StepSuccess";
+import { useForgetPassword, useResetPassword } from "./services/forgetPassword.hook";
 
 export default function ForgetPassword() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
 
-  const [currentStep, setCurrentStep] = useState(1);
+  const isResetRoute = location.pathname === Pathname.RESET_PASSWORD;
+
+  const [currentStep, setCurrentStep] = useState(isResetRoute ? 3 : 1);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (currentStep === 2) {
-      const timer = setTimeout(() => setCurrentStep(3), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [currentStep]);
+  const forgetPasswordMutation = useForgetPassword();
+  const resetPasswordMutation = useResetPassword();
 
   // Step 1: Send reset email
   const handleEmailSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
-    setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 2000));
-    setIsLoading(false);
-    setCurrentStep(2);
+    forgetPasswordMutation.mutate({ email }, {
+      onSuccess: (data) => {
+        toast.success(data?.message || "Reset link sent to your email");
+        setCurrentStep(2);
+      }
+    });
   };
 
   // Step 3: Update password
@@ -55,10 +58,17 @@ export default function ForgetPassword() {
       return;
     }
 
-    setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setIsLoading(false);
-    setCurrentStep(4);
+    if (!token) {
+      toast.error("Valid reset token not found in the URL.");
+      return;
+    }
+
+    resetPasswordMutation.mutate({ token, password }, {
+      onSuccess: (data) => {
+        toast.success(data?.message || "Password changed successfully");
+        setCurrentStep(4);
+      }
+    });
   };
 
   return (
@@ -78,8 +88,8 @@ export default function ForgetPassword() {
           {(currentStep === 1 || currentStep === 3) && (
             <div className="absolute top-8 left-8 sm:top-12 sm:left-12">
               <Link
-                to={currentStep === 1 ? Pathname.LOGIN : "#"}
-                onClick={currentStep === 3 ? () => setCurrentStep(1) : undefined}
+                to={currentStep === 1 || isResetRoute ? Pathname.LOGIN : "#"}
+                onClick={currentStep === 3 && !isResetRoute ? () => setCurrentStep(1) : undefined}
                 className="flex items-center text-sm font-medium text-[#475467] hover:text-[#101828] transition-colors"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -94,7 +104,7 @@ export default function ForgetPassword() {
               <StepEnterEmail
                 email={email}
                 setEmail={setEmail}
-                isLoading={isLoading}
+                isLoading={forgetPasswordMutation.isPending}
                 onSubmit={handleEmailSubmit}
               />
             )}
@@ -109,7 +119,7 @@ export default function ForgetPassword() {
                 setConfirmPassword={setConfirmPassword}
                 confirmPasswordError={confirmPasswordError}
                 setConfirmPasswordError={setConfirmPasswordError}
-                isLoading={isLoading}
+                isLoading={resetPasswordMutation.isPending}
                 onSubmit={handlePasswordSubmit}
               />
             )}

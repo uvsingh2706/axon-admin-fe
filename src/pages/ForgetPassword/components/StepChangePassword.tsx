@@ -24,6 +24,8 @@ export default function StepChangePassword({
   isLoading,
   onSubmit,
 }: StepChangePasswordProps) {
+  const isFormValid = password.length > 0 && password === confirmPassword;
+
   return (
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-8 text-left pt-6">
@@ -67,7 +69,12 @@ export default function StepChangePassword({
           <Button
             id="forgot-password-submit"
             type="submit"
-            className="w-full py-6 mt-1 text-base border border-[#EAECF0] font-semibold bg-[#F2F4F7] hover:bg-primary-700 text-[#98A2B3] hover:text-[#FFFFFF] shadow-none rounded-lg transition-all"
+            disabled={!isFormValid || isLoading}
+            className={`w-full py-6 mt-1 text-base font-semibold shadow-none rounded-lg transition-all ${
+              isFormValid && !isLoading
+                ? "bg-primary-700 hover:bg-primary-800 text-white border-0"
+                : "border border-[#EAECF0] bg-[#F2F4F7] text-[#98A2B3] cursor-not-allowed"
+            }`}
             isIcon={false}
           >
             {isLoading ? "Updating…" : "Update Password"}

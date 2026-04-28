@@ -17,6 +17,8 @@ export default function StepEnterEmail({
   isLoading,
   onSubmit,
 }: StepEnterEmailProps) {
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   return (
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="mb-6 flex flex-col items-center justify-center text-center pt-6">
@@ -48,7 +50,12 @@ export default function StepEnterEmail({
           <Button
             id="forgot-email-submit"
             type="submit"
-            className="w-full py-6 mt-1 text-base border border-[#EAECF0] font-semibold bg-[#F2F4F7] hover:bg-primary-700 text-[#98A2B3] hover:text-[#FFFFFF] shadow-none rounded-lg transition-all"
+            disabled={!isEmailValid || isLoading}
+            className={`w-full py-6 mt-1 text-base font-semibold shadow-none rounded-lg transition-all ${
+              isEmailValid && !isLoading
+                ? "bg-primary-700 hover:bg-primary-800 text-white border-0"
+                : "border border-[#EAECF0] bg-[#F2F4F7] text-[#98A2B3] cursor-not-allowed"
+            }`}
             isIcon={false}
           >
             {isLoading ? "Sending…" : "Request New Password"}

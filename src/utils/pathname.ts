@@ -1,6 +1,7 @@
 export const Pathname = {
     LOGIN: '/login',
     FORGOT_PASSWORD: '/forgot-password',
+    RESET_PASSWORD: '/reset-password',
     COMPONENTS: "/components",
     DASHBOARD: "/dashboard",
     CHARGING_STATION: "/charging-stations",
