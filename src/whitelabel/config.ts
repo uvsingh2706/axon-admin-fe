@@ -1,4 +1,5 @@
-import logo from "@/assets/images/logo.webp";
+
+import logo from '@/assets/images/ams-logo.png'
 import type {
   ThemeTokenMap,
   WhiteLabelApiResponse,
@@ -8,15 +9,15 @@ const urbanistFontUrl =
   "https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap";
 
 const FALLBACK_CONFIG: WhiteLabelConfig = {
-  platform: "axon",
+  platform: "ams",
   typography: {
     fontFamily: "'Urbanist', sans-serif",
     fontUrl: urbanistFontUrl,
   },
   assets: {
     logo,
-    logoAlt: "Axon Energies",
-    displayName: "Axon Energies",
+    logoAlt: "AMS",
+    displayName: "AMS",
     adminPanelLabel: "Administrator Panel",
   },
   tokens: {

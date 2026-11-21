@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 import { Pathname } from "../../utils/pathname";
 
-import Logo from "@/assets/images/logo.webp";
+import Logo from "@/assets/images/ams-logo.png";
 import OnboardingImage from "@/assets/images/Onboardingimage.webp";
 
 import StepEnterEmail from "./components/StepEnterEmail";
@@ -151,7 +151,7 @@ export default function ForgetPassword() {
               </div>
 
               <img
-                alt="axon energies"
+                alt="AMS"
                 src={Logo}
                 className="h-10 w-auto max-w-[112px] object-contain"
               />

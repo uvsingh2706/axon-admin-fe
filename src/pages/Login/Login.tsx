@@ -7,7 +7,7 @@ import { useLogin } from "../../services/auth";
 import { Pathname } from "../../utils/pathname";
 import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
-import OnboardingImage from "@/assets/images/Onboardingimage.webp";
+import OnboardingImage from "@/assets/images/vegetables.jpg";
 import { useWhiteLabel } from "@/whitelabel";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -156,7 +156,7 @@ export default function Login() {
               <img
                 alt={assets.logoAlt}
                 src={assets.logo}
-                className="h-10 w-auto max-w-28 object-contain"
+                className="h-20 w-auto max-w-28 object-contain"
               />
             </div>
 
